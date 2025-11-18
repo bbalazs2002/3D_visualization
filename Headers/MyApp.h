@@ -1,0 +1,153 @@
+#pragma once
+
+#include "include_all.h"
+
+struct SUpdateInfo
+{
+	float ElapsedTimeInSec = 0.0f;	// Elapsed time since start of the program
+	float DeltaTimeInSec = 0.0f;	// Elapsed time since last update
+};
+
+class CMyApp
+{
+public:
+
+	inline static int MeshID = -1;
+
+	CMyApp() {}
+	~CMyApp() {}
+
+	bool Init();
+	void Clean();
+
+	void Update(const SUpdateInfo&);
+	void Render() const;
+	void RenderGUI();
+
+	void KeyboardDown(const SDL_KeyboardEvent&);
+	void KeyboardUp(const SDL_KeyboardEvent&);
+	void MouseMove(const SDL_MouseMotionEvent&);
+	void MouseDown(const SDL_MouseButtonEvent&);
+	void MouseUp(const SDL_MouseButtonEvent&);
+	void MouseWheel(const SDL_MouseWheelEvent&);
+	void Resize(int, int);
+
+	void OtherEvent(const SDL_Event&);
+protected:
+	void SetupDebugCallback();
+
+	//
+	// Variables
+	//
+	int m_width = 0, m_height = 0;
+	glm::vec2 m_cursorPos = glm::vec2(0, 0);
+	float m_ElapsedTimeInSec = 0.0f;
+	int m_selectedModel = -1;
+	float m_selectionWidth = 2.f;
+	float m_lineWidth = 1.f;
+	bool m_cursorMoved = false;
+
+	// Camera
+	Camera m_camera;
+	CameraManipulator m_cameraManipulator;
+
+	// Shader program variables
+	GLuint m_programAxesID = 0;						// Program showing X,Y,Z directions
+	GLuint m_programSkyboxID = 0;					// Skybox shaders
+	GLuint m_programModelID = 0;					// Drawing models
+	GLuint m_programSelectedID = 0;					// Draw selection onto model
+	GLuint m_programBezierID = 0;					// Draw Bezier-curves
+	GLuint m_programBezierSelectedID = 0;			// Draw Bezier-curve selection
+	GLuint m_programBSplineID = 0;					// Draw BSpline-curves
+	GLuint m_programBSplineSelectedID = 0;			// Draw BSpline-curve selection
+	GLuint m_programBezierSurfaceID = 0;			// Draw BSpline-curves
+	GLuint m_programBezierSurfaceSelectedID = 0;	// Draw BSpline-curve selection
+	GLuint m_programShadowID = 0;					// Render shadow texture
+
+	// Shader initialization and termination
+	void InitShaders();
+	void CleanShaders();
+	void InitSkyboxShader();
+	void CleanSkyboxShader();
+	void InitAxesShader();
+	void CleanAxesShader();
+
+	// Geometry variables
+	OGLObject m_SkyboxGPU = {};
+	std::vector<ModelBase*> m_models{};
+
+	// Light sources
+	std::vector<Light*> m_lights{};
+
+	// Geometry initialization and termination
+	void InitGeometry();
+	void CleanGeometry();
+	void InitSkyboxGeometry();
+	void CleanSkyboxGeometry();
+	void InitModels();
+	void CleanModels();
+
+	// Textures
+	GLuint m_skyboxTextureID = 0;
+	GLuint m_modelTextureID = 0;
+	GLuint m_shadowTextureID = 0;
+
+	// Lighting
+	glm::vec4 m_lightPos = glm::vec4(1.0, 1.0, 0.0, 0.0);
+
+	// Texture initialization
+	void InitTexture();
+	void CleanTexture();
+	void InitSkyboxTexture();
+	void CleanSkyboxTexture();
+	void InitResolutionDependentResources(glm::vec2 bufferSize);
+	void CleanResolutionDependentResources();
+
+	// Buffer IDs
+	GLuint m_ModelIDBufferID = 0;
+	GLuint m_FBOShadowID = 0;
+
+	// Buffer initialization
+	void InitBuffers();
+	void CleanBuffers();
+
+	// rendering methods
+	void DrawAxes() const;
+	void RenderModels() const;
+	void RenderSkybox() const;
+
+	// ImGui stuff
+	void RenderObjectOptions();
+	void RenderModelOptions(Model* m);
+	void RenderBezierOptions(Bezier* b);
+	void RenderBSplineOptions(BSpline* b);
+	void RenderBezierSurfaceOptions(BezierSurface* b);
+
+	bool m_showAxes = true;
+	bool m_renderShadows = true;
+	int m_shadowBufferSize = 1024;
+
+	float m_rotationAngleX = 0;
+	float m_rotationAngleY = 0;
+	float m_rotationAngleZ = 0;
+	float m_translateX = 0;
+	float m_translateY = 0;
+	float m_translateZ = 0;
+	float m_scaleX = 1;
+	float m_scaleY = 1;
+	float m_scaleZ = 1;
+	float m_shearX = 0;
+	float m_shearY = 0;
+	float m_shearZ = 0;
+	float m_bezierCutParam = 0;
+
+	float m_newKnot = 0;
+
+	glm::vec3 m_bezierColor{1, 0, 1};
+	glm::vec3 m_selColor{1, 0, 0};
+	glm::vec3 m_bezierNewCtrlPoint{ 0, 0, 0 };
+	glm::vec3 m_bsplineNewCtrlPoint{ 0, 0, 0 };
+
+	std::vector<glm::vec4> m_newIntpolPoints{};
+	std::vector<float> m_newTParams{};
+};
