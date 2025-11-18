@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="15.0">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{5f51035f-27db-5b4f-b611-ad0f67b18727}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>My01_Shaders</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)includes;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)includes;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>SDL_MAIN_HANDLED;GLM_ENABLE_EXPERIMENTAL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>SDL_MAIN_HANDLED;GLM_ENABLE_EXPERIMENTAL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="includes\GLUtils.cpp" />
+    <ClCompile Include="includes\SDL_GLDebugMessageCallback.cpp" />
+    <ClCompile Include="includes\Camera.cpp" />
+    <ClCompile Include="includes\CameraManipulator.cpp" />
+    <ClCompile Include="includes\ObjParser.cpp" />
+    <ClCompile Include="includes\ProgramBuilder.cpp" />
+    <ClCompile Include="Sources\Models\Bezier.cpp" />
+    <ClCompile Include="Sources\Models\BezierSurface.cpp" />
+    <ClCompile Include="Sources\Models\BSpline.cpp" />
+    <ClCompile Include="Sources\Models\Material.cpp" />
+    <ClCompile Include="Sources\Models\Mesh.cpp" />
+    <ClCompile Include="Sources\Models\Model.cpp" />
+    <ClCompile Include="Sources\MyApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\Classes.h" />
+    <ClInclude Include="Headers\config.h" />
+    <ClInclude Include="Headers\include_all.h" />
+    <ClInclude Include="Headers\Interfaces\IDrawable.h" />
+    <ClInclude Include="Headers\Interfaces\IPrintable.h" />
+    <ClInclude Include="Headers\Light.h" />
+    <ClInclude Include="Headers\Log.h" />
+    <ClInclude Include="Headers\Material.h" />
+    <ClInclude Include="Headers\ModelBase.h" />
+    <ClInclude Include="Headers\Mesh.h" />
+    <ClInclude Include="Headers\Model.h" />
+    <ClInclude Include="Headers\ModelLoader.h" />
+    <ClInclude Include="Headers\MyApp.h" />
+    <ClInclude Include="Headers\Splines\Bezier.h" />
+    <ClInclude Include="Headers\Splines\BezierSpline.h" />
+    <ClInclude Include="Headers\Splines\BSpline.h" />
+    <ClInclude Include="Headers\Splines\BSplineInterpolation.h" />
+    <ClInclude Include="Headers\Surfaces\BezierSurface.h" />
+    <ClInclude Include="Headers\Transformation.h" />
+    <ClInclude Include="Headers\Types.h" />
+    <ClInclude Include="includes\GLUtils.hpp" />
+    <ClInclude Include="includes\SDL_GLDebugMessageCallback.h" />
+    <ClInclude Include="includes\Camera.h" />
+    <ClInclude Include="includes\CameraManipulator.h" />
+    <ClInclude Include="includes\ObjParser.h" />
+    <ClInclude Include="includes\ProgramBuilder.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\desert-heightmap.jpg" />
+    <Image Include="Assets\Earth-heightmap-small.png" />
+    <Image Include="Assets\heightmap_dot.png" />
+    <Image Include="Assets\lab_xneg.png" />
+    <Image Include="Assets\lab_xpos.png" />
+    <Image Include="Assets\lab_yneg.png" />
+    <Image Include="Assets\lab_ypos.png" />
+    <Image Include="Assets\lab_zneg.png" />
+    <Image Include="Assets\lab_zpos.png" />
+    <Image Include="Assets\metal.png" />
+    <Image Include="Assets\nx.jpg" />
+    <Image Include="Assets\ny.jpg" />
+    <Image Include="Assets\nz.jpg" />
+    <Image Include="Assets\px.jpg" />
+    <Image Include="Assets\py.jpg" />
+    <Image Include="Assets\pz.jpg" />
+    <Image Include="Assets\spikes.png" />
+    <Image Include="Assets\xneg.png" />
+    <Image Include="Assets\xpos.png" />
+    <Image Include="Assets\yneg.png" />
+    <Image Include="Assets\ypos.png" />
+    <Image Include="Assets\zneg.png" />
+    <Image Include="Assets\zpos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\Suzanne.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Axes\Frag_PosCol.frag" />
+    <None Include="Shaders\Axes\Vert_axes.vert" />
+    <None Include="Shaders\Frag_Simple.frag">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\BezierSurface\Frag_BezierSurface.frag" />
+    <None Include="Shaders\BezierSurface\Frag_BezierSurfaceSelected.frag" />
+    <None Include="Shaders\BezierSurface\Frag_Selected.frag" />
+    <None Include="Shaders\BezierSurface\Frag_Lighting.frag" />
+    <None Include="Shaders\BezierSurface\Vert_BezierSurface.vert" />
+    <None Include="Shaders\BezierSurface\Vert_BezierSurfaceSelected.vert" />
+    <None Include="Shaders\Bezier\Frag_Bezier.frag" />
+    <None Include="Shaders\Bezier\Geom_Bezier.geom" />
+    <None Include="Shaders\Bezier\Geom_BezierSelected.geom" />
+    <None Include="Shaders\Bezier\Vert_Bezier.vert" />
+    <None Include="Shaders\BSpline\Frag_BSpline.frag" />
+    <None Include="Shaders\BSpline\Geom_BSpline.geom" />
+    <None Include="Shaders\BSpline\Geom_BSplineSelected.geom" />
+    <None Include="Shaders\BSpline\Vert_BSpline.vert" />
+    <None Include="Shaders\Conemap\Comp_Conemap.comp" />
+    <None Include="Shaders\Debug\Frag_Points.frag" />
+    <None Include="Shaders\Debug\Geom_Cones.geom" />
+    <None Include="Shaders\Debug\Vert_Cones.vert" />
+    <None Include="Shaders\Debug\Vert_Points.vert" />
+    <None Include="Shaders\Models\Frag_Improved.frag" />
+    <None Include="Shaders\Models\Frag_Lighting.frag" />
+    <None Include="Shaders\Models\Frag_Model.frag" />
+    <None Include="Shaders\Models\Frag_Selected.frag" />
+    <None Include="Shaders\Models\Frag_Shadow.frag" />
+    <None Include="Shaders\Models\Frag_Simple.frag" />
+    <None Include="Shaders\Models\Geom_Model.geom" />
+    <None Include="Shaders\Models\Geom_Model_old.geom" />
+    <None Include="Shaders\Models\Glsl_common.glsl" />
+    <None Include="Shaders\Models\Vert_Model.vert" />
+    <None Include="Shaders\Models\Vert_Selected.vert" />
+    <None Include="Shaders\Shadow\Vert_Shadow.vert" />
+    <None Include="Shaders\Skybox\Frag_skybox_skeleton.frag" />
+    <None Include="Shaders\Skybox\Vert_skybox.vert" />
+    <None Include="Shaders\Vert_PosNormTex.vert">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\cube.obj">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Assets\ico-sphere-3.obj">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Assets\ico-sphere-4.obj">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Assets\uv-sphere-32.obj">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Assets\uv-sphere-64.obj">
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
