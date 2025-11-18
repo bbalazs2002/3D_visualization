@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="GL Utils">
+      <UniqueIdentifier>{ea41bfed-30a1-414b-b747-4d59ac6748a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{fd8e325f-d9a1-4eb6-84af-f37bce4b03f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{549da90a-db95-4b93-981f-1ff4f29b0d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Axes">
+      <UniqueIdentifier>{93c73990-a87b-46b6-981f-69f1af0705d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Ray-tracing">
+      <UniqueIdentifier>{78b65e9b-41e3-4790-b59a-577850c127c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MyApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\GLUtils.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\SDL_GLDebugMessageCallback.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\Camera.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\CameraManipulator.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ObjParser.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ProgramBuilder.cpp">
+      <Filter>GL Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\GLUtils.hpp">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\SDL_GLDebugMessageCallback.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Camera.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\CameraManipulator.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ObjParser.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ProgramBuilder.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalTypes.h">
+      <Filter>GL Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\metal.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\ypos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\zneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\zpos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_xneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_xpos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_yneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_ypos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_zneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\lab_zpos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\nx.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\nz.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\ny.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\px.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\py.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\pz.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\xneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\xpos.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\yneg.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\Suzanne.obj">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\cube.obj">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\ico-sphere-3.obj">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\ico-sphere-4.obj">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\uv-sphere-32.obj">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\uv-sphere-64.obj">
+      <Filter>Assets</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Vert_Shadow.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Frag_LightingShadow.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Vert_PosNormTexShadow.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Vert_axes.vert">
+      <Filter>Shaders\Axes</Filter>
+    </None>
+    <None Include="Shaders\Frag_PosCol.frag">
+      <Filter>Shaders\Axes</Filter>
+    </None>
+    <None Include="Shaders\Frag_Tracer.frag">
+      <Filter>Shaders\Ray-tracing</Filter>
+    </None>
+    <None Include="Shaders\Vert_Tracer.vert">
+      <Filter>Shaders\Ray-tracing</Filter>
+    </None>
+    <None Include="Shaders\Vert_PosNormTex.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Frag_Lighting.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Frag_TracerRecursive.frag">
+      <Filter>Shaders\Ray-tracing</Filter>
+    </None>
+    <None Include="Shaders\Frag_skybox_skeleton.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Vert_skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
