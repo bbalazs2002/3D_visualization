@@ -63,9 +63,10 @@
 #include "ModelLoader.h"
 #include "ModelBase.h"
 #include "Model.h"
-#include "Splines/Bezier.h"
-#include "Splines/BSpline.h"
-#include "Splines/BSplineInterpolation.h"
+#include "Curves/Bezier.h"
+#include "Curves/BSpline.h"
+#include "Curves/BSplineInterpolation.h"
+#include "Curves/DiscreteCurve.h"
 #include "Surfaces/BezierSurface.h"
 
 // main application

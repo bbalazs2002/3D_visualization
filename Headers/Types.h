@@ -4,9 +4,10 @@
 
 // Model params
 #define MODEL2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,params.drawMode}
-#define BEZIER2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_POINTS}
-#define BSPLINE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_POINTS}
-#define BEZIERSURFACE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_POINTS}
+#define BEZIER2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
+#define BSPLINE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
+#define DISCRETECURVE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
+#define BEZIERSURFACE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_TRIANGLES}
 
 struct ModelBaseParams {
     GLuint programID = 0;
@@ -38,6 +39,13 @@ struct BSplineParams {
     GLuint programSelectedID = 0;
     int smoothness = 10;
     std::vector<float> knots{};
+    const char* name = "";
+    bool show = true;
+};
+
+struct DiscreteCurveParams {
+    GLuint programID = 0;
+    GLuint programSelectedID = 0;
     const char* name = "";
     bool show = true;
 };

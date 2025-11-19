@@ -41,6 +41,9 @@
     <ClCompile Include="Sources\Models\BezierSurface.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Models\DiscreteCurve.cpp">
+      <Filter>Sources\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\ProgramBuilder.h">
@@ -106,20 +109,23 @@
     <ClInclude Include="Headers\Light.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Splines\Bezier.h">
-      <Filter>Headers\Splines</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Splines\BezierSpline.h">
-      <Filter>Headers\Splines</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Splines\BSpline.h">
-      <Filter>Headers\Splines</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Splines\BSplineInterpolation.h">
-      <Filter>Headers\Splines</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Surfaces\BezierSurface.h">
       <Filter>Headers\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Curves\Bezier.h">
+      <Filter>Headers\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Curves\BezierSpline.h">
+      <Filter>Headers\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Curves\BSpline.h">
+      <Filter>Headers\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Curves\BSplineInterpolation.h">
+      <Filter>Headers\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Curves\DiscreteCurve.h">
+      <Filter>Headers\Curves</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -257,20 +263,11 @@
     <None Include="Shaders\Bezier\Frag_Bezier.frag">
       <Filter>Shaders\Bezier</Filter>
     </None>
-    <None Include="Shaders\Bezier\Geom_Bezier.geom">
-      <Filter>Shaders\Bezier</Filter>
-    </None>
-    <None Include="Shaders\Bezier\Geom_BezierSelected.geom">
-      <Filter>Shaders\Bezier</Filter>
-    </None>
     <None Include="Shaders\Shadow\Vert_Shadow.vert">
       <Filter>Shaders\Shadow</Filter>
     </None>
     <None Include="Shaders\Models\Frag_Shadow.frag">
       <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\BSpline\Geom_BSpline.geom">
-      <Filter>Shaders\BSpline</Filter>
     </None>
     <None Include="Shaders\BSpline\Vert_BSpline.vert">
       <Filter>Shaders\BSpline</Filter>
@@ -278,11 +275,6 @@
     <None Include="Shaders\BSpline\Frag_BSpline.frag">
       <Filter>Shaders\BSpline</Filter>
     </None>
-    <None Include="Shaders\BSpline\Geom_BSplineSelected.geom">
-      <Filter>Shaders\BSpline</Filter>
-    </None>
-    <None Include="Shaders\BezierSurface\Frag_Selected.frag" />
-    <None Include="Shaders\BezierSurface\Frag_Lighting.frag" />
     <None Include="Shaders\BezierSurface\Frag_BezierSurface.frag">
       <Filter>Shaders\BezierSurface</Filter>
     </None>
@@ -300,6 +292,21 @@
     </None>
     <None Include="Shaders\Frag_Simple.frag">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Bezier\Vert_BezierSelected.vert">
+      <Filter>Shaders\Bezier</Filter>
+    </None>
+    <None Include="Shaders\BSpline\Vert_BSplineSelected.vert">
+      <Filter>Shaders\BSpline</Filter>
+    </None>
+    <None Include="Shaders\DiscreteCurve\Frag_DiscreteCurve.frag">
+      <Filter>Shaders\DiscreteCurve</Filter>
+    </None>
+    <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurve.vert">
+      <Filter>Shaders\DiscreteCurve</Filter>
+    </None>
+    <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurveSelected.vert">
+      <Filter>Shaders\DiscreteCurve</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +372,6 @@
     <Filter Include="Sources\Models">
       <UniqueIdentifier>{5909df44-71b3-4737-9994-ca5a561f0af3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Splines">
-      <UniqueIdentifier>{4d3d6887-2733-4328-8841-c60f1c6774c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\BSpline">
       <UniqueIdentifier>{665623af-d015-43b6-9cf7-0405ad5af426}</UniqueIdentifier>
     </Filter>
@@ -376,6 +380,12 @@
     </Filter>
     <Filter Include="Shaders\BezierSurface">
       <UniqueIdentifier>{cfc39ced-41c2-43aa-a016-c5a53c04f731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\DiscreteCurve">
+      <UniqueIdentifier>{91f6c85c-8620-400b-9027-5472bfba5c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Curves">
+      <UniqueIdentifier>{1ebca7b4-d18c-47fb-9778-501d1159fb79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

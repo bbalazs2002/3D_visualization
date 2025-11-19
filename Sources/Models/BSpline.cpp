@@ -132,7 +132,7 @@ void BSpline::Render(RenderParams* p) {
     glGetFloatv(GL_LINE_WIDTH, &lineWidth);
     glLineWidth(p->lineWidth);
 
-    glDrawArrays(m_drawMode, 0, 1);
+    glDrawArrays(m_drawMode, 0, GetSmoothness());
     glLineWidth(lineWidth);
 
     if (p->selected) {
@@ -163,7 +163,7 @@ void BSpline::RenderSelection(RenderParams* p) {
     glPointSize(p->selectionWidth);
 
     // draw control points
-    glDrawArrays(m_drawMode, 0, 1);
+    glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());
 
     // reset gl state
     glPointSize(pointSize);
@@ -190,7 +190,7 @@ void BSpline::RenderInterpolatedPoints(RenderParams* p) {
     glPointSize(p->selectionWidth);
 
     // draw control points
-    glDrawArrays(GL_POINTS, 0, 1);
+    glDrawArrays(GL_POINTS, 0, GetInterpolatedPointsCount());
 
     // reset gl state
     glPointSize(pointSize);

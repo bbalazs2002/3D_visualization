@@ -58,6 +58,8 @@ protected:
 	GLuint m_programSelectedID = 0;					// Draw selection onto model
 	GLuint m_programBezierID = 0;					// Draw Bezier-curves
 	GLuint m_programBezierSelectedID = 0;			// Draw Bezier-curve selection
+	GLuint m_programDiscreteCurveID = 0;			// Draw Discrete curves
+	GLuint m_programDiscreteCurveSelectedID = 0;	// Draw Discrete curve selection
 	GLuint m_programBSplineID = 0;					// Draw BSpline-curves
 	GLuint m_programBSplineSelectedID = 0;			// Draw BSpline-curve selection
 	GLuint m_programBezierSurfaceID = 0;			// Draw BSpline-curves
@@ -121,6 +123,7 @@ protected:
 	void RenderModelOptions(Model* m);
 	void RenderBezierOptions(Bezier* b);
 	void RenderBSplineOptions(BSpline* b);
+	void RenderDiscreteCurveOptions(DiscreteCurve* d);
 	void RenderBezierSurfaceOptions(BezierSurface* b);
 
 	bool m_showAxes = true;
@@ -143,10 +146,11 @@ protected:
 
 	float m_newKnot = 0;
 
-	glm::vec3 m_bezierColor{1, 0, 1};
+	glm::vec3 m_curveColor{1, 0, 1};
 	glm::vec3 m_selColor{1, 0, 0};
 	glm::vec3 m_bezierNewCtrlPoint{ 0, 0, 0 };
 	glm::vec3 m_bsplineNewCtrlPoint{ 0, 0, 0 };
+	glm::vec3 m_discreteCurveNewCtrlPoint{0,0,0};
 
 	std::vector<glm::vec4> m_newIntpolPoints{};
 	std::vector<float> m_newTParams{};

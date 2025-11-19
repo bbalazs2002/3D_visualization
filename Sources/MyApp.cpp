@@ -33,14 +33,12 @@ void CMyApp::InitShaders()
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_Bezier.vert")
-		.ShaderStage(GL_GEOMETRY_SHADER, "Shaders/Bezier/Geom_Bezier.geom")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
 		.Link();
 
 	m_programBezierSelectedID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_Bezier.vert")
-		.ShaderStage(GL_GEOMETRY_SHADER, "Shaders/Bezier/Geom_BezierSelected.geom")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
 		.Link();
 
@@ -48,15 +46,26 @@ void CMyApp::InitShaders()
 	m_programBSplineID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
-		.ShaderStage(GL_GEOMETRY_SHADER, "Shaders/BSpline/Geom_BSpline.geom")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 		.Link();
 
 	m_programBSplineSelectedID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
-		.ShaderStage(GL_GEOMETRY_SHADER, "Shaders/BSpline/Geom_BSplineSelected.geom")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
+		.Link();
+
+	// DiscreteCurve
+	m_programDiscreteCurveID = glCreateProgram();
+	ProgramBuilder{ m_programDiscreteCurveID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+		.Link();
+
+	m_programDiscreteCurveSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programDiscreteCurveSelectedID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
 		.Link();
 
 	// Bezier-surface
@@ -100,6 +109,11 @@ void CMyApp::CleanShaders()
 	m_programBSplineID = 0;
 	glDeleteProgram(m_programBSplineSelectedID);
 	m_programBSplineSelectedID = 0;
+
+	glDeleteProgram(m_programDiscreteCurveID);
+	m_programDiscreteCurveID = 0;
+	glDeleteProgram(m_programDiscreteCurveSelectedID);
+	m_programDiscreteCurveSelectedID = 0;
 
 	glDeleteProgram(m_programBezierSurfaceID);
 	m_programBezierSurfaceID = 0;
@@ -205,6 +219,7 @@ void CMyApp::CleanSkyboxGeometry()
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				m_programBezierSurfaceID,
@@ -228,6 +243,7 @@ void CMyApp::InitModels() {
 			32.f,
 			m_modelTextureID, 0, 0, 0
 		});
+		*/
 
 		// Bezier-surface
 		/*
@@ -261,7 +277,7 @@ void CMyApp::InitModels() {
 				m_programBezierSelectedID,
 				10,
 				"Bezier",
-				false
+				true
 			}
 		));
 		((Bezier*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
@@ -293,6 +309,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -309,6 +326,7 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// B-Spline
 		/*
@@ -386,6 +404,25 @@ void CMyApp::InitModels() {
 		}
 		*/
 
+		// Discrete Curve
+		m_models.push_back(new DiscreteCurve(
+			DiscreteCurveParams{
+				m_programDiscreteCurveID,
+				m_programDiscreteCurveSelectedID,
+				"DiscreteCurve",
+				true
+			}
+		));
+		((DiscreteCurve*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
+			glm::vec4{ 10.0, 0.0, 0.0, 1 },
+			glm::vec4{ 5.0, 5.0, 1.0, 1 },
+			glm::vec4{ 0.0, 10.0, 2.0, 1 },
+			glm::vec4{ -5.0, 5.0, 3.0, 1 },
+			glm::vec4{ -10.0, 0.0, 4.0, 1 },
+			glm::vec4{ -5.0, -5.0, 5.0, 1 },
+			glm::vec4{ 0.0, -10.0, 6.0, 1 },
+			glm::vec4{ 5.0, -5.0, 7.0, 1 }
+		});
 	}
 }
 
@@ -747,11 +784,11 @@ void CMyApp::RenderBezierOptions(Bezier* b) {
 
 	// color
 	glm::vec3 col = b->GetColor();
-	m_bezierColor[0] = col.r;
-	m_bezierColor[1] = col.g;
-	m_bezierColor[2] = col.b;
-	if (ImGui::ColorEdit3("Color", &m_bezierColor.r)) {
-		b->SetColor(m_bezierColor);
+	m_curveColor[0] = col.r;
+	m_curveColor[1] = col.g;
+	m_curveColor[2] = col.b;
+	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
+		b->SetColor(m_curveColor);
 	}
 
 	if (ImGui::Button("Elevate degree")) {
@@ -776,7 +813,7 @@ void CMyApp::RenderBezierOptions(Bezier* b) {
 void CMyApp::RenderBSplineOptions(BSpline* b) {
 	ImGui::Spacing();
 	ImGui::Separator();
-	ImGui::Text("Bezier-curve specific options");
+	ImGui::Text("B-Spline specific options");
 
 	int smoothness = b->GetSmoothness();
 	if (ImGui::SliderInt("Smoothness", &smoothness, 2, 64)) {
@@ -853,11 +890,11 @@ void CMyApp::RenderBSplineOptions(BSpline* b) {
 
 	// color
 	glm::vec3 col = b->GetColor();
-	m_bezierColor[0] = col.r;
-	m_bezierColor[1] = col.g;
-	m_bezierColor[2] = col.b;
-	if (ImGui::ColorEdit3("Color", &m_bezierColor.r)) {
-		b->SetColor(m_bezierColor);
+	m_curveColor[0] = col.r;
+	m_curveColor[1] = col.g;
+	m_curveColor[2] = col.b;
+	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
+		b->SetColor(m_curveColor);
 	}
 
 	/*
@@ -876,6 +913,56 @@ void CMyApp::RenderBSplineOptions(BSpline* b) {
 		b->Cut(m_bezierCutParam, (Bezier*)m_models[m_models.size() - 1]);
 	}
 	*/
+
+	ImGui::Separator();
+	ImGui::Spacing();
+}
+
+void CMyApp::RenderDiscreteCurveOptions(DiscreteCurve* d) {
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Text("Discrete-curve specific options");
+
+	// ctrl points
+	ImGui::Spacing();
+	if (ImGui::CollapsingHeader("Control points")) {
+		int ctrlPointCount = 0;
+		for (auto p : d->GetCtrlPoints()) {
+			glm::vec3 point = p;
+			std::stringstream label;
+			label << "Ctrl point " << ctrlPointCount;
+			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
+				d->SetCtrlPoint(ctrlPointCount, point);
+				break;
+			}
+			ImGui::SameLine();
+			label.str("");
+			label << "Delete #" << ctrlPointCount;
+			if (ImGui::Button(label.str().c_str())) {
+				d->DelCtrlPoint(ctrlPointCount);
+				break;
+			}
+			++ctrlPointCount;
+		}
+		ImGui::Spacing();
+		ImGui::InputFloat3("New ctrl point", &m_discreteCurveNewCtrlPoint.x);
+		ImGui::SameLine();
+		if (ImGui::Button("Add")) {
+			d->AddCtrlPoint(m_discreteCurveNewCtrlPoint);
+		}
+	}
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+
+	// color
+	glm::vec3 col = d->GetColor();
+	m_curveColor[0] = col.r;
+	m_curveColor[1] = col.g;
+	m_curveColor[2] = col.b;
+	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
+		d->SetColor(m_curveColor);
+	}
 
 	ImGui::Separator();
 	ImGui::Spacing();
@@ -954,6 +1041,10 @@ void CMyApp::RenderObjectOptions() {
 		// B-Spline specific options
 		if (m->GetType() == MODEL_TYPE_BSPLINE) {
 			RenderBSplineOptions((BSpline*) m);
+		}
+		// Discrete-curve specific options
+		if (m->GetType() == MODEL_TYPE_DISCRETECURVE) {
+			RenderDiscreteCurveOptions((DiscreteCurve*) m);
 		}
 		// Bezier-surface specific options
 		if (m->GetType() == MODEL_TYPE_BEZIERSURFACE) {
