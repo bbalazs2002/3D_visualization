@@ -92,6 +92,7 @@
     <ClCompile Include="Sources\Models\Bezier.cpp" />
     <ClCompile Include="Sources\Models\BezierSurface.cpp" />
     <ClCompile Include="Sources\Models\BSpline.cpp" />
+    <ClCompile Include="Sources\Models\DiscreteCurve.cpp" />
     <ClCompile Include="Sources\Models\Material.cpp" />
     <ClCompile Include="Sources\Models\Mesh.cpp" />
     <ClCompile Include="Sources\Models\Model.cpp" />
@@ -100,6 +101,11 @@
   <ItemGroup>
     <ClInclude Include="Headers\Classes.h" />
     <ClInclude Include="Headers\config.h" />
+    <ClInclude Include="Headers\Curves\Bezier.h" />
+    <ClInclude Include="Headers\Curves\BezierSpline.h" />
+    <ClInclude Include="Headers\Curves\BSpline.h" />
+    <ClInclude Include="Headers\Curves\BSplineInterpolation.h" />
+    <ClInclude Include="Headers\Curves\DiscreteCurve.h" />
     <ClInclude Include="Headers\include_all.h" />
     <ClInclude Include="Headers\Interfaces\IDrawable.h" />
     <ClInclude Include="Headers\Interfaces\IPrintable.h" />
@@ -111,10 +117,6 @@
     <ClInclude Include="Headers\Model.h" />
     <ClInclude Include="Headers\ModelLoader.h" />
     <ClInclude Include="Headers\MyApp.h" />
-    <ClInclude Include="Headers\Splines\Bezier.h" />
-    <ClInclude Include="Headers\Splines\BezierSpline.h" />
-    <ClInclude Include="Headers\Splines\BSpline.h" />
-    <ClInclude Include="Headers\Splines\BSplineInterpolation.h" />
     <ClInclude Include="Headers\Surfaces\BezierSurface.h" />
     <ClInclude Include="Headers\Transformation.h" />
     <ClInclude Include="Headers\Types.h" />
@@ -156,22 +158,21 @@
   <ItemGroup>
     <None Include="Shaders\Axes\Frag_PosCol.frag" />
     <None Include="Shaders\Axes\Vert_axes.vert" />
+    <None Include="Shaders\Bezier\Vert_BezierSelected.vert" />
+    <None Include="Shaders\BSpline\Vert_BSplineSelected.vert" />
+    <None Include="Shaders\DiscreteCurve\Frag_DiscreteCurve.frag" />
+    <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurve.vert" />
+    <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurveSelected.vert" />
     <None Include="Shaders\Frag_Simple.frag">
       <FileType>Document</FileType>
     </None>
     <None Include="Shaders\BezierSurface\Frag_BezierSurface.frag" />
     <None Include="Shaders\BezierSurface\Frag_BezierSurfaceSelected.frag" />
-    <None Include="Shaders\BezierSurface\Frag_Selected.frag" />
-    <None Include="Shaders\BezierSurface\Frag_Lighting.frag" />
     <None Include="Shaders\BezierSurface\Vert_BezierSurface.vert" />
     <None Include="Shaders\BezierSurface\Vert_BezierSurfaceSelected.vert" />
     <None Include="Shaders\Bezier\Frag_Bezier.frag" />
-    <None Include="Shaders\Bezier\Geom_Bezier.geom" />
-    <None Include="Shaders\Bezier\Geom_BezierSelected.geom" />
     <None Include="Shaders\Bezier\Vert_Bezier.vert" />
     <None Include="Shaders\BSpline\Frag_BSpline.frag" />
-    <None Include="Shaders\BSpline\Geom_BSpline.geom" />
-    <None Include="Shaders\BSpline\Geom_BSplineSelected.geom" />
     <None Include="Shaders\BSpline\Vert_BSpline.vert" />
     <None Include="Shaders\Conemap\Comp_Conemap.comp" />
     <None Include="Shaders\Debug\Frag_Points.frag" />

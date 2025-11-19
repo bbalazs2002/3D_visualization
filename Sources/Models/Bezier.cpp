@@ -66,7 +66,7 @@ void Bezier::Render(RenderParams* p) {
 	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
 	glLineWidth(p->lineWidth);
 
-	glDrawArrays(m_drawMode, 0, 1);
+	glDrawArrays(m_drawMode, 0, GetSmoothness());
 
 	// reset gl state
 	glLineWidth(lineWidth);
@@ -94,7 +94,7 @@ void Bezier::RenderSelection(RenderParams* p) {
 	glPointSize(p->selectionWidth);
 
 	// draw control points
-	glDrawArrays(m_drawMode, 0, 1);
+	glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());
 
 	// reset gl state
 	glPointSize(pointSize);
