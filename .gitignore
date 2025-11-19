@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Assets (textures and models)
+/Assets/
+Assets/
+
+# Documentation
+/Documentation/
+Documentation/

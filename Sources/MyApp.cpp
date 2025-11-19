@@ -293,7 +293,6 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -309,8 +308,7 @@ void CMyApp::InitModels() {
 				{ 0, 0, 0, 1 }
 			}
 		));
-		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\Transforms\\Assets\\Equinox-render\\Equinox.obj");
-		*/
+		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
 
 		// B-Spline
 		/*
