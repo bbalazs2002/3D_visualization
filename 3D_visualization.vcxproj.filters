@@ -44,6 +44,9 @@
     <ClCompile Include="Sources\Models\DiscreteCurve.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Models\ModelBase.cpp">
+      <Filter>Sources\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\ProgramBuilder.h">

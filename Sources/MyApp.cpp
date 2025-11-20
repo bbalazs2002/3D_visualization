@@ -607,64 +607,9 @@ void CMyApp::DrawAxes() const
 }
 
 void CMyApp::RenderModels() const {
-	// render shadow textures
-	/*
-	if (m_renderShadows) {
-		// iterate through lights
-		for (auto l : m_lights) {
-			// iterate through models
-			for (auto m : m_models) {
-				m->RenderShadow();
-			}
-		}
-	}
-	*/
 
-	//
-	// models
-	//
-
-	// render test model
-	/*
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glUseProgram(m_programModelID);
-
-	// set material
-	Material material = Material();
-	Material::UploadMaterialToShader(m_programModelID, &material);
-
-	// set light
-	Light light = Light();
-	light.pos = m_lightPos;
-	Light::UploadLightToShader(m_programModelID, &light);
-
-	// uniforms
-	glUniform3fv(ul(m_programModelID, "cameraPos"), 1, glm::value_ptr(m_camera.GetEye()));
-	glUniform1i(ul(m_programModelID, "modelID"), 1);
-	glUniform2fv(ul(m_programModelID, "cursorPos"), 1, glm::value_ptr(m_cursorPos));
-	glm::vec2 windowSize = glm::vec2(m_width, m_height);
-	glUniform2fv(ul(m_programModelID, "windowSize"), 1, glm::value_ptr(windowSize));
-	glm::mat4 viewProj = m_camera.GetViewProj();
-	glUniformMatrix4fv(ul(m_programModelID, "viewProj"), 1, GL_FALSE, glm::value_ptr(viewProj));
-	glm::mat4 world = glm::identity<glm::mat4>();
-	glUniformMatrix4fv(ul(m_programModelID, "world"), 1, GL_FALSE, glm::value_ptr(world));
-
-	// bind VAO
-	glBindVertexArray(m_SquareGPU.vaoID);
-
-	// draw call
-	glDrawElements(GL_TRIANGLES, m_SquareGPU.count, GL_UNSIGNED_INT, nullptr);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
-	glUseProgram(0);
-	*/
-	// end test model
-
-
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	// update first vec4 in the buffer to the default model id
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glm::vec4 defObjID = glm::vec4(-1.f);
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(glm::vec4), &defObjID);
 
@@ -742,72 +687,7 @@ void CMyApp::RenderModelOptions(Model* m) {
 }
 
 void CMyApp::RenderBezierOptions(Bezier* b) {
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Text("Bezier-curve specific options");
 
-	int smoothness = b->GetSmoothness();
-	if (ImGui::SliderInt("Smoothness", &smoothness, 2, 64)) {
-		b->SetSmoothness(smoothness);
-	}
-
-	// ctrl points
-	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Control points")) {
-		int ctrlPointCount = 0;
-		for (auto p : b->GetCtrlPoints()) {
-			glm::vec3 point = p;
-			std::stringstream label;
-			label << "Ctrl point " << ctrlPointCount;
-			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
-				b->SetCtrlPoint(ctrlPointCount, point);
-			}
-			ImGui::SameLine();
-			label.str("");
-			label << "Delete #" << ctrlPointCount;
-			if (ImGui::Button(label.str().c_str())) {
-				b->DelCtrlPoint(ctrlPointCount);
-			}
-			++ctrlPointCount;
-		}
-		ImGui::Spacing();
-		glm::vec3 point = m_bezierNewCtrlPoint;
-		if (ImGui::InputFloat3("New ctrl point", &point.x)) {
-			m_bezierNewCtrlPoint = point;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Add")) {
-			b->AddCtrlPoint(m_bezierNewCtrlPoint);
-		}
-	}
-	ImGui::Spacing();
-
-	// color
-	glm::vec3 col = b->GetColor();
-	m_curveColor[0] = col.r;
-	m_curveColor[1] = col.g;
-	m_curveColor[2] = col.b;
-	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
-		b->SetColor(m_curveColor);
-	}
-
-	if (ImGui::Button("Elevate degree")) {
-		b->Elevate();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Reduce degree")) {
-		b->Reduce();
-	}
-
-	ImGui::SliderFloat("Cut param", &m_bezierCutParam, 0, 1, "%.2f");
-	ImGui::SameLine();
-	if (ImGui::Button("Cut")) {
-		m_models.push_back(nullptr);
-		b->Cut(m_bezierCutParam, (Bezier*)m_models[m_models.size() - 1]);
-	}
-
-	ImGui::Separator();
-	ImGui::Spacing();
 }
 
 void CMyApp::RenderBSplineOptions(BSpline* b) {
@@ -1020,200 +900,52 @@ void CMyApp::RenderBezierSurfaceOptions(BezierSurface* b) {
 }
 
 void CMyApp::RenderObjectOptions() {
-	// Object EDITOR WINDOW
-	if (ImGui::Begin("Object editor")) {
-		ModelBase* m = m_models[m_selectedModel];
-
-		ImGui::InputText("name", m->m_objNameBuffer, IM_ARRAYSIZE(m->m_objNameBuffer));
-		ImGui::SameLine();
-		if (ImGui::Button("Rename")) {
-			m->SetName();
-		}
-
+	// Type dependent options
 		// Model specific options
-		if (m->GetType() == MODEL_TYPE_MODEL) {
-			RenderModelOptions((Model*) m);
-		}
-		// Bezier-curve specific options
-		if (m->GetType() == MODEL_TYPE_BEZIER) {
-			RenderBezierOptions((Bezier*) m);
-		}
-		// B-Spline specific options
-		if (m->GetType() == MODEL_TYPE_BSPLINE) {
-			RenderBSplineOptions((BSpline*) m);
-		}
-		// Discrete-curve specific options
-		if (m->GetType() == MODEL_TYPE_DISCRETECURVE) {
-			RenderDiscreteCurveOptions((DiscreteCurve*) m);
-		}
-		// Bezier-surface specific options
-		if (m->GetType() == MODEL_TYPE_BEZIERSURFACE) {
-			RenderBezierSurfaceOptions((BezierSurface*) m);
-		}
-
-		bool show = m->GetShow();
-		if (ImGui::Checkbox("show", &show)) {
-			m->SetShow(show);
-		}
-		bool applyTransforms = m->GetApplyTransforms();
-		if (ImGui::Checkbox("apply transforms", &applyTransforms)) {
-			if (m->GetType() == MODEL_TYPE_BEZIER) {
-				((Bezier*)m)->SetApplyTransforms(applyTransforms);
-			}
-			else {
-				m->SetApplyTransforms(applyTransforms);
-			}
-
-		}
-
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		ImGui::Text("Transformations:");
-
-		std::stringstream str;
-		int TCount = 0;
-		for (auto t : *m) {
-			str.str(std::string());
-			str << "transformation #" << TCount;
-			if (ImGui::CollapsingHeader(str.str().c_str())) {
-
-				glm::mat4 temp = t->Get();
-				glm::mat4 arr = glm::transpose(temp);
-
-				bool changed = false;
-				for (int i = 0; i < 4; i++) {
-					if (ImGui::InputFloat4(("Row " + std::to_string(TCount) + " " + std::to_string(i)).c_str(), &arr[i][0])) {
-						changed = true;
-					}
-				}
-				if (changed) {
-					t->Set(glm::transpose(arr));
-				}
-
-				if (ImGui::Button(("Delete #" + std::to_string(TCount)).c_str())) {
-					m->DelTransform(TCount);
-					break;
-				}
-
-			}
-			++TCount;
-		}
-		if (ImGui::CollapsingHeader("Collapsed transformations")) {
-
-			glm::mat4 arr = glm::transpose(m->GetTransform());
-			if (ImGui::BeginTable("Collapsed_transformations", 4, ImGuiTableFlags_Borders))
-			{
-				for (int row = 0; row < 4; ++row)
-				{
-					ImGui::TableNextRow();
-					for (int col = 0; col < 4; ++col)
-					{
-						ImGui::TableSetColumnIndex(col);
-						ImGui::Text("%f", arr[row][col]);
-					}
-				}
-				ImGui::EndTable();
-			}
-
-		}
-
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		if (ImGui::CollapsingHeader("Identity")) {
-			if (ImGui::Button("Add")) {
-				m->AddTransform();
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Translate")) {
-			ImGui::SliderFloat("X", &m_translateX, -100.f, 100.f);
-			ImGui::SliderFloat("Y", &m_translateY, -100.f, 100.f);
-			ImGui::SliderFloat("Z", &m_translateZ, -100.f, 100.f);
-			if (ImGui::Button("Add")) {
-				m->AddTransform(glm::transpose(glm::mat4{
-					{1, 0, 0, m_translateX},
-					{0, 1, 0, m_translateY},
-					{0, 0, 1, m_translateZ},
-					{0, 0, 0, 1}
-					}));
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Rotate")) {
-			ImGui::SliderAngle("Angle X", &m_rotationAngleX);
-			ImGui::SliderAngle("Angle Y", &m_rotationAngleY);
-			ImGui::SliderAngle("Angle Z", &m_rotationAngleZ);
-			if (ImGui::Button("Add")) {
-				float cosX = glm::cos(m_rotationAngleX);
-				float sinX = glm::sin(m_rotationAngleX);
-				float cosY = glm::cos(m_rotationAngleY);
-				float sinY = glm::sin(m_rotationAngleY);
-				float cosZ = glm::cos(m_rotationAngleZ);
-				float sinZ = glm::sin(m_rotationAngleZ);
-				m->AddTransform(glm::transpose(glm::mat4{
-					{cosY * cosZ,                       -sinZ * cosY,                      sinY,         0},
-					{sinX * sinY * cosZ + cosX * sinZ,  -sinZ * sinX * sinY + cosX * cosZ, -sinX * cosY, 0},
-					{-sinY * cosX * cosZ + sinX * sinZ, cosX * sinY * sinZ + sinX * cosZ,  cosX * cosY,  0},
-					{0,                                 0,                                 0,            1}
-					}));
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Scale / Reflect")) {
-			ImGui::SliderFloat("X", &m_scaleX, -100.f, 100.f);
-			ImGui::SliderFloat("Y", &m_scaleY, -100.f, 100.f);
-			ImGui::SliderFloat("Z", &m_scaleZ, -100.f, 100.f);
-			if (ImGui::Button("Add")) {
-				m->AddTransform(glm::transpose(glm::mat4{
-					{m_scaleX, 0,        0,        0},
-					{0,        m_scaleY, 0,        0},
-					{0,        0,        m_scaleZ, 0},
-					{0,        0,        0,        1}
-					}));
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Shear")) {
-			ImGui::SliderAngle("Angle X", &m_shearX);
-			ImGui::SliderAngle("Angle Y", &m_shearY);
-			ImGui::SliderAngle("Angle Z", &m_shearZ);
-			if (ImGui::Button("Add")) {
-				float x = glm::tan(m_shearX);
-				float y = glm::tan(m_shearY);
-				float z = glm::tan(m_shearZ);
-				m->AddTransform(glm::transpose(glm::mat4{
-					{1, x,             x * (y + 1.f),                 0},
-					{y, x * y + 1.f,   x * y + y * (x * y + 1.f),     0},
-					{z, z * (x + 1.f), z * (y * (x + 1.f) + x) + 1.f, 0},
-					{0, 0,             0,                             1}
-					}));
-			}
-		}
-
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		if (ImGui::Button("Delete")) {
-			delete(m_models[m_selectedModel]);
-			m_models.erase(m_models.begin() + m_selectedModel);
-			m_selectedModel = -1;
-		}
+	if (m->GetType() == MODEL_TYPE_MODEL) {
+		RenderModelOptions((Model*)m);
 	}
-	ImGui::End();
+	// Bezier-curve specific options
+	if (m->GetType() == MODEL_TYPE_BEZIER) {
+		RenderBezierOptions((Bezier*)m);
+	}
+	// B-Spline specific options
+	if (m->GetType() == MODEL_TYPE_BSPLINE) {
+		RenderBSplineOptions((BSpline*)m);
+	}
+	// Discrete-curve specific options
+	if (m->GetType() == MODEL_TYPE_DISCRETECURVE) {
+		RenderDiscreteCurveOptions((DiscreteCurve*)m);
+	}
+	// Bezier-surface specific options
+	if (m->GetType() == MODEL_TYPE_BEZIERSURFACE) {
+		RenderBezierSurfaceOptions((BezierSurface*)m);
+	}
 }
 
 void CMyApp::RenderGUI()
 {
 	// OBJECT OPTIONS WINDOW
 	if (m_selectedModel >= 0 && m_selectedModel < m_models.size()) {
-		RenderObjectOptions();
+
+		ModelBase* m = m_models[m_selectedModel];
+
+		// Delete selected model if marked
+		if (m->MarkedForDeletion()) {
+			delete(m);
+			m_models.erase(m_models.begin() + m_selectedModel);
+			m_selectedModel = -1;
+			return;
+		}
+
+		if (ImGui::Begin("Object editor")) {
+			// Render type specific options
+			m->RenderGUI();
+
+			// Render general options
+			m->RenderGUIBase();
+		}
+		ImGui::End();
 	}
 
 	// GLOBAL OPTIONS WINDOW

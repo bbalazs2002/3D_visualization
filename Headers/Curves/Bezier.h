@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class Bezier : public ModelBase, public IDrawable {
+class Bezier : public ModelBase {
 protected:
 	std::vector<glm::vec4> m_ctrlPoints{};
 	GLuint m_ctrlPointsSSBOID = 0;
@@ -10,7 +10,6 @@ protected:
 	int m_smoothness = 10;
 	glm::vec3 m_color = {1.f, 0, 1.f};
 	
-
 	void SetCtrlPointsSSBO() {
 		glGenBuffers(1, &m_ctrlPointsSSBOID);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ctrlPointsSSBOID);
@@ -57,8 +56,9 @@ public:
 	Bezier(BezierParams params);
 	~Bezier();
 
-	void Render(RenderParams* p);
-	void RenderSelection(RenderParams* p);
+	void Render(RenderParams* p) override;
+	void RenderSelection(RenderParams* p) override;
+	void RenderGUI(std::vector<ModelBase*>* models) override;
 	/*
 	void RenderShadow(RenderParams* p, Light* l) {
 		return;
@@ -73,7 +73,7 @@ public:
 	}
 
 	// prevent GetTransform to reset m_transformDirty and Transformation::m_dirty
-	inline glm::mat4 GetTransform() const {
+	inline glm::mat4 GetTransform() override {
 		return m_transform;
 	}
 

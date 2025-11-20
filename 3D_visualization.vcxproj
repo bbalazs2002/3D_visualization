@@ -96,6 +96,7 @@
     <ClCompile Include="Sources\Models\Material.cpp" />
     <ClCompile Include="Sources\Models\Mesh.cpp" />
     <ClCompile Include="Sources\Models\Model.cpp" />
+    <ClCompile Include="Sources\Models\ModelBase.cpp" />
     <ClCompile Include="Sources\MyApp.cpp" />
   </ItemGroup>
   <ItemGroup>
