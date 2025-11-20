@@ -686,56 +686,6 @@ void CMyApp::RenderModelOptions(Model* m) {
 	ImGui::Spacing();
 }
 
-void CMyApp::RenderDiscreteCurveOptions(DiscreteCurve* d) {
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Text("Discrete-curve specific options");
-
-	// ctrl points
-	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Control points")) {
-		int ctrlPointCount = 0;
-		for (auto p : d->GetCtrlPoints()) {
-			glm::vec3 point = p;
-			std::stringstream label;
-			label << "Ctrl point " << ctrlPointCount;
-			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
-				d->SetCtrlPoint(ctrlPointCount, point);
-				break;
-			}
-			ImGui::SameLine();
-			label.str("");
-			label << "Delete #" << ctrlPointCount;
-			if (ImGui::Button(label.str().c_str())) {
-				d->DelCtrlPoint(ctrlPointCount);
-				break;
-			}
-			++ctrlPointCount;
-		}
-		ImGui::Spacing();
-		ImGui::InputFloat3("New ctrl point", &m_discreteCurveNewCtrlPoint.x);
-		ImGui::SameLine();
-		if (ImGui::Button("Add")) {
-			d->AddCtrlPoint(m_discreteCurveNewCtrlPoint);
-		}
-	}
-
-	ImGui::Spacing();
-	ImGui::Spacing();
-
-	// color
-	glm::vec3 col = d->GetColor();
-	m_curveColor[0] = col.r;
-	m_curveColor[1] = col.g;
-	m_curveColor[2] = col.b;
-	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
-		d->SetColor(m_curveColor);
-	}
-
-	ImGui::Separator();
-	ImGui::Spacing();
-}
-
 void CMyApp::RenderBezierSurfaceOptions(BezierSurface* b) {
 	ImGui::Spacing();
 	ImGui::Separator();
