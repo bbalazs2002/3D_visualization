@@ -667,25 +667,6 @@ void CMyApp::Render() const
 
 }
 
-void CMyApp::RenderModelOptions(Model* m) {
-	// Model spacific options
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Text("Object specific options");
-
-	bool wireframe = m->GetWireFrame();
-	if (ImGui::Checkbox("Wireframe", &wireframe)) {
-		m->SetWireFrame(wireframe);
-	}
-	ImGui::InputText("Obj file path", m->m_objPathBuffer, IM_ARRAYSIZE(m->m_objPathBuffer));
-	ImGui::SameLine();
-	if (ImGui::Button("Load")) {
-		m->SetObjPath();
-	}
-	ImGui::Separator();
-	ImGui::Spacing();
-}
-
 void CMyApp::RenderObjectOptions() {
 	// Type dependent options
 		// Model specific options
