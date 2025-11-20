@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class BezierSurface : public ModelBase, public IDrawable {
+class BezierSurface : public ModelBase {
 protected:
 	Material* m_material{};
 	std::vector<glm::vec4> m_ctrlPoints{};
@@ -40,8 +40,9 @@ public:
 	BezierSurface(BezierSurfaceParams params);
 	~BezierSurface();
 
-	void Render(RenderParams* p);
-	void RenderSelection(RenderParams* p);
+	void Render(RenderParams* p) override;
+	void RenderSelection(RenderParams* p) override;
+	void RenderGUI(std::vector<ModelBase*>* models) override;
 
 	inline void SetWireFrame(bool wireframe) {
 		m_wireframe = wireframe;

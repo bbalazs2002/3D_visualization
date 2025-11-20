@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class DiscreteCurve : public ModelBase, public IDrawable {
+class DiscreteCurve : public ModelBase {
 protected:
 	std::vector<glm::vec4> m_ctrlPoints{};
 	GLuint m_ctrlPointsSSBOID = 0;
@@ -39,8 +39,9 @@ public:
 	DiscreteCurve(DiscreteCurveParams params);
 	~DiscreteCurve();
 
-	void Render(RenderParams* p);
-	void RenderSelection(RenderParams* p);
+	void Render(RenderParams* p) override;
+	void RenderSelection(RenderParams* p) override;
+	void RenderGUI(std::vector<ModelBase*>* models) override;
 	/*
 	void RenderShadow(RenderParams* p, Light* l) {
 		return;

@@ -96,13 +96,13 @@
     <ClCompile Include="Sources\Models\Material.cpp" />
     <ClCompile Include="Sources\Models\Mesh.cpp" />
     <ClCompile Include="Sources\Models\Model.cpp" />
+    <ClCompile Include="Sources\Models\ModelBase.cpp" />
     <ClCompile Include="Sources\MyApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Classes.h" />
     <ClInclude Include="Headers\config.h" />
     <ClInclude Include="Headers\Curves\Bezier.h" />
-    <ClInclude Include="Headers\Curves\BezierSpline.h" />
     <ClInclude Include="Headers\Curves\BSpline.h" />
     <ClInclude Include="Headers\Curves\BSplineInterpolation.h" />
     <ClInclude Include="Headers\Curves\DiscreteCurve.h" />

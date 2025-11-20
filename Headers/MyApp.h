@@ -119,39 +119,12 @@ protected:
 	void RenderSkybox() const;
 
 	// ImGui stuff
-	void RenderObjectOptions();
-	void RenderModelOptions(Model* m);
-	void RenderBezierOptions(Bezier* b);
-	void RenderBSplineOptions(BSpline* b);
-	void RenderDiscreteCurveOptions(DiscreteCurve* d);
-	void RenderBezierSurfaceOptions(BezierSurface* b);
-
 	bool m_showAxes = true;
 	bool m_renderShadows = true;
 	int m_shadowBufferSize = 1024;
 
-	float m_rotationAngleX = 0;
-	float m_rotationAngleY = 0;
-	float m_rotationAngleZ = 0;
-	float m_translateX = 0;
-	float m_translateY = 0;
-	float m_translateZ = 0;
-	float m_scaleX = 1;
-	float m_scaleY = 1;
-	float m_scaleZ = 1;
-	float m_shearX = 0;
-	float m_shearY = 0;
-	float m_shearZ = 0;
-	float m_bezierCutParam = 0;
-
-	float m_newKnot = 0;
-
-	glm::vec3 m_curveColor{1, 0, 1};
-	glm::vec3 m_selColor{1, 0, 0};
-	glm::vec3 m_bezierNewCtrlPoint{ 0, 0, 0 };
-	glm::vec3 m_bsplineNewCtrlPoint{ 0, 0, 0 };
-	glm::vec3 m_discreteCurveNewCtrlPoint{0,0,0};
-
 	std::vector<glm::vec4> m_newIntpolPoints{};
 	std::vector<float> m_newTParams{};
+
+	glm::vec3 m_selColor{1, 0, 0};
 };

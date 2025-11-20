@@ -15,10 +15,32 @@ protected:
 	bool m_transformDirty = true;
 	bool m_applyTransforms = true;
 	MODEL_TYPE_TYPE m_type;
+	bool m_deleteMarker = false;
+
+	// ImGui buffers
+	static inline float m_rotationAngleX = 0;
+	static inline float m_rotationAngleY = 0;
+	static inline float m_rotationAngleZ = 0;
+	static inline float m_translateX = 0;
+	static inline float m_translateY = 0;
+	static inline float m_translateZ = 0;
+	static inline float m_scaleX = 1;
+	static inline float m_scaleY = 1;
+	static inline float m_scaleZ = 1;
+	static inline float m_shearX = 0;
+	static inline float m_shearY = 0;
+	static inline float m_shearZ = 0;
+	static inline float m_bezierCutParam = 0;
+	static inline float m_newKnot = 0;
+
+	static inline glm::vec3 m_curveColor{ 1, 0, 1 };
+	static inline glm::vec3 m_bezierNewCtrlPoint{ 0, 0, 0 };
+	static inline glm::vec3 m_bsplineNewCtrlPoint{ 0, 0, 0 };
+	static inline glm::vec3 m_discreteCurveNewCtrlPoint{ 0, 0, 0 };
+
+	char m_objNameBuffer[64] = "";
 	
 public:
-	char m_objNameBuffer[64] = "";
-
 	ModelBase(ModelBaseParams params) {
 		m_type = MODEL_TYPE_MODEL;
 		m_programID = params.programID;
@@ -35,6 +57,16 @@ public:
 		std::strcpy(m_objNameBuffer, m_name.c_str());
 
 		++ModelBase::count;
+	}
+
+	// IDrawable methods
+	// virtual void Render(RenderParams* p) override = 0;
+	// virtual void RenderSelection(RenderParams* p) override = 0;
+	// virtual void RenderGUI(std::vector<ModelBase*>* models) = 0;
+	void RenderGUIBase() override;
+
+	bool MarkedForDeletion() {
+		return m_deleteMarker;
 	}
 
 	std::string GetName() const {

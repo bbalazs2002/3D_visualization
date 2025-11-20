@@ -101,6 +101,83 @@ void Bezier::RenderSelection(RenderParams* p) {
 
 	return;
 }
+void Bezier::RenderGUI(std::vector<ModelBase*>* models) {
+	ImGui::Text("Bezier-curve specific options");
+	ImGui::Spacing();
+
+	Bezier* b = this;
+
+	// Smoothness
+	int smoothness = b->GetSmoothness();
+	if (ImGui::SliderInt("Smoothness", &smoothness, 2, 64)) {
+		b->SetSmoothness(smoothness);
+	}
+
+	// ctrl points
+	ImGui::Spacing();
+	if (ImGui::CollapsingHeader("Control points")) {
+		int ctrlPointCount = 0;
+		for (auto p : b->GetCtrlPoints()) {
+			glm::vec3 point = p;
+			std::stringstream label;
+			label << "Ctrl point " << ctrlPointCount;
+			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
+				b->SetCtrlPoint(ctrlPointCount, point);
+			}
+			ImGui::SameLine();
+			label.str("");
+			label << "Delete #" << ctrlPointCount;
+			if (ImGui::Button(label.str().c_str())) {
+				b->DelCtrlPoint(ctrlPointCount);
+			}
+			++ctrlPointCount;
+		}
+		ImGui::Spacing();
+		glm::vec3 point = m_bezierNewCtrlPoint;
+		if (ImGui::InputFloat3("New ctrl point", &point.x)) {
+			m_bezierNewCtrlPoint = point;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add")) {
+			b->AddCtrlPoint(m_bezierNewCtrlPoint);
+		}
+	}
+	ImGui::Spacing();
+
+	// color
+	glm::vec3 col = b->GetColor();
+	m_curveColor[0] = col.r;
+	m_curveColor[1] = col.g;
+	m_curveColor[2] = col.b;
+	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
+		b->SetColor(m_curveColor);
+	}
+
+	// operations
+	if (ImGui::Button("Elevate degree")) {
+		b->Elevate();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reduce degree")) {
+		b->Reduce();
+	}
+	ImGui::SliderFloat("Cut param", &m_bezierCutParam, 0, 1, "%.2f");
+	ImGui::SameLine();
+	if (ImGui::Button("Cut")) {
+		Bezier* newBezier = nullptr;
+		b->Cut(m_bezierCutParam, newBezier);
+
+		if (newBezier != nullptr) {
+			models->push_back(newBezier);
+		}
+		else {
+			Log::errorToConsole("Unable to cut Bezier-curve");
+		}
+	}
+
+	ImGui::Separator();
+	ImGui::Spacing();
+}
 /*
 void RenderShadow(RenderParams* p, Light* l) {
 	return;
@@ -125,7 +202,7 @@ void Bezier::Reduce() {
 		return;
 	}
 }
-void Bezier::Cut(float t, Bezier* newCurve2) {
+void Bezier::Cut(float t, Bezier*& newCurve2) {
 	if (t < 0 || t > 1) {
 		Log::errorToConsole("Bezier::Cut invalid t param");
 		return;

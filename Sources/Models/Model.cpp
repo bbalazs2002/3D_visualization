@@ -65,6 +65,29 @@ void Model::Render(RenderParams* p) {
 void Model::RenderSelection(RenderParams* p) {
 	return;
 }
+void Model::RenderGUI(std::vector<ModelBase*>*) {
+	ImGui::Text("Model specific options");
+	ImGui::Spacing();
+
+	Model* m = this;
+
+	// Wireframe
+	bool wireframe = m->GetWireFrame();
+	if (ImGui::Checkbox("Wireframe", &wireframe)) {
+		m->SetWireFrame(wireframe);
+	}
+
+	// OBJ file
+	ImGui::InputText("Obj file path", m->m_objPathBuffer, IM_ARRAYSIZE(m->m_objPathBuffer));
+	ImGui::SameLine();
+	if (ImGui::Button("Load")) {
+		m->SetObjPath();
+	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+}
 
 void Model::SetObjPath() {
 	if (!std::filesystem::exists(m_objPathBuffer)) {
