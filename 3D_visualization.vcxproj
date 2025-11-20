@@ -190,6 +190,9 @@
     <None Include="Shaders\Models\Glsl_common.glsl" />
     <None Include="Shaders\Models\Vert_Model.vert" />
     <None Include="Shaders\Models\Vert_Selected.vert" />
+    <None Include="Shaders\Modules\BezierSurfaceUtils.glsl" />
+    <None Include="Shaders\Modules\BezierUtils.glsl" />
+    <None Include="Shaders\Modules\Math.glsl" />
     <None Include="Shaders\Shadow\Vert_Shadow.vert" />
     <None Include="Shaders\Skybox\Frag_skybox_skeleton.frag" />
     <None Include="Shaders\Skybox\Vert_skybox.vert" />

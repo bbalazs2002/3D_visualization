@@ -308,6 +308,15 @@
     <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurveSelected.vert">
       <Filter>Shaders\DiscreteCurve</Filter>
     </None>
+    <None Include="Shaders\Modules\BezierUtils.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
+    <None Include="Shaders\Modules\Math.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
+    <None Include="Shaders\Modules\BezierSurfaceUtils.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\cube.obj">
@@ -386,6 +395,9 @@
     </Filter>
     <Filter Include="Headers\Curves">
       <UniqueIdentifier>{1ebca7b4-d18c-47fb-9778-501d1159fb79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules">
+      <UniqueIdentifier>{fdff6cae-9011-4ec0-b37c-edb0e4b10a80}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
