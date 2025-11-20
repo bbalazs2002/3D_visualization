@@ -686,118 +686,6 @@ void CMyApp::RenderModelOptions(Model* m) {
 	ImGui::Spacing();
 }
 
-void CMyApp::RenderBezierOptions(Bezier* b) {
-
-}
-
-void CMyApp::RenderBSplineOptions(BSpline* b) {
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Text("B-Spline specific options");
-
-	int smoothness = b->GetSmoothness();
-	if (ImGui::SliderInt("Smoothness", &smoothness, 2, 64)) {
-		b->SetSmoothness(smoothness);
-	}
-
-	// ctrl points
-	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Control points")) {
-		int ctrlPointCount = 0;
-		for (auto p : b->GetCtrlPoints()) {
-			glm::vec3 point = p;
-			std::stringstream label;
-			label << "Ctrl point " << ctrlPointCount;
-			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
-				b->SetCtrlPoint(ctrlPointCount, point);
-			}
-			ImGui::SameLine();
-			label.str("");
-			label << "Delete #" << ctrlPointCount;
-			if (ImGui::Button(label.str().c_str())) {
-				b->DelCtrlPoint(ctrlPointCount);
-			}
-			++ctrlPointCount;
-		}
-		ImGui::Spacing();
-		ImGui::InputFloat3("New ctrl point", &m_bsplineNewCtrlPoint.x);
-		ImGui::SameLine();
-		if (ImGui::Button("Add")) {
-			b->AddCtrlPoint(m_bsplineNewCtrlPoint);
-		}
-	}
-	
-	// knot vector
-	if (ImGui::CollapsingHeader("Knot vector")) {
-		int knotCount = 0;
-		for (auto k : b->GetKnots()) {
-			float knot = k;
-			std::stringstream label;
-			label << "Knot #" << knotCount;
-			if (ImGui::InputFloat(label.str().c_str(), &knot)) {
-				b->SetKnot(knotCount, knot);
-			}
-			ImGui::SameLine();
-			label.str("");
-			label << "Delete #" << knotCount;
-			if (ImGui::Button(label.str().c_str())) {
-				b->DelKnot(knotCount);
-			}
-			++knotCount;
-		}
-		ImGui::Spacing();
-		ImGui::InputFloat("New knot", &m_newKnot);
-		ImGui::SameLine();
-		if (ImGui::Button("Add")) {
-			b->AddKnot(m_newKnot);
-		}
-	}
-
-	// interpolation points
-	if (ImGui::CollapsingHeader("interpolated points")) {
-		int intPointCount = 0;
-		for (auto p : b->GetInterpolatedPoints()) {
-			glm::vec3 point = p;
-			std::stringstream label;
-			label << "Interpolated point " << intPointCount;
-			ImGui::InputFloat3(label.str().c_str(), &point.x);
-			++intPointCount;
-		}
-	}
-
-	ImGui::Spacing();
-	ImGui::Spacing();
-
-	// color
-	glm::vec3 col = b->GetColor();
-	m_curveColor[0] = col.r;
-	m_curveColor[1] = col.g;
-	m_curveColor[2] = col.b;
-	if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
-		b->SetColor(m_curveColor);
-	}
-
-	/*
-	if (ImGui::Button("Elevate degree")) {
-		b->Elevate();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Reduce degree")) {
-		b->Reduce();
-	}
-
-	ImGui::SliderFloat("Cut param", &m_bezierCutParam, 0, 1, "%.33f");
-	ImGui::SameLine();
-	if (ImGui::Button("Cut")) {
-		m_models.push_back(nullptr);
-		b->Cut(m_bezierCutParam, (Bezier*)m_models[m_models.size() - 1]);
-	}
-	*/
-
-	ImGui::Separator();
-	ImGui::Spacing();
-}
-
 void CMyApp::RenderDiscreteCurveOptions(DiscreteCurve* d) {
 	ImGui::Spacing();
 	ImGui::Separator();
@@ -940,7 +828,7 @@ void CMyApp::RenderGUI()
 
 		if (ImGui::Begin("Object editor")) {
 			// Render type specific options
-			m->RenderGUI();
+			m->RenderGUI(&m_models);
 
 			// Render general options
 			m->RenderGUIBase();

@@ -142,7 +142,6 @@ void BSpline::Render(RenderParams* p) {
         RenderInterpolatedPoints(p);
     }
 }
-
 void BSpline::RenderSelection(RenderParams* p) {
     GLuint progID = GetProgramSelectedID();
 
@@ -169,6 +168,97 @@ void BSpline::RenderSelection(RenderParams* p) {
     glPointSize(pointSize);
 
     return;
+}
+void BSpline::RenderGUI(std::vector<ModelBase*>* models) {
+    ImGui::Text("B-Spline specific options");
+
+    BSpline* b = this;
+
+    // Smoothness
+    int smoothness = b->GetSmoothness();
+    if (ImGui::SliderInt("Smoothness", &smoothness, 2, 64)) {
+        b->SetSmoothness(smoothness);
+    }
+
+    // ctrl points
+    ImGui::Spacing();
+    if (ImGui::CollapsingHeader("Control points")) {
+        int ctrlPointCount = 0;
+        for (auto p : b->GetCtrlPoints()) {
+            glm::vec3 point = p;
+            std::stringstream label;
+            label << "Ctrl point " << ctrlPointCount;
+            if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
+                b->SetCtrlPoint(ctrlPointCount, point);
+            }
+            ImGui::SameLine();
+            label.str("");
+            label << "Delete #" << ctrlPointCount;
+            if (ImGui::Button(label.str().c_str())) {
+                b->DelCtrlPoint(ctrlPointCount);
+            }
+            ++ctrlPointCount;
+        }
+        ImGui::Spacing();
+        ImGui::InputFloat3("New ctrl point", &m_bsplineNewCtrlPoint.x);
+        ImGui::SameLine();
+        if (ImGui::Button("Add")) {
+            b->AddCtrlPoint(m_bsplineNewCtrlPoint);
+        }
+    }
+
+    // knot vector
+    if (ImGui::CollapsingHeader("Knot vector")) {
+        int knotCount = 0;
+        for (auto k : b->GetKnots()) {
+            float knot = k;
+            std::stringstream label;
+            label << "Knot #" << knotCount;
+            if (ImGui::InputFloat(label.str().c_str(), &knot)) {
+                b->SetKnot(knotCount, knot);
+            }
+            ImGui::SameLine();
+            label.str("");
+            label << "Delete #" << knotCount;
+            if (ImGui::Button(label.str().c_str())) {
+                b->DelKnot(knotCount);
+            }
+            ++knotCount;
+        }
+        ImGui::Spacing();
+        ImGui::InputFloat("New knot", &m_newKnot);
+        ImGui::SameLine();
+        if (ImGui::Button("Add")) {
+            b->AddKnot(m_newKnot);
+        }
+    }
+
+    // interpolation points
+    if (ImGui::CollapsingHeader("interpolated points")) {
+        int intPointCount = 0;
+        for (auto p : b->GetInterpolatedPoints()) {
+            glm::vec3 point = p;
+            std::stringstream label;
+            label << "Interpolated point " << intPointCount;
+            ImGui::InputFloat3(label.str().c_str(), &point.x);
+            ++intPointCount;
+        }
+    }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    // color
+    glm::vec3 col = b->GetColor();
+    m_curveColor[0] = col.r;
+    m_curveColor[1] = col.g;
+    m_curveColor[2] = col.b;
+    if (ImGui::ColorEdit3("Color", &m_curveColor.r)) {
+        b->SetColor(m_curveColor);
+    }
+
+    ImGui::Separator();
+    ImGui::Spacing();
 }
 
 void BSpline::RenderInterpolatedPoints(RenderParams* p) {

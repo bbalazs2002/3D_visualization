@@ -118,9 +118,6 @@
     <ClInclude Include="Headers\Curves\Bezier.h">
       <Filter>Headers\Curves</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Curves\BezierSpline.h">
-      <Filter>Headers\Curves</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Curves\BSpline.h">
       <Filter>Headers\Curves</Filter>
     </ClInclude>

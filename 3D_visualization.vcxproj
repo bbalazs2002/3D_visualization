@@ -103,7 +103,6 @@
     <ClInclude Include="Headers\Classes.h" />
     <ClInclude Include="Headers\config.h" />
     <ClInclude Include="Headers\Curves\Bezier.h" />
-    <ClInclude Include="Headers\Curves\BezierSpline.h" />
     <ClInclude Include="Headers\Curves\BSpline.h" />
     <ClInclude Include="Headers\Curves\BSplineInterpolation.h" />
     <ClInclude Include="Headers\Curves\DiscreteCurve.h" />

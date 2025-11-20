@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class BSpline : public ModelBase, public IDrawable {
+class BSpline : public ModelBase {
 protected:
     std::vector<glm::vec4> m_interpolatedPoints{};
     std::vector<glm::vec4> m_ctrlPoints{};
@@ -59,6 +59,7 @@ public:
     void Render(RenderParams* p);
     void RenderSelection(RenderParams* p);
     void RenderInterpolatedPoints(RenderParams* p);
+    void RenderGUI(std::vector<ModelBase*>* models) override;
 
     // Control points
     inline void AddCtrlPoint(glm::vec3 newPoint) {
