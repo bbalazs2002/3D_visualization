@@ -136,6 +136,7 @@ void BezierSurface::RenderSelection(RenderParams* p) {
 }
 void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 	ImGui::Text("Bezier-curve specific options");
+	ImGui::Spacing();
 
 	BezierSurface* b = this;
 

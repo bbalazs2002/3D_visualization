@@ -119,13 +119,6 @@ protected:
 	void RenderSkybox() const;
 
 	// ImGui stuff
-	void RenderObjectOptions();
-	void RenderModelOptions(Model* m);
-	void RenderBezierOptions(Bezier* b);
-	void RenderBSplineOptions(BSpline* b);
-	void RenderDiscreteCurveOptions(DiscreteCurve* d);
-	void RenderBezierSurfaceOptions(BezierSurface* b);
-
 	bool m_showAxes = true;
 	bool m_renderShadows = true;
 	int m_shadowBufferSize = 1024;

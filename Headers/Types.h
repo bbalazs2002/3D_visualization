@@ -38,7 +38,6 @@ struct BSplineParams {
     GLuint programID = 0;
     GLuint programSelectedID = 0;
     int smoothness = 10;
-    std::vector<float> knots{};
     const char* name = "";
     bool show = true;
 };

@@ -102,9 +102,10 @@ void Bezier::RenderSelection(RenderParams* p) {
 	return;
 }
 void Bezier::RenderGUI(std::vector<ModelBase*>* models) {
-	Bezier* b = this;
-
 	ImGui::Text("Bezier-curve specific options");
+	ImGui::Spacing();
+
+	Bezier* b = this;
 
 	// Smoothness
 	int smoothness = b->GetSmoothness();
@@ -165,7 +166,13 @@ void Bezier::RenderGUI(std::vector<ModelBase*>* models) {
 	if (ImGui::Button("Cut")) {
 		Bezier* newBezier = nullptr;
 		b->Cut(m_bezierCutParam, newBezier);
-		models->push_back(newBezier);
+
+		if (newBezier != nullptr) {
+			models->push_back(newBezier);
+		}
+		else {
+			Log::errorToConsole("Unable to cut Bezier-curve");
+		}
 	}
 
 	ImGui::Separator();
@@ -195,7 +202,7 @@ void Bezier::Reduce() {
 		return;
 	}
 }
-void Bezier::Cut(float t, Bezier* newCurve2) {
+void Bezier::Cut(float t, Bezier*& newCurve2) {
 	if (t < 0 || t > 1) {
 		Log::errorToConsole("Bezier::Cut invalid t param");
 		return;

@@ -2,6 +2,8 @@
 
 void ModelBase::RenderGUIBase() {
 	// Object EDITOR WINDOW
+	ImGui::Text("Object options");
+
 	ModelBase* m = this;
 
 	ImGui::InputText("name", m->m_objNameBuffer, IM_ARRAYSIZE(m->m_objNameBuffer));

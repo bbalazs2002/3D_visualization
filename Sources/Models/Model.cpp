@@ -66,7 +66,8 @@ void Model::RenderSelection(RenderParams* p) {
 	return;
 }
 void Model::RenderGUI(std::vector<ModelBase*>*) {
-	ImGui::Text("Object specific options");
+	ImGui::Text("Model specific options");
+	ImGui::Spacing();
 
 	Model* m = this;
 
@@ -83,6 +84,7 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 		m->SetObjPath();
 	}
 
+	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
 }

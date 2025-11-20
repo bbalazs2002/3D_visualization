@@ -143,6 +143,7 @@ void DiscreteCurve::RenderGUI(std::vector<ModelBase*>* models) {
 		d->SetColor(m_curveColor);
 	}
 
+	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
 }

@@ -6,14 +6,17 @@ BSpline::BSpline(BSplineParams params) : ModelBase(BSPLINE2MODELBASE) {
 
     // Alap vezérlõpontok
     m_ctrlPoints = {
-        {0, 0, 0, 1},
-        {1, 0, 0, 1},
-        {2, 1, 0, 1},
-        {3, 1, 0, 1},
-        {4, 0, 0, 1}
+        glm::vec4{ 10.0, 0.0, 0.0, 1 },
+        glm::vec4{ 5.0, 5.0, 1.0, 1 },
+        glm::vec4{ 0.0, 10.0, 2.0, 1 },
+        glm::vec4{ -5.0, 5.0, 3.0, 1 },
+        glm::vec4{ -10.0, 0.0, 4.0, 1 },
+        glm::vec4{ -5.0, -5.0, 5.0, 1 },
+        glm::vec4{ 0.0, -10.0, 6.0, 1 },
+        glm::vec4{ 5.0, -5.0, 7.0, 1 }
     };
 
-    m_knots = params.knots;
+    m_knots = { 0,0,0,0,1,1,1,1,2,2,2,2 };
     m_smoothness = params.smoothness;
 
     SetCtrlPointsSSBO();
@@ -171,6 +174,7 @@ void BSpline::RenderSelection(RenderParams* p) {
 }
 void BSpline::RenderGUI(std::vector<ModelBase*>* models) {
     ImGui::Text("B-Spline specific options");
+    ImGui::Spacing();
 
     BSpline* b = this;
 
@@ -257,6 +261,7 @@ void BSpline::RenderGUI(std::vector<ModelBase*>* models) {
         b->SetColor(m_curveColor);
     }
 
+    ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
 }

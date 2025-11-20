@@ -329,13 +329,11 @@ void CMyApp::InitModels() {
 		*/
 
 		// B-Spline
-		/*
 		m_models.push_back(new BSpline(
 			BSplineParams{
 				m_programBSplineID,
 				m_programBSplineSelectedID,
 				10,
-				std::vector<float>{0,0,0,0,1,1,1,1,2,2,2,2},
 				"B-Spline",
 				true
 			}
@@ -350,7 +348,7 @@ void CMyApp::InitModels() {
 			glm::vec4{ 0.0, -10.0, 6.0, 1 },
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
-		*/
+		((BSpline*)m_models[m_models.size() - 1])->SetKnots(std::vector<float>{0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2});
 
 		// Semi circle interpolation
 		/*
@@ -405,6 +403,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Discrete Curve
+		/*
 		m_models.push_back(new DiscreteCurve(
 			DiscreteCurveParams{
 				m_programDiscreteCurveID,
@@ -423,6 +422,7 @@ void CMyApp::InitModels() {
 			glm::vec4{ 0.0, -10.0, 6.0, 1 },
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
+		*/
 	}
 }
 
@@ -667,30 +667,6 @@ void CMyApp::Render() const
 
 }
 
-void CMyApp::RenderObjectOptions() {
-	// Type dependent options
-		// Model specific options
-	if (m->GetType() == MODEL_TYPE_MODEL) {
-		RenderModelOptions((Model*)m);
-	}
-	// Bezier-curve specific options
-	if (m->GetType() == MODEL_TYPE_BEZIER) {
-		RenderBezierOptions((Bezier*)m);
-	}
-	// B-Spline specific options
-	if (m->GetType() == MODEL_TYPE_BSPLINE) {
-		RenderBSplineOptions((BSpline*)m);
-	}
-	// Discrete-curve specific options
-	if (m->GetType() == MODEL_TYPE_DISCRETECURVE) {
-		RenderDiscreteCurveOptions((DiscreteCurve*)m);
-	}
-	// Bezier-surface specific options
-	if (m->GetType() == MODEL_TYPE_BEZIERSURFACE) {
-		RenderBezierSurfaceOptions((BezierSurface*)m);
-	}
-}
-
 void CMyApp::RenderGUI()
 {
 	// OBJECT OPTIONS WINDOW
@@ -746,7 +722,9 @@ void CMyApp::RenderGUI()
 			CleanResolutionDependentResources();
 			InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
 		}
-		if (ImGui::Button("Add object")) {
+
+		// Add new model
+		if (ImGui::Button("Add model")) {
 			m_models.push_back(new Model(
 				ModelParams{
 					m_programModelID,
@@ -754,7 +732,7 @@ void CMyApp::RenderGUI()
 				}
 			));
 		}
-		ImGui::SameLine();
+		// Add new curve
 		if (ImGui::Button("Add Bezier-curve")) {
 			m_models.push_back(new Bezier(
 				BezierParams{
@@ -763,6 +741,35 @@ void CMyApp::RenderGUI()
 				}
 			));
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add B-Spline")) {
+			m_models.push_back(new BSpline(
+				BSplineParams{
+					m_programBSplineID,
+					m_programBSplineSelectedID
+				}
+			));
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add Discrete-curve")) {
+			m_models.push_back(new DiscreteCurve(
+				DiscreteCurveParams{
+					m_programDiscreteCurveID,
+					m_programDiscreteCurveSelectedID
+				}
+			));
+		}
+		// Add new surface
+		if (ImGui::Button("Add Bezier-surface")) {
+			m_models.push_back(new BezierSurface(
+				BezierSurfaceParams{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID
+				}
+			));
+		}
+
+		// Log data to console
 		if (ImGui::Button("Log data to console")) {
 			std::cout << "Scene data ----------------------------------" << std::endl << std::endl;
 			for (auto m : m_models) {

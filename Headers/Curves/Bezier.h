@@ -126,5 +126,5 @@ public:
 
 	void Elevate();
 	void Reduce();
-	void Cut(float t, Bezier* newCurve2);
+	void Cut(float t, Bezier*& newCurve2);
 };
