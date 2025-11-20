@@ -686,57 +686,6 @@ void CMyApp::RenderModelOptions(Model* m) {
 	ImGui::Spacing();
 }
 
-void CMyApp::RenderBezierSurfaceOptions(BezierSurface* b) {
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Text("Bezier-curve specific options");
-
-	int smoothness[2]{ b->GetSmoothness().x, b->GetSmoothness().y };
-	if (ImGui::SliderInt2("Smoothness", smoothness, 2, 16)) {
-		b->SetSmoothness(glm::vec2(smoothness[0], smoothness[1]));
-	}
-	bool wireframe = b->GetWireFrame();
-	if (ImGui::Checkbox("Wireframe", &wireframe)) {
-		b->SetWireFrame(wireframe);
-	}
-
-	// ctrl points
-	/*
-	ImGui::Spacing();
-	if (ImGui::CollapsingHeader("Control points")) {
-		int ctrlPointCount = 0;
-		for (auto p : b->GetCtrlPoints()) {
-			glm::vec3 point = p;
-			std::stringstream label;
-			label << "Ctrl point " << ctrlPointCount;
-			if (ImGui::InputFloat3(label.str().c_str(), &point.x)) {
-				b->SetCtrlPoint(ctrlPointCount, point);
-			}
-			ImGui::SameLine();
-			label.str("");
-			label << "Delete #" << ctrlPointCount;
-			if (ImGui::Button(label.str().c_str())) {
-				b->DelCtrlPoint(ctrlPointCount);
-			}
-			++ctrlPointCount;
-		}
-		ImGui::Spacing();
-		glm::vec3 point = m_bezierNewCtrlPoint;
-		if (ImGui::InputFloat3("New ctrl point", &point.x)) {
-			m_bezierNewCtrlPoint = point;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Add")) {
-			b->AddCtrlPoint(m_bezierNewCtrlPoint);
-		}
-	}
-	ImGui::Spacing();
-	*/
-
-	ImGui::Separator();
-	ImGui::Spacing();
-}
-
 void CMyApp::RenderObjectOptions() {
 	// Type dependent options
 		// Model specific options
