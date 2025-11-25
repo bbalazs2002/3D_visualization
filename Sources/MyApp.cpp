@@ -246,7 +246,6 @@ void CMyApp::InitModels() {
 		*/
 
 		// Bezier-surface
-		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				m_programBezierSurfaceID,
@@ -266,8 +265,7 @@ void CMyApp::InitModels() {
 			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
-			});
-		*/
+		});
 
 		// Bezier
 		/*
@@ -612,11 +610,10 @@ void CMyApp::RenderModels() const {
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(glm::vec4), &defObjID);
 
 	int objCount = 0;
-	glm::vec2 cursorPos = glm::vec2(m_cursorPos.x, m_cursorPos.y);
 	for (auto m : m_models) {
 		RenderParams rp{
 			m_lineWidth, m_camera.GetEye(), std::vector<glm::vec4>{m_lightPos},
-			objCount, cursorPos, glm::vec2(m_width, m_height),
+			objCount, m_cursorPos, glm::ivec2(m_width, m_height),
 			m_camera.GetViewProj(), (m_selectedModel == objCount),
 			m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
 		};
@@ -661,7 +658,7 @@ void CMyApp::Render() const
 	}
 	// RenderSkybox();
 
-	// exit(1);
+	exit(1);
 
 }
 
@@ -692,7 +689,7 @@ void CMyApp::RenderGUI()
 
 	// GLOBAL OPTIONS WINDOW
 	if (ImGui::Begin("Options window")) {
-		ImGui::Text("Render resolution %dx%d", m_width, m_height);
+		ImGui::Text("Render resolution: %dx%d", m_width, m_height);
 		std::stringstream cursorPos;
 		cursorPos << "Cursor position: " << m_cursorPos[0] << "; " << m_cursorPos[1];
 		ImGui::Text(cursorPos.str().c_str());
@@ -893,7 +890,7 @@ void CMyApp::KeyboardUp(const SDL_KeyboardEvent& key)
 
 void CMyApp::MouseMove(const SDL_MouseMotionEvent& mouse)
 {
-	m_cursorPos = glm::vec2(mouse.x, mouse.y);
+	m_cursorPos = glm::ivec2(mouse.x, mouse.y);
 	m_cursorMoved = true;
 	m_cameraManipulator.MouseMove(mouse);
 }

@@ -70,8 +70,8 @@ struct RenderParams {
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
     std::vector<glm::vec4> lights{};
     int modelIndex = 0;
-    glm::vec2 cursorPos = glm::vec2(0, 0);
-    glm::vec2 windowSize = glm::vec2(0, 0);
+    glm::ivec2 cursorPos = glm::ivec2(0, 0);
+    glm::ivec2 windowSize = glm::ivec2(0, 0);
     glm::mat4 viewProj = glm::identity<glm::mat4>();
     bool selected = false;
     float selectionWidth = 1.f;
@@ -88,8 +88,8 @@ struct MeshRenderParams {
     glm::vec3 cameraPos;
     std::vector<glm::vec4> lights;
     int modelIndex;
-    glm::vec2 cursorPos;
-    glm::vec2 windowSize;
+    glm::ivec2 cursorPos;
+    glm::ivec2 windowSize;
     glm::mat4 viewProj;
     //
     GLuint progID;

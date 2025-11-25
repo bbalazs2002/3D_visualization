@@ -1,33 +1,8 @@
 #include "../../Headers/include_all.h"
 
 void Mesh::Build(std::vector<Vertex> verteces, std::vector<GLuint> indeces) {
-
 	MeshObject<Vertex> mesh{verteces, indeces};
 	m_GPU = CreateGLObjectFromMesh(mesh, vertexAttribList);
-
-	// test model
-	/*
-	const std::initializer_list<VertexAttributeDescriptor> vertexAttribList =
-	{
-		{ 0, offsetof(Vertex, position), 4, GL_FLOAT },
-		{ 1, offsetof(Vertex, normal), 3, GL_FLOAT },
-		{ 3, offsetof(Vertex, texcoord), 2, GL_FLOAT }
-	};
-	// SQUARE
-	MeshObject<Vertex> ObjectCPU = {
-		{
-			{glm::vec4(0, 0, 0, 1.), glm::vec3(0, 1., 0), glm::vec2(0, 0)},
-			{glm::vec4(0, 0, 10., 1.), glm::vec3(0, 1., 0), glm::vec2(0, 1.)},
-			{glm::vec4(10., 0, 10., 1.), glm::vec3(0, 1., 0), glm::vec2(1., 1.)},
-			{glm::vec4(10., 0, 0, 1.), glm::vec3(0, 1., 0), glm::vec2(1., 0)}
-		},
-		{
-			0,1,2,
-			0,2,3
-		}
-	};
-	m_GPU = CreateGLObjectFromMesh(ObjectCPU, vertexAttribList);
-	*/
 }
 
 void Mesh::Render(MeshRenderParams* p) {
@@ -65,8 +40,8 @@ void Mesh::Render(MeshRenderParams* p) {
 	// uniforms
 	glUniform3fv(ul(p->progID, "cameraPos"), 1, glm::value_ptr(p->cameraPos));
 	glUniform1i(ul(p->progID, "modelID"), p->modelIndex);
-	glUniform2fv(ul(p->progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
-	glUniform2fv(ul(p->progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
+	glUniform2iv(ul(p->progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
+	glUniform2iv(ul(p->progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
 	glUniformMatrix4fv(ul(p->progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	if (p->applyTransforms) {
 		glUniformMatrix4fv(ul(p->progID, "world"), 1, GL_FALSE, glm::value_ptr(p->transform));

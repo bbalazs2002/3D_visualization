@@ -296,6 +296,15 @@
     <None Include="Shaders\Modules\BSplineUtils.glsl">
       <Filter>Shaders\Modules</Filter>
     </None>
+    <None Include="Shaders\Modules\Material.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
+    <None Include="Shaders\Modules\ClickHandler.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\cube.obj">

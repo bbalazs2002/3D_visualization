@@ -40,7 +40,7 @@ protected:
 	// Variables
 	//
 	int m_width = 0, m_height = 0;
-	glm::vec2 m_cursorPos = glm::vec2(0, 0);
+	glm::ivec2 m_cursorPos = glm::ivec2(0, 0);
 	float m_ElapsedTimeInSec = 0.0f;
 	int m_selectedModel = -1;
 	float m_selectionWidth = 2.f;

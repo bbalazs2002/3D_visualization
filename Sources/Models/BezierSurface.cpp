@@ -80,8 +80,8 @@ void BezierSurface::Render(RenderParams* p) {
 	// set uniforms
 	glUniform3fv(ul(progID, "cameraPos"), 1, glm::value_ptr(p->cameraPos));
 	glUniform1i(ul(progID, "modelID"), p->modelIndex);
-	glUniform2fv(ul(progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
-	glUniform2fv(ul(progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
+	glUniform2iv(ul(progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
+	glUniform2iv(ul(progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
 	glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	glUniform2iv(ul(progID, "ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
 	glUniform2iv(ul(progID, "division"), 1, glm::value_ptr(GetSmoothness()));

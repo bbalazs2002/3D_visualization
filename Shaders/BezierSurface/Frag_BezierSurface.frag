@@ -1,8 +1,4 @@
 #version 430
-layout(early_fragment_tests) in;
-layout(std430, binding = 0) buffer ModelIDBuffer {
-    vec4 currentModelID[];
-};
 
 // pipeline-ból bejövõ per-fragment attribútumok
 in vec3 vs_out_pos;
@@ -13,49 +9,33 @@ in vec2 vs_out_tex;
 out vec4 fs_out_col;
 
 // material
-struct Material {
-    vec3 diffuseColor;
-    float shininess;
-    vec3 specularColor;
-    int hasDiffuseTex;
-    vec3 ambientColor;
-    int hasSpecularTex;
-    int hasEmissionTex;
-    int hasNormalTex;
-    sampler2D diffuseTex;
-    sampler2D specularTex;
-    sampler2D emissionTex;
-    sampler2D normalTex;
-};
+#include "../Modules/Material.glsl"
 uniform Material material;
 
-// cursor position in window coords (same as gl_FragCoord.xy)
-uniform vec2 windowSize = vec2(0, 0);
-uniform vec2 cursorPos = vec2(0, 0);
-uniform int modelID = -1;
+// click handler
+layout(early_fragment_tests) in;
+layout(std430, binding = 0) buffer ModelIDBuffer {
+    vec4 currentModelID[];
+};
+uniform ivec2 windowSize = ivec2(0, 0);      // window inner size
+uniform ivec2 cursorPos = ivec2(0, 0);       // cursor position from SDL
+uniform int modelID = -1;                   // ID of the currently rendering model
+void SetCurrentModelID(int i, vec4 val) {
+    currentModelID[i] = val;
+}
+#define SET_CURRENT_MODEL_ID SetCurrentModelID
+#include "../Modules/ClickHandler.glsl"
 
 uniform vec3 cameraPos;
 
 // light
-struct Light {
-	vec3 pos;
-	float constantAttenuation;
-	vec3 La;
-	float linearAttenuation;
-	vec3 Ld;
-	float quadraticAttenuation;
-	vec3 Ls;
-	int type;
-};
+#include "../Modules/Light.glsl"
 uniform Light light;
 
 void main()
 {
-	ivec2 frag = ivec2(gl_FragCoord.xy);
-    ivec2 cursor = ivec2(cursorPos.x, windowSize.y - cursorPos.y);
-	// index is 0 if frag == cursor, 1 if frag != cursor
-	// save model below cursor to index 0
-	currentModelID[1 - int(frag == cursor)] = vec4(modelID);
+	// click handler
+    ClickHandler(ClickHandlerParams(windowSize, cursorPos, ivec2(gl_FragCoord.xy), modelID));
 
     /////////////////////////////////
     // DEBUG
