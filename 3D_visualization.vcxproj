@@ -185,7 +185,8 @@
     <None Include="Shaders\Modules\BezierSurfaceUtils.glsl" />
     <None Include="Shaders\Modules\BezierUtils.glsl" />
     <None Include="Shaders\Modules\BSplineUtils.glsl" />
-    <None Include="Shaders\Modules\ClickHandler.glsl" />
+    <None Include="Shaders\Modules\ClickHandler\ClickHandler.glsl" />
+    <None Include="Shaders\Modules\ClickHandler\ClickHandler_uniforms.glsl" />
     <None Include="Shaders\Modules\Light.glsl" />
     <None Include="Shaders\Modules\Material.glsl" />
     <None Include="Shaders\Modules\Math.glsl" />

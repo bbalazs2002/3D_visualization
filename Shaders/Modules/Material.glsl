@@ -7,8 +7,8 @@ struct Material {
     int hasSpecularTex;
     int hasEmissionTex;
     int hasNormalTex;
-    sampler2D diffuseTex;
-    sampler2D specularTex;
-    sampler2D emissionTex;
-    sampler2D normalTex;
 };
+sampler2D diffuseTex;
+sampler2D specularTex;
+sampler2D emissionTex;
+sampler2D normalTex;

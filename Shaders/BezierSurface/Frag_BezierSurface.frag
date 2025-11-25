@@ -17,13 +17,10 @@ layout(early_fragment_tests) in;
 layout(std430, binding = 0) buffer ModelIDBuffer {
     vec4 currentModelID[];
 };
-uniform ivec2 windowSize = ivec2(0, 0);      // window inner size
-uniform ivec2 cursorPos = ivec2(0, 0);       // cursor position from SDL
-uniform int modelID = -1;                   // ID of the currently rendering model
 void SetCurrentModelID(int i, vec4 val) {
     currentModelID[i] = val;
 }
-#define SET_CURRENT_MODEL_ID SetCurrentModelID
+#define CLICK_HANDLER_SET_SSBO SetCurrentModelID
 #include "../Modules/ClickHandler.glsl"
 
 uniform vec3 cameraPos;

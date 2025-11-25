@@ -299,11 +299,14 @@
     <None Include="Shaders\Modules\Material.glsl">
       <Filter>Shaders\Modules</Filter>
     </None>
-    <None Include="Shaders\Modules\ClickHandler.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
     <None Include="Shaders\Modules\Light.glsl">
       <Filter>Shaders\Modules</Filter>
+    </None>
+    <None Include="Shaders\Modules\ClickHandler\ClickHandler_uniforms.glsl">
+      <Filter>Shaders\Modules\ClickHandler</Filter>
+    </None>
+    <None Include="Shaders\Modules\ClickHandler\ClickHandler.glsl">
+      <Filter>Shaders\Modules\ClickHandler</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +386,9 @@
     </Filter>
     <Filter Include="Shaders\Modules">
       <UniqueIdentifier>{fdff6cae-9011-4ec0-b37c-edb0e4b10a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ClickHandler">
+      <UniqueIdentifier>{e4ba56b0-57af-45d6-abaa-dfbcf30bf23a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
