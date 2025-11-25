@@ -1,11 +1,15 @@
 #version 430 core
 
-#include "../Modules/BezierSurfaceUtils.glsl"
-
 // SSBO bound to binding point 1
 layout(std430, binding = 1) buffer ctrlPointsSSBO {
     vec4 ctrlPoints[];   // flexible array member
 };
+vec4 BezierGetCtrlPoint(int i) {
+    return ctrlPoints[i];
+}
+#define BEZIER_GET_CTRL_POINT BezierGetCtrlPoint
+
+#include "../Modules/BezierSurfaceUtils.glsl"
 
 // out vec3 vs_out_col;
 out vec3 vs_out_pos;
@@ -61,16 +65,16 @@ void main()
     vs_out_tex = vec2(u,v);
 
     vec4 p = vec4(BezierSurface(
-        BezierSurfaceParams(u, v, ctrlPointCount, ctrlPoints)
+        BezierSurfaceParams(u, v, ctrlPointCount)
     ), 1);
     gl_Position = viewProj * p;
     vs_out_pos = (viewProj * p).xyz;
 
     vec3 T_u = BezierSurface_du(
-        BezierSurfaceParams(u, v, ctrlPointCount, ctrlPoints)
+        BezierSurfaceParams(u, v, ctrlPointCount)
     );
     vec3 T_v = BezierSurface_dv(
-        BezierSurfaceParams(u, v, ctrlPointCount, ctrlPoints)
+        BezierSurfaceParams(u, v, ctrlPointCount)
     );
     vs_out_norm = normalize(cross(T_v, T_u));
 }

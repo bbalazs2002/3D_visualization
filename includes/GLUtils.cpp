@@ -2,13 +2,12 @@
 
 #include "GLUtils.hpp"
 
-#include <stdio.h>
 #include <string>
-#include <iostream>
 #include <fstream>
 #include <regex>
 #include <vector>
-#include <sstream>
+#include <set>
+#include <utility>
 
 #include <SDL2/SDL_image.h>
 
@@ -43,6 +42,7 @@ static void loadShaderCode( std::string& shaderCode, const std::filesystem::path
 	shaderStream.close();
 }
 
+/* STABLE VERSION
 // Ez egy nagyon primitív preprocesszor!!! Csak az #include-okat kezeli és nincs benne védelem a többszörös include-ok ellen
 static void preprocessShaderCode(std::string& shaderCode, const std::filesystem::path& includerPath) {
 
@@ -76,6 +76,77 @@ static void preprocessShaderCode(std::string& shaderCode, const std::filesystem:
 
 	processedCode.append(searchStart, shaderCode.cend()); // Append remaining code
 	shaderCode = std::move(processedCode);
+}
+*/
+
+// Segédfüggvény a rekurzióhoz és az állapottartáshoz
+static void preprocessShaderCodeRecursive(std::string& sourceCode, const std::filesystem::path& currentPath, std::set<std::string>& includedFiles) {
+
+	// Regex for includes
+	std::regex includeRegex(R"(#include\s*\"([^\"]+)\")");
+	std::smatch match;
+
+	std::string processedCode;
+	std::string::const_iterator searchStart(sourceCode.cbegin());
+
+	int currentLine = 1;
+
+	while (std::regex_search(searchStart, sourceCode.cend(), match, includeRegex)) {
+
+		// string before match
+		std::string segment(searchStart, match[0].first);
+		processedCode.append(segment);
+
+		currentLine += std::count(segment.begin(), segment.end(), '\n');
+
+		// set include path
+		std::filesystem::path includePath = currentPath.parent_path() / match[1].str();
+
+		// build absolute path for duplication filtering
+		std::error_code ec;
+		std::filesystem::path canonicalPath = std::filesystem::weakly_canonical(includePath, ec);
+		std::string uniqueKey = canonicalPath.string();
+
+		if (!ec && includedFiles.find(uniqueKey) == includedFiles.end()) {
+			// not yet included
+
+			includedFiles.insert(uniqueKey);
+			Log::logToConsole("Include found: ", match[1].str());
+
+			std::string includedCode;
+			loadShaderCode(includedCode, includePath.string());
+
+			if (!includedCode.empty()) {
+				// recursion on included file
+				preprocessShaderCodeRecursive(includedCode, includePath, includedFiles);
+
+				// insert #line directive
+				processedCode.append("\n#line 1\n");
+				processedCode.append(includedCode);
+
+				// reset line on return
+				processedCode.append("\n#line " + std::to_string(currentLine + 1) + "\n");
+			}
+		}
+		else {
+			// already included
+			processedCode.append("// Skipped duplicate include: " + match[1].str() + "\n");
+		}
+
+		searchStart = match[0].second;
+	}
+
+	processedCode.append(searchStart, sourceCode.cend());
+	sourceCode = std::move(processedCode);
+}
+
+static void preprocessShaderCode(std::string& shaderCode, const std::filesystem::path& includerPath) {
+	std::set<std::string> includedFiles;
+
+	std::error_code ec;
+	includedFiles.insert(std::filesystem::weakly_canonical(includerPath, ec).string());
+
+	preprocessShaderCodeRecursive(shaderCode, includerPath, includedFiles);
 }
 
 GLuint AttachShader( const GLuint programID, GLenum shaderType, const std::filesystem::path& _fileName )

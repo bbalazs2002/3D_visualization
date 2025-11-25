@@ -309,7 +309,6 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -326,9 +325,9 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
-		*/
 
 		// B-Spline
+		/*
 		m_models.push_back(new BSpline(
 			BSplineParams{
 				m_programBSplineID,
@@ -349,6 +348,7 @@ void CMyApp::InitModels() {
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
 		((BSpline*)m_models[m_models.size() - 1])->SetKnots(std::vector<float>{0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2});
+		*/
 
 		// Semi circle interpolation
 		/*
@@ -362,7 +362,6 @@ void CMyApp::InitModels() {
 			m_programBSplineID,
 			m_programBSplineSelectedID,
 			10,
-			std::vector<float>{},
 			"B-Spline-2",
 			false
 		});
@@ -390,7 +389,6 @@ void CMyApp::InitModels() {
 			m_programBSplineID,
 			m_programBSplineSelectedID,
 			10,
-			std::vector<float>{},
 			"B-Spline-3",
 			false
 		});

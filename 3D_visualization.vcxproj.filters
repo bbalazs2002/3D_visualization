@@ -212,22 +212,7 @@
     <None Include="Shaders\Skybox\Vert_skybox.vert">
       <Filter>Shaders\Skybox</Filter>
     </None>
-    <None Include="Shaders\Conemap\Comp_Conemap.comp">
-      <Filter>Shaders\Conemap</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Model.frag">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Geom_Model.geom">
-      <Filter>Shaders\Models</Filter>
-    </None>
     <None Include="Shaders\Models\Vert_Model.vert">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Simple.frag">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Geom_Model_old.geom">
       <Filter>Shaders\Models</Filter>
     </None>
     <None Include="Shaders\Debug\Frag_Points.frag">
@@ -241,12 +226,6 @@
     </None>
     <None Include="Shaders\Debug\Geom_Cones.geom">
       <Filter>Shaders\Debug</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Improved.frag">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Glsl_common.glsl">
-      <Filter>Shaders\Models</Filter>
     </None>
     <None Include="Shaders\Models\Frag_Lighting.frag">
       <Filter>Shaders\Models</Filter>
@@ -265,9 +244,6 @@
     </None>
     <None Include="Shaders\Shadow\Vert_Shadow.vert">
       <Filter>Shaders\Shadow</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Shadow.frag">
-      <Filter>Shaders\Models</Filter>
     </None>
     <None Include="Shaders\BSpline\Vert_BSpline.vert">
       <Filter>Shaders\BSpline</Filter>
@@ -317,6 +293,9 @@
     <None Include="Shaders\Modules\BezierSurfaceUtils.glsl">
       <Filter>Shaders\Modules</Filter>
     </None>
+    <None Include="Shaders\Modules\BSplineUtils.glsl">
+      <Filter>Shaders\Modules</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\cube.obj">
@@ -359,9 +338,6 @@
     </Filter>
     <Filter Include="Shaders\Skybox">
       <UniqueIdentifier>{635ef6e0-8067-4c35-8e10-1577557036a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Conemap">
-      <UniqueIdentifier>{79651dd6-2745-4136-b4ef-fc154eaf69b7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\Models">
       <UniqueIdentifier>{00816edf-bbb7-462c-97e7-3ca45691a18a}</UniqueIdentifier>

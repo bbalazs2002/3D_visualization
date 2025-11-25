@@ -1,5 +1,9 @@
 #include "BezierUtils.glsl"
 
+#ifndef BEZIER_GET_CTRL_POINT
+    #error "BEZIER_GET_CTRL_POINT(i) macro is undefined!"
+#endif
+
 float BernsteinBaseDerivative(int n, int k, float t) {
     // If degree n is 0, the derivative is always 0.
     if (n == 0) {
@@ -31,7 +35,6 @@ struct BezierSurfaceParams{
     float u;
     float v;
     ivec2 ctrlPointCount;
-    vec4 ctrlPoints[];
 };
 
 /**
@@ -46,7 +49,7 @@ vec3 BezierSurface_du(BezierSurfaceParams params) {
         vec3 p_ = vec3(0.0);
         for (int j = 0; j <= m; ++j) {   // u direction (column)
             int index = i * (m + 1) + j; // row-major
-            p_ += BernsteinBaseDerivative(m, j, params.u) * params.ctrlPoints[index].xyz;
+            p_ += BernsteinBaseDerivative(m, j, params.u) * BEZIER_GET_CTRL_POINT(index).xyz;
         }
         p_u += BernsteinBase(n, i, params.v) * p_;
     }
@@ -65,7 +68,7 @@ vec3 BezierSurface_dv(BezierSurfaceParams params) {
         vec3 p_ = vec3(0.0);
         for (int j = 0; j <= m; ++j) {   // u direction (column)
             int index = i * (m + 1) + j; // row-major
-            p_ += BernsteinBase(m, j, params.u) * params.ctrlPoints[index].xyz;
+            p_ += BernsteinBase(m, j, params.u) * BEZIER_GET_CTRL_POINT(index).xyz;
         }
         p_v += BernsteinBaseDerivative(n, i, params.v) * p_;
     }
@@ -80,7 +83,7 @@ vec3 BezierSurface(BezierSurfaceParams params) {
         vec3 p_ = vec3(0.0);
         for (int j = 0; j < params.ctrlPointCount.y; ++j) {      // oszlop (u)
             int index = i * int(params.ctrlPointCount.y) + j;    // row-major
-            p_ += BernsteinBase(int(params.ctrlPointCount.y) - 1, j, params.u) * params.ctrlPoints[index].xyz;
+            p_ += BernsteinBase(int(params.ctrlPointCount.y) - 1, j, params.u) * BEZIER_GET_CTRL_POINT(index).xyz;
         }
         p += BernsteinBase(int(params.ctrlPointCount.x) - 1, i, params.v) * p_;
     }
