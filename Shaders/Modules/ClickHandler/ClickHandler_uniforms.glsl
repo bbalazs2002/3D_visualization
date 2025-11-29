@@ -1,11 +1,15 @@
-// SSBO setter (layout + binding is in the shader)
-#ifndef CLICK_HANDLER_SET_SSBO
-	#error "CLICK_HANDLER_SET_SSBO(i, val) macro is undefined!"
+#ifndef CLICK_HANDLER_MODEL_SSBO
+	#error "CLICK_HANDLER_MODEL_SSBO macro is undefined"
 #endif
 
+layout(early_fragment_tests) in;
+layout(std430, binding = CLICK_HANDLER_MODEL_SSBO) buffer ClickHandlerModelBuffer {
+    vec4 clickHandlerModel[];
+};
+
 struct ClickHandlerUniforms {
-	ivec2 windowSize = ivec2(0,0,);
-	vec2 cursorPos = ivec2(0,0);
-	int modelID = -1;
+	ivec2 windowSize;
+	ivec2 cursorPos;
+	int modelID;
 };
 uniform ClickHandlerUniforms clickHandlerData;

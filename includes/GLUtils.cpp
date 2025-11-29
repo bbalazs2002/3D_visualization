@@ -209,45 +209,71 @@ GLuint AttachShaderCode( const GLuint programID, GLenum shaderType, std::string_
 
 }
 
-void LinkProgram( const GLuint programID, bool OwnShaders )
+void LinkProgram(const GLuint programID, bool OwnShaders)
 {
-	// illesszük össze a shadereket (kimenő-bemenő változók összerendelése stb.)
-	glLinkProgram( programID );
-
-	// linkeles ellenorzese
-	GLint infoLogLength = 0, result = 0;
-
-	glGetProgramiv( programID, GL_LINK_STATUS, &result );
-	glGetProgramiv( programID, GL_INFO_LOG_LENGTH, &infoLogLength );
-	if ( GL_FALSE == result || infoLogLength != 0 )
+	// Require a valid program handle
+	if (programID == 0)
 	{
-		std::string ErrorMessage( infoLogLength, '\0' );
-		glGetProgramInfoLog( programID, infoLogLength, nullptr, ErrorMessage.data() );
-		SDL_LogMessage( SDL_LOG_CATEGORY_ERROR,
-						( result ) ? SDL_LOG_PRIORITY_WARN : SDL_LOG_PRIORITY_ERROR,
-						"[glLinkProgram]: %s", ErrorMessage.data() );
+		SDL_LogMessage(SDL_LOG_CATEGORY_ERROR,
+			SDL_LOG_PRIORITY_ERROR,
+			"LinkProgram: programID is 0 (invalid)!");
+		return;
 	}
 
-	// Ebben az esetben a program objektumhoz tartozik a shader objektum.
-	// Vagyis a shader objektumokat ki tudjuk "törölni".
-    // Szabvány szerint (https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteShader.xhtml)
-    // a shader objektumok csak akkor törlődnek, ha nincsennek hozzárendelve egyetlen program objektumhoz sem.
-	// Vagyis mikor a program objektumot töröljük, akkor törlődnek a shader objektumok is.
-	if ( OwnShaders )
+	// Ensure there is a current GL context on this thread
+	if (SDL_GL_GetCurrentContext() == nullptr)
 	{
-		// kerjuk le a program objektumhoz tartozó shader objektumokat, ...
-        GLint attachedShaders = 0;
-        glGetProgramiv( programID, GL_ATTACHED_SHADERS, &attachedShaders );
-        std::vector<GLuint> shaders( attachedShaders );
+		SDL_LogMessage(SDL_LOG_CATEGORY_ERROR,
+			SDL_LOG_PRIORITY_ERROR,
+			"LinkProgram: No current OpenGL context on this thread!");
+		return;
+	}
 
-        glGetAttachedShaders( programID, attachedShaders, nullptr, shaders.data() );
+	// Link the program
+	glLinkProgram(programID);
 
-        // ... es "toroljuk" oket
-        for ( GLuint shader : shaders )
-        {
-            glDeleteShader( shader );
-        }
+	// Query link status and info log length safely
+	GLint linkStatus = GL_FALSE;
+	GLint infoLogLength = 0;
 
+	glGetProgramiv(programID, GL_LINK_STATUS, &linkStatus);
+	glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+	// Only request the info log if the driver returned a positive length
+	if (infoLogLength > 0)
+	{
+		std::string ErrorMessage(static_cast<size_t>(infoLogLength), '\0');
+		glGetProgramInfoLog(programID, infoLogLength, nullptr, ErrorMessage.data());
+
+		SDL_LogMessage(SDL_LOG_CATEGORY_ERROR,
+			(linkStatus == GL_TRUE) ? SDL_LOG_PRIORITY_WARN : SDL_LOG_PRIORITY_ERROR,
+			"[glLinkProgram]: %s", ErrorMessage.c_str());
+	}
+	else if (linkStatus != GL_TRUE)
+	{
+		// Linking failed but no log provided
+		SDL_LogMessage(SDL_LOG_CATEGORY_ERROR,
+			SDL_LOG_PRIORITY_ERROR,
+			"[glLinkProgram]: Linking failed, no info log available.");
+	}
+
+	// If the program "owns" shaders, delete attached shaders.
+	if (OwnShaders)
+	{
+		GLint attachedShaders = 0;
+		glGetProgramiv(programID, GL_ATTACHED_SHADERS, &attachedShaders);
+
+		if (attachedShaders > 0)
+		{
+			std::vector<GLuint> shaders(static_cast<size_t>(attachedShaders));
+			GLsizei actuallyRetrieved = 0;
+			glGetAttachedShaders(programID, attachedShaders, &actuallyRetrieved, shaders.data());
+
+			for (GLuint shader : shaders)
+			{
+				glDeleteShader(shader);
+			}
+		}
 	}
 }
 

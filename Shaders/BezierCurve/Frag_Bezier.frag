@@ -1,4 +1,5 @@
 #version 430
+layout(early_fragment_tests) in;
 
 // kimenõ érték - a fragment színe
 out vec4 fs_out_col;

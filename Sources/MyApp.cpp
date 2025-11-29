@@ -16,6 +16,7 @@ void CMyApp::SetupDebugCallback()
 
 void CMyApp::InitShaders()
 {
+	/*
 	// Drawing models
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
@@ -32,14 +33,14 @@ void CMyApp::InitShaders()
 	// Bezier
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_Bezier.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
 	m_programBezierSelectedID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_BezierSelected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
 	// B-Spline
@@ -80,6 +81,7 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
 		.Link();
+	*/
 
 	// Shadows
 	/*
@@ -88,6 +90,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Shadow/vert_Shadow.vert")
 		.Link();
 	*/
+
+	// exit(1);
 
 	InitAxesShader();
 	InitSkyboxShader();
@@ -173,11 +177,11 @@ void CMyApp::InitSkyboxGeometry() {
 	{
 		std::vector<glm::vec3>
 		{
-		// back
-		glm::vec3(-1, -1, -1),
-		glm::vec3(1, -1, -1),
-		glm::vec3(1,  1, -1),
-		glm::vec3(-1,  1, -1),
+			// back
+			glm::vec3(-1, -1, -1),
+			glm::vec3(1, -1, -1),
+			glm::vec3(1,  1, -1),
+			glm::vec3(-1,  1, -1),
 			// front
 			glm::vec3(-1, -1, 1),
 			glm::vec3(1, -1, 1),
@@ -187,9 +191,9 @@ void CMyApp::InitSkyboxGeometry() {
 
 		std::vector<GLuint>
 		{
-		// back
-		0, 1, 2,
-		2, 3, 0,
+			// back
+			0, 1, 2,
+			2, 3, 0,
 			// front
 			4, 6, 5,
 			6, 4, 7,
@@ -246,6 +250,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				m_programBezierSurfaceID,
@@ -266,6 +271,7 @@ void CMyApp::InitModels() {
 			32.f,
 			m_modelTextureID, 0, 0, 0
 		});
+		*/
 
 		// Bezier
 		/*
@@ -307,6 +313,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -323,6 +330,7 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// B-Spline
 		/*
@@ -530,7 +538,6 @@ void CMyApp::InitResolutionDependentResources(glm::vec2 bufferSize) {
 		}
 	}
 }
-
 void CMyApp::CleanResolutionDependentResources()
 {
 	glDeleteTextures(1, &m_shadowTextureID);
@@ -591,8 +598,8 @@ void CMyApp::DrawAxes() const
 	glUseProgram(m_programAxesID);
 
 	glm::mat4 axisWorld = glm::translate(m_camera.GetAt());
-	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "viewProj"), 1, GL_FALSE, glm::value_ptr(m_camera.GetViewProj()));
-	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "world"), 1, GL_FALSE, glm::value_ptr(axisWorld));
+	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(m_camera.GetViewProj()));
+	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(axisWorld));
 
 	// We always want to see it, regardless of whether there is an object in front of it
 	glDisable(GL_DEPTH_TEST);
@@ -652,13 +659,13 @@ void CMyApp::Render() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RenderModels();
+	// RenderModels();
 	if (m_showAxes) {
 		DrawAxes();
 	}
-	// RenderSkybox();
+	RenderSkybox();
 
-	exit(1);
+	// exit(1);
 
 }
 

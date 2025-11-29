@@ -1,44 +1,25 @@
 #version 430 core
 
-// === Control points SSBO ===
-layout(std430, binding = 1) buffer ctrlPointsSSBO {
-    vec4 ctrlPoints[];
-};
-vec4 BSplineGetCtrlPoint(int i) {
-    return ctrlPoints[i];
-}
-#define BSPLINE_GET_CTRL_POINT BSplineGetCtrlPoint
+#define BSPLINE_CTRL_POINTS_SSBO 1
+#define BSPLINE_KNOTS_SSBO 2
+#include "../Modules/ObjectTypes/BSpline/BSpline_uniforms.glsl"
+#include "../Modules/ObjectTypes/BSpline/BSpline.glsl"
 
-// === Knot vector SSBO ===
-layout(std430, binding = 2) buffer knotSSBO {
-    float knots[];
-};
-float BSplineGetKnot(int i) {
-    return knots[i];
-}
-#define BSPLINE_GET_KNOT BSplineGetKnot
-
-uniform mat4 viewProj;
-uniform int ctrlPointCount = 4; // Kontrollpontok száma
-uniform int knotCount = 8;      // Csomópontok száma
-uniform int degree = 3;         // Fokszám
-uniform int division = 50;      // Kiértékelési lépések
-
-#include "../Modules/BSplineUtils.glsl"
+// camera
+#include "../Modules/Camera/Camera_uniforms.glsl"
+#include "../Modules/Camera/Camera.glsl"
 
 void main()
 {
-    int div = max(2, division); 
-    float tStart = GetTStart(GetTParams(degree, knotCount));
-    float tEnd = GetTEnd(GetTParams(degree, knotCount));
+    int div = max(2, BSplineData.division);
+    float tStart = BSplineGetTStart(GetTParams(BSplineData.degree, BSplineData.knotCount));
+    float tEnd = BSplineGetTEnd(GetTParams(BSplineData.degree, BSplineData.knotCount));
     float deltaT = (tEnd - tStart) / float(div - 1);
     int index = gl_VertexID;
     float t = tStart + deltaT * float(index);
 
-    gl_Position = viewProj * vec4(BSpline(BSplineParams(
-        degree, t,
-        knotCount, ctrlPointCount
-    )), 1);
-
-    // gl_Position = viewProj * ctrlPoints[index];
+    gl_Position = CameraViewProj(vec4(BSpline(BSplineParams(
+        BSplineData.degree, t,
+        BSplineData.knotCount, BSplineData.ctrlPointCount
+    )), 1));
 }

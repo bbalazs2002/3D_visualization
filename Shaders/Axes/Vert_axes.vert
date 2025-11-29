@@ -3,9 +3,13 @@
 // Variables going forward through the pipeline
 out vec3 vs_out_color;
 
-// External parameters of the shader
-uniform mat4 world;
-uniform mat4 viewProj;
+// tramsform
+#include "../Modules/Transform/Transform_uniforms.glsl"
+#include "../Modules/Transform/Transform.glsl"
+
+// camera
+#include "../Modules/Camera/Camera_uniforms.glsl"
+#include "../Modules/Camera/Camera.glsl"
 
 const vec4 positions[6] = vec4[6](
 	// 1. segment (X)
@@ -31,7 +35,8 @@ const vec3 colors[6] = vec3[6](
 void main()
 {
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/gl_VertexID.xhtml
-	gl_Position = viewProj * world * positions[gl_VertexID];
+	// gl_Position = CameraViewProj(Transform(positions[gl_VertexID]));
+	gl_Position = positions[gl_VertexID];
 	vs_out_color = colors[gl_VertexID];
 }
 

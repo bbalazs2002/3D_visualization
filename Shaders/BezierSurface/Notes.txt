@@ -1,0 +1,51 @@
+The vertex shader could have several primitive types. It works with triangles now, but I wrote a method for point cloud:
+void main() {
+
+    int index = gl_VertexID;
+
+    int u = index % division.x;
+    int v = int(floor(float(index) / float(division.x)));
+
+    int divu = int(division.x);
+    float deltau = 1.f / float(divu - 1);
+
+    int divv = int(division.y);
+    float deltav = 1.f / float(divv - 1);
+    
+    vec4 p = vec4(BSurface(u * deltau, v * deltav), 1);
+    gl_Position = viewProj * p;
+}
+
+and I plan to write one for triangle_strip:
+void main()
+{
+    // TRIANGLE_STRIP
+    float w = 1.f / division.x;
+    float h = 1.f / division.y;
+
+    int period = 2 + cols * 4;
+    int blockID = int(floor(gl_VertexID / period));
+    int correctID = gl_VertexID - blockID * period;
+
+    int sgn = int(round(max(0.0, sign(period / 2.0 - correctID))));       // (-inf; 0] => 0, (0; +inf) => 1
+
+    float x = position.x
+        + sgn * ((correctID - (correctID % 2)) / 2.0) * w                                     // position if the vertex is in the upper row of the block
+        + (1 - sgn) * (cols - ((correctID + (correctID % 2)) / 2.0 - (cols + 1.0))) * w;      // position if the vertex is in the lower row of the block
+
+    float z = position.z
+        + h * (
+            blockID * 2.0                                   // number of rows before this block
+            + sgn * (correctID % 2)                         // relative position to the block for the upper row
+            + (1 - sgn) * (1.0 + (1.0 - (correctID % 2)))   // relative position to the block for the lower row
+        );
+  
+    vec2 texPos = vec2((x - position.x) / width, (z - position.z) / height);
+    vs_out_color = texture(texImage, texPos);
+    // vs_out_color = vec4(.0, 1., .0, 1.);
+    // vec4 hTex = texture(hightMapImage, texPos);
+    gl_Position = viewProj * world * vec4(x, position.y + texture(hightMapImage, texPos).g * heightMult, z, 1.0);
+    // gl_Position = viewProj * world * vec4(x, 0.0, z, 1.0);
+}
+
+That would be more efficient.

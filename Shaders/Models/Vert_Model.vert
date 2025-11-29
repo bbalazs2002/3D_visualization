@@ -10,9 +10,13 @@ out vec3 vs_out_pos;
 out vec2 vs_out_tex;
 out vec3 vs_out_norm;
 
-// uniforms
-uniform mat4 world;
-uniform mat4 viewProj;
+// camera
+#include "../Modules/Camera/Camera_uniforms.glsl"
+#include "../Modules/Camera/Camera.glsl"
+
+// transform
+#include "../Modules/Transform/Transform_uniforms.glsl"
+#include "../Modules/Transform/Transform.glsl"
 
 void main()
 {
@@ -28,7 +32,6 @@ void main()
 	// vs_out_tex = vec2(1.f - vs_in_tex.y, vs_in_tex.x);
 	// vs_out_tex = vec2(1.f - vs_in_tex.y, 1.f - vs_in_tex.x);
 
-	vs_out_pos = (world * vec4( vs_in_pos, 1 )).xyz;
-
-	gl_Position = viewProj * world * vec4( vs_in_pos, 1 );
+	vs_out_pos = Transform(vec4(vs_in_pos, 1)).xyz;
+	gl_Position = CameraViewProj(Transform(vec4( vs_in_pos, 1 )));
 }

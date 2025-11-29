@@ -1,0 +1,34 @@
+float[13] MaterialPrepare(vec2 texCoord) {
+    // --- Material Preparation (Texture Sampling) ---
+    vec3 diffuseColor = materialData.diffuseColorTex.xyz;
+    if (materialData.diffuseColorTex.w > 0.5) {
+        diffuseColor = texture(MaterialDiffuseTex, texCoord).rgb;
+    }
+
+    vec3 specularColor = materialData.specularColorTex.xyz;
+    if (materialData.specularColorTex.w > 0.5) {
+        specularColor = texture(MaterialSpecularTex, texCoord).rgb;
+    }
+
+    vec3 ambientColor = materialData.ambientColorEmissionTex.xyz;
+    vec3 emissionColor = vec3(0.0);
+    if (materialData.ambientColorEmissionTex.w > 0.5) {
+        emissionColor = texture(MaterialEmissionTex, texCoord).rgb;
+    }
+
+    // --- Packing into float[12]
+    float[13] value = float[13](
+        // ambientColor
+        ambientColor.r, ambientColor.g, ambientColor.b,
+        // diffuseColor
+        diffuseColor.r, diffuseColor.g, diffuseColor.b,
+        // specularColor
+        specularColor.r, specularColor.g, specularColor.b,
+        // emissionColor
+        emissionColor.r, emissionColor.g, emissionColor.b,
+        // shininess
+        materialData.shininess
+    );
+
+    return value;
+}

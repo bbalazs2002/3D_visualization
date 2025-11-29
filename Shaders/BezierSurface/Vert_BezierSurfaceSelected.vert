@@ -1,15 +1,15 @@
 #version 430 core
 
-// SSBO bound to binding point 1
-layout(std430, binding = 1) buffer ctrlPointsSSBO {
-    vec4 ctrlPoints[];   // flexible array member
-};
+// BezierSurface
+#define BEZIER_SURFACE_CTRL_POINTS_SSBO 1
+#include "../Modules/ObjectTypes/BezierSurface/BezierSurface_uniforms.glsl"
 
-uniform mat4 viewProj;
-uniform ivec2 ctrlPointCount = ivec2(5, 5);
+// camera
+#include "../Modules/Camera/Camera_uniforms.glsl"
+#include "../Modules/Camera/Camera.glsl"
 
 void main()
 {
 	int index = gl_VertexID;
-	gl_Position = viewProj * ctrlPoints[index];
+	gl_Position = CameraViewProj(bezierSurfaceCtrlPoints[index]);
 }

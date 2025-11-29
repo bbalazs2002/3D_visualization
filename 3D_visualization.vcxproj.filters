@@ -215,18 +215,6 @@
     <None Include="Shaders\Models\Vert_Model.vert">
       <Filter>Shaders\Models</Filter>
     </None>
-    <None Include="Shaders\Debug\Frag_Points.frag">
-      <Filter>Shaders\Debug</Filter>
-    </None>
-    <None Include="Shaders\Debug\Vert_Points.vert">
-      <Filter>Shaders\Debug</Filter>
-    </None>
-    <None Include="Shaders\Debug\Vert_Cones.vert">
-      <Filter>Shaders\Debug</Filter>
-    </None>
-    <None Include="Shaders\Debug\Geom_Cones.geom">
-      <Filter>Shaders\Debug</Filter>
-    </None>
     <None Include="Shaders\Models\Frag_Lighting.frag">
       <Filter>Shaders\Models</Filter>
     </None>
@@ -235,12 +223,6 @@
     </None>
     <None Include="Shaders\Models\Vert_Selected.vert">
       <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Bezier\Vert_Bezier.vert">
-      <Filter>Shaders\Bezier</Filter>
-    </None>
-    <None Include="Shaders\Bezier\Frag_Bezier.frag">
-      <Filter>Shaders\Bezier</Filter>
     </None>
     <None Include="Shaders\Shadow\Vert_Shadow.vert">
       <Filter>Shaders\Shadow</Filter>
@@ -269,9 +251,6 @@
     <None Include="Shaders\Frag_Simple.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Bezier\Vert_BezierSelected.vert">
-      <Filter>Shaders\Bezier</Filter>
-    </None>
     <None Include="Shaders\BSpline\Vert_BSplineSelected.vert">
       <Filter>Shaders\BSpline</Filter>
     </None>
@@ -284,22 +263,7 @@
     <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurveSelected.vert">
       <Filter>Shaders\DiscreteCurve</Filter>
     </None>
-    <None Include="Shaders\Modules\BezierUtils.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
     <None Include="Shaders\Modules\Math.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
-    <None Include="Shaders\Modules\BezierSurfaceUtils.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
-    <None Include="Shaders\Modules\BSplineUtils.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
-    <None Include="Shaders\Modules\Material.glsl">
-      <Filter>Shaders\Modules</Filter>
-    </None>
-    <None Include="Shaders\Modules\Light.glsl">
       <Filter>Shaders\Modules</Filter>
     </None>
     <None Include="Shaders\Modules\ClickHandler\ClickHandler_uniforms.glsl">
@@ -307,6 +271,69 @@
     </None>
     <None Include="Shaders\Modules\ClickHandler\ClickHandler.glsl">
       <Filter>Shaders\Modules\ClickHandler</Filter>
+    </None>
+    <None Include="Shaders\Modules\Material\Material.glsl">
+      <Filter>Shaders\Modules\Material</Filter>
+    </None>
+    <None Include="Shaders\Modules\Camera\Camera.glsl">
+      <Filter>Shaders\Modules\Camera</Filter>
+    </None>
+    <None Include="Shaders\Modules\Camera\Camera_uniforms.glsl">
+      <Filter>Shaders\Modules\Camera</Filter>
+    </None>
+    <None Include="Shaders\Modules\Transform\Transform.glsl">
+      <Filter>Shaders\Modules\Transform</Filter>
+    </None>
+    <None Include="Shaders\Modules\Transform\Transform_uniforms.glsl">
+      <Filter>Shaders\Modules\Transform</Filter>
+    </None>
+    <None Include="Shaders\Modules\Color\Color.glsl">
+      <Filter>Shaders\Modules\Color</Filter>
+    </None>
+    <None Include="Shaders\Modules\Color\Color_uniforms.glsl">
+      <Filter>Shaders\Modules\Color</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BezierCurve\BezierCurve.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BezierCurve</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BezierCurve\BezierCurve_uniforms.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BezierCurve</Filter>
+    </None>
+    <None Include="Shaders\BezierCurve\Vert_Bezier.vert">
+      <Filter>Shaders\BezierCurve</Filter>
+    </None>
+    <None Include="Shaders\BezierCurve\Vert_BezierSelected.vert">
+      <Filter>Shaders\BezierCurve</Filter>
+    </None>
+    <None Include="Shaders\BezierCurve\Frag_Bezier.frag">
+      <Filter>Shaders\BezierCurve</Filter>
+    </None>
+    <None Include="Shaders\Modules\Material\Material_uniforms.glsl">
+      <Filter>Shaders\Modules\Material</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light\Light.glsl">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light\Light_uniforms.glsl">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BSpline\BSpline.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BSpline</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BSpline\BSpline_uniforms.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BSpline</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\DiscreteCurve\DiscreteCurve.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\DiscreteCurve</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\DiscreteCurve\DiscreteCurve_uniforms.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\DiscreteCurve</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BezierSurface\BezierSurface.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BezierSurface</Filter>
+    </None>
+    <None Include="Shaders\Modules\ObjectTypes\BezierSurface\BezierSurface_uniforms.glsl">
+      <Filter>Shaders\Modules\ObjectTypes\BezierSurface</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -354,12 +381,6 @@
     <Filter Include="Shaders\Models">
       <UniqueIdentifier>{00816edf-bbb7-462c-97e7-3ca45691a18a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\Debug">
-      <UniqueIdentifier>{bb056941-0079-493f-95ca-2cae444d7822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Bezier">
-      <UniqueIdentifier>{057c0e8f-7db8-44dd-81b0-2e6be86924d1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Shadow">
       <UniqueIdentifier>{090520a3-be30-4e98-8534-672812a7f5aa}</UniqueIdentifier>
     </Filter>
@@ -389,6 +410,39 @@
     </Filter>
     <Filter Include="Shaders\Modules\ClickHandler">
       <UniqueIdentifier>{e4ba56b0-57af-45d6-abaa-dfbcf30bf23a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\Material">
+      <UniqueIdentifier>{f3d0d101-9787-4495-8beb-6117b00d959f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\Camera">
+      <UniqueIdentifier>{24e72b45-d06a-4e34-955b-8a6809737171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\Transform">
+      <UniqueIdentifier>{5d40370e-d6dc-45ec-9b88-4963f20e7e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\Color">
+      <UniqueIdentifier>{beb8dd80-5c50-4c0c-a1ba-c0df10eabc4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ObjectTypes">
+      <UniqueIdentifier>{7448a575-4865-4d28-b342-0c31e82d3f67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ObjectTypes\BezierCurve">
+      <UniqueIdentifier>{a4316a89-aec4-4b41-aca4-46ddc6344beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\BezierCurve">
+      <UniqueIdentifier>{057c0e8f-7db8-44dd-81b0-2e6be86924d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\Light">
+      <UniqueIdentifier>{5e47b509-7b9d-4086-91df-c2fb2386d3be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ObjectTypes\BSpline">
+      <UniqueIdentifier>{612f8163-a9ac-4ecd-915f-3d318d85aeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ObjectTypes\DiscreteCurve">
+      <UniqueIdentifier>{5716852c-d95b-41ba-a681-e7de6b0eb9b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Modules\ObjectTypes\BezierSurface">
+      <UniqueIdentifier>{eda74913-6985-4b07-aeda-c71745fda4d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
