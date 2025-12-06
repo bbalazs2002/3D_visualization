@@ -1,13 +1,15 @@
 #version 430 core
 
-// === Control points SSBO ===
-layout(std430, binding = 1) buffer ctrlPointsSSBO {
-    vec4 ctrlPoints[];
-};
+// BSpline
+#define BSPLINE_CTRL_POINTS_SSBO 1
+#define BSPLINE_KNOTS_SSBO 2
+#include "../Modules/ObjectTypes/BSpline/BSpline_uniforms.glsl"
 
-uniform mat4 viewProj;
+// camera
+#include "../Modules/Camera/Camera_uniforms.glsl"
+#include "../Modules/Camera/Camera.glsl"
 
 void main() {
     int index = gl_VertexID;
-    gl_Position = viewProj * ctrlPoints[index];
+    gl_Position = CameraViewProj(BSplineCtrlPoints[index]);
 }

@@ -1,19 +1,22 @@
 #pragma once
 
-// C++ libraries
-#include <filesystem>
-#include <iterator>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <algorithm>
-#include <memory>
-#include <cmath>
-#include <numeric>
-
 // preprocessor config
 #include "config.h"
+
+// C++ libraries
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <filesystem>
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <numeric>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <math.h>
 
 // GLM
 #include <glm/glm.hpp>
@@ -59,11 +62,11 @@
 #include "Material.h"
 #include "Light.h"
 #include "Types.h"
-#include "Mesh.h"
-#include "ModelLoader.h"
+#include "Models/Mesh.h"
+#include "Models/ModelLoader.h"
 #include "ModelBase.h"
-#include "Model.h"
-#include "Curves/Bezier.h"
+#include "Models/Model.h"
+#include "Curves/BezierCurve.h"
 #include "Curves/BSpline.h"
 #include "Curves/BSplineInterpolation.h"
 #include "Curves/DiscreteCurve.h"

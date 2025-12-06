@@ -8,7 +8,7 @@ protected:
 	GLuint m_programID;
 	GLuint m_programSelectedID;
 	std::vector<Transformation*> m_transforms{};
-	glm::mat4 m_transform{};
+	glm::mat4 m_transform{glm::identity<glm::mat4>()};
 	bool m_show;
 	int m_drawMode;
 	std::string m_name;
@@ -54,7 +54,7 @@ public:
 		else {
 			m_name = params.name;
 		}
-		std::strcpy(m_objNameBuffer, m_name.c_str());
+		strcpy_s(m_objNameBuffer, m_name.c_str());
 
 		++ModelBase::count;
 	}
@@ -80,7 +80,7 @@ public:
 		m_name = m_objNameBuffer;
 	}
 	void SetName(const char* name) {
-		std::strcpy(m_objNameBuffer, name);
+		strcpy_s(m_objNameBuffer, name);
 		SetName();
 	}
 

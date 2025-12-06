@@ -32,14 +32,14 @@ void CMyApp::InitShaders()
 	// Bezier
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_Bezier.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
 	m_programBezierSelectedID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Bezier/Vert_BezierSelected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Bezier/Frag_Bezier.frag")
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
 	// B-Spline
@@ -89,6 +89,8 @@ void CMyApp::InitShaders()
 		.Link();
 	*/
 
+	// exit(1);
+
 	InitAxesShader();
 	InitSkyboxShader();
 }
@@ -104,7 +106,7 @@ void CMyApp::CleanShaders()
 	m_programBezierID = 0;
 	glDeleteProgram(m_programBezierSelectedID);
 	m_programBezierSelectedID = 0;
-	
+
 	glDeleteProgram(m_programBSplineID);
 	m_programBSplineID = 0;
 	glDeleteProgram(m_programBSplineSelectedID);
@@ -229,8 +231,8 @@ void CMyApp::InitModels() {
 				true, false
 			}
 		));
-		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{6, 5}, std::vector<glm::vec4>{
-				glm::vec4{ -2,2,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
+		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 6, 5 }, std::vector<glm::vec4>{
+			glm::vec4{ -2,2,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
 				glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,2,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
 				glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,10,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
 				glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,2,1,1 }, glm::vec4{ 2,0,1,1 },
@@ -239,10 +241,10 @@ void CMyApp::InitModels() {
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
 			"Bezier-surface-material",
-			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
+			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
-		});
+			});
 		*/
 
 		// Bezier-surface
@@ -266,13 +268,13 @@ void CMyApp::InitModels() {
 			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
-			});
+		});
 		*/
 
-		// Bezier
+		// Bezier-curve
 		/*
-		m_models.push_back(new Bezier(
-			BezierParams{
+		m_models.push_back(new BezierCurve(
+			BezierCurveParams{
 				m_programBezierID,
 				m_programBezierSelectedID,
 				10,
@@ -280,7 +282,7 @@ void CMyApp::InitModels() {
 				true
 			}
 		));
-		((Bezier*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
+		((BezierCurve*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
 			glm::vec4{ 0,0,0,1 },
 			glm::vec4{ 5,0,0,1 },
 			glm::vec4{ 0,5,0,1 },
@@ -295,7 +297,7 @@ void CMyApp::InitModels() {
 				m_programModelID,
 				m_programSelectedID,
 				"Cube",
-				false
+				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
@@ -309,13 +311,12 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
 				m_programSelectedID,
 				"Equinox",
-				false
+				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
@@ -326,9 +327,9 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
-		*/
 
 		// B-Spline
+		/*
 		m_models.push_back(new BSpline(
 			BSplineParams{
 				m_programBSplineID,
@@ -349,6 +350,7 @@ void CMyApp::InitModels() {
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
 		((BSpline*)m_models[m_models.size() - 1])->SetKnots(std::vector<float>{0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2});
+		*/
 
 		// Semi circle interpolation
 		/*
@@ -362,7 +364,6 @@ void CMyApp::InitModels() {
 			m_programBSplineID,
 			m_programBSplineSelectedID,
 			10,
-			std::vector<float>{},
 			"B-Spline-2",
 			false
 		});
@@ -390,7 +391,6 @@ void CMyApp::InitModels() {
 			m_programBSplineID,
 			m_programBSplineSelectedID,
 			10,
-			std::vector<float>{},
 			"B-Spline-3",
 			false
 		});
@@ -491,14 +491,28 @@ void CMyApp::InitBuffers() {
 	glGenBuffers(1, &m_ModelIDBufferID);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_COPY);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ModelIDBufferID);
+
+	InitLightBuffer();
 
 	// framebuffer for shadow texture
 	// glCreateFramebuffers(1, &m_FBOShadowID);
 }
+void CMyApp::InitLightBuffer() {
+	// clear old buffer if exists
+	if (m_LightsBufferID > 0) {
+		glDeleteBuffers(1, &m_LightsBufferID);
+	}
+	// SSBO for lights
+	glGenBuffers(1, &m_LightsBufferID);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightsBufferID);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 6 * m_lights.size(), nullptr, GL_DYNAMIC_DRAW);
+}
 void CMyApp::CleanBuffers() {
 	glDeleteBuffers(1, &m_ModelIDBufferID);
 	m_ModelIDBufferID = 0;
+
+	glDeleteBuffers(1, &m_LightsBufferID);
+	m_LightsBufferID = 0;
 
 	// glDeleteFramebuffers(1, &m_FBOShadowID);
 	// m_FBOShadowID = 0;
@@ -534,7 +548,6 @@ void CMyApp::InitResolutionDependentResources(glm::vec2 bufferSize) {
 		}
 	}
 }
-
 void CMyApp::CleanResolutionDependentResources()
 {
 	glDeleteTextures(1, &m_shadowTextureID);
@@ -595,8 +608,8 @@ void CMyApp::DrawAxes() const
 	glUseProgram(m_programAxesID);
 
 	glm::mat4 axisWorld = glm::translate(m_camera.GetAt());
-	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "viewProj"), 1, GL_FALSE, glm::value_ptr(m_camera.GetViewProj()));
-	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "world"), 1, GL_FALSE, glm::value_ptr(axisWorld));
+	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(m_camera.GetViewProj()));
+	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(axisWorld));
 
 	// We always want to see it, regardless of whether there is an object in front of it
 	glDisable(GL_DEPTH_TEST);
@@ -612,13 +625,20 @@ void CMyApp::RenderModels() const {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glm::vec4 defObjID = glm::vec4(-1.f);
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(glm::vec4), &defObjID);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	// bind the buffer to binding point 0
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ModelIDBufferID);
 
+	// update light buffer
+	Light::UploadLightToSSBO(m_LightsBufferID, m_lights.size(), m_lights.data());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_LightsBufferID);
+
+	// Render all models
 	int objCount = 0;
-	glm::vec2 cursorPos = glm::vec2(m_cursorPos.x, m_cursorPos.y);
 	for (auto m : m_models) {
 		RenderParams rp{
-			m_lineWidth, m_camera.GetEye(), std::vector<glm::vec4>{m_lightPos},
-			objCount, cursorPos, glm::vec2(m_width, m_height),
+			m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
+			objCount, m_cursorPos, glm::ivec2(m_width, m_height),
 			m_camera.GetViewProj(), (m_selectedModel == objCount),
 			m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
 		};
@@ -657,6 +677,17 @@ void CMyApp::Render() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	/* TODO : IDrawable for lights
+	m_lights[m_selectedLight]->render(
+		RenderParams rp{
+				m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
+				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
+				m_camera.GetViewProj(), true,
+				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
+		};
+	);
+	*/
+
 	RenderModels();
 	if (m_showAxes) {
 		DrawAxes();
@@ -694,12 +725,11 @@ void CMyApp::RenderGUI()
 
 	// GLOBAL OPTIONS WINDOW
 	if (ImGui::Begin("Options window")) {
-		ImGui::Text("Render resolution %dx%d", m_width, m_height);
+		ImGui::Text("Render resolution: %dx%d", m_width, m_height);
 		std::stringstream cursorPos;
 		cursorPos << "Cursor position: " << m_cursorPos[0] << "; " << m_cursorPos[1];
 		ImGui::Text(cursorPos.str().c_str());
 		ImGui::Checkbox("Show axes", &m_showAxes);
-		ImGui::SliderFloat3("Light position", &m_lightPos[0], -10.f, 10.f);
 		ImGui::InputInt("Shown mesh", &CMyApp::MeshID);
 		ImGui::InputInt("Selected model", &m_selectedModel);
 		if (ImGui::BeginCombo("Select model", (m_selectedModel >= 0 && m_selectedModel < m_models.size()) ? m_models[m_selectedModel]->GetName().c_str() : ""))
@@ -734,8 +764,8 @@ void CMyApp::RenderGUI()
 		}
 		// Add new curve
 		if (ImGui::Button("Add Bezier-curve")) {
-			m_models.push_back(new Bezier(
-				BezierParams{
+			m_models.push_back(new BezierCurve(
+				BezierCurveParams{
 					m_programBezierID,
 					m_programBezierSelectedID
 				}
@@ -776,6 +806,43 @@ void CMyApp::RenderGUI()
 				std::cout << m->toString() << std::endl;
 			}
 			std::cout << "---------------------------------------------" << std::endl;
+		}
+	}
+	ImGui::End();
+
+	// LIGHT OPTION WINDOW
+	if (ImGui::Begin("Light options")) {
+		ImGui::InputInt("Selected light", &m_selectedLight);
+		if (m_selectedLight >= 0 && m_selectedLight < m_lights.size()) {
+			int i = m_selectedLight;
+			ImGui::SliderFloat3("Position", &m_lights[i]->position.x, -10.f, 10.f);
+			ImGui::SliderFloat3("Direction", &m_lights[i]->direction.x, -10.f, 10.f);
+			ImGui::SliderFloat3("La", &m_lights[i]->La.x, -10.f, 10.f);
+			ImGui::SliderFloat3("Ld", &m_lights[i]->Ld.x, -10.f, 10.f);
+			ImGui::SliderFloat3("Ls", &m_lights[i]->Ls.x, -10.f, 10.f);
+			ImGui::Text("Attenuation");
+			ImGui::SliderFloat("Constant", &m_lights[i]->constantAttenuation, -10.f, 10.f);
+			ImGui::SliderFloat("Linear", &m_lights[i]->linearAttenuation, -10.f, 10.f);
+			ImGui::SliderFloat("Quadratic", &m_lights[i]->quadraticAttenuation, -10.f, 10.f);
+
+			int type = m_lights[i]->GetType();
+			if (ImGui::InputInt("Type", &type)) {
+				m_lights[i]->SetType(type);
+			}
+
+			ImGui::SliderFloat("Inner angle (rad)", &m_lights[i]->innerAngle, 0, M_PI);
+			ImGui::SliderFloat("Outer angle (rad)", &m_lights[i]->outerAngle, 0, M_PI);
+			if (ImGui::Button("Delete Light")) {
+				delete(m_lights[i]);
+				m_lights.erase(m_lights.begin() + i);
+				InitLightBuffer();
+				ImGui::End();
+				return;
+			}
+		}
+		if (ImGui::Button("Add Light")) {
+			m_lights.push_back(new Light());
+			InitLightBuffer();
 		}
 	}
 	ImGui::End();
@@ -895,7 +962,7 @@ void CMyApp::KeyboardUp(const SDL_KeyboardEvent& key)
 
 void CMyApp::MouseMove(const SDL_MouseMotionEvent& mouse)
 {
-	m_cursorPos = glm::vec2(mouse.x, mouse.y);
+	m_cursorPos = glm::ivec2(mouse.x, mouse.y);
 	m_cursorMoved = true;
 	m_cameraManipulator.MouseMove(mouse);
 }
@@ -912,7 +979,7 @@ void CMyApp::MouseUp(const SDL_MouseButtonEvent& mouse)
 	if (!m_cursorMoved) {
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 		glm::vec4* activeObj = (glm::vec4*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-		m_selectedModel = activeObj->x;
+		m_selectedModel = (int)std::round(activeObj->x);
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	}
 }
@@ -938,4 +1005,4 @@ void CMyApp::Resize(int _w, int _h)
 
 void CMyApp::OtherEvent(const SDL_Event& ev)
 {
-}
+}////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

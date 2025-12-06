@@ -21,12 +21,7 @@ void ModelBase::RenderGUIBase() {
 	// Transformations
 	bool applyTransforms = m->GetApplyTransforms();
 	if (ImGui::Checkbox("apply transforms", &applyTransforms)) {
-		if (m->GetType() == MODEL_TYPE_BEZIER) {
-			((Bezier*)m)->SetApplyTransforms(applyTransforms);
-		}
-		else {
-			m->SetApplyTransforms(applyTransforms);
-		}
+		m->SetApplyTransforms(applyTransforms);
 	}
 
 	ImGui::Spacing();

@@ -1,6 +1,6 @@
 #include "../../Headers/include_all.h"
 
-DiscreteCurve::DiscreteCurve(DiscreteCurveParams params) : ModelBase(BEZIER2MODELBASE) {
+DiscreteCurve::DiscreteCurve(DiscreteCurveParams params) : ModelBase(DISCRETECURVE2MODELBASE) {
 	m_type = MODEL_TYPE_DISCRETECURVE;
 	m_ctrlPoints = {
 		glm::vec4{0,0,0,1},
@@ -18,12 +18,14 @@ void DiscreteCurve::Render(RenderParams* p) {
 		return;
 	}
 
+	// -- Check if the surface can be rendered --
 	if (GetCtrlPoints().size() < 2) {
 		Log::errorToConsole("DiscreteCurve \"", GetName().c_str(), "\" has too few control points");
 		SetShow(false);
 		return;
 	}
 
+	// -- Update ctrlPoints SSBO and transformation matrix if needed --
 	bool transformsReset = false;
 	// check if any of the transformations is changed
 	bool isDirty = false;
@@ -48,54 +50,61 @@ void DiscreteCurve::Render(RenderParams* p) {
 		WriteCtrlPointsSSBO();
 	}
 
-	GLuint progID = GetProgramID();
-	glUseProgram(progID);
-
-	// set SSBO
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
-
-	// set uniforms
-	glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-	glUniform3fv(ul(progID, "color"), 1, glm::value_ptr(GetColor()));
-
-	// set line width
+	// -- Set render options --
 	GLfloat lineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
 	glLineWidth(p->lineWidth);
 
-	glDrawArrays(m_drawMode, 0, GetCtrlPoints().size());
+	// -- Activate shader --
+	GLuint progID = GetProgramID();
+	glUseProgram(progID);
 
-	// reset gl state
+	// -- Set shader input data --
+	// Discrete curve module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
+
+	// -- Draw call --
+	glDrawArrays(m_drawMode, 0, GetCtrlPointCount());
+
+	// -- Restore initial OGL state --
 	glLineWidth(lineWidth);
+	glUseProgram(0);
 
+	// -- Render selection if needed --
 	if (p->selected) {
 		RenderSelection(p);
 	}
 }
 void DiscreteCurve::RenderSelection(RenderParams* p) {
+	// -- Activate shader --
 	GLuint progID = GetProgramSelectedID();
 	glUseProgram(progID);
 
-	// set SSBO
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
-
-	// set uniforms
-	glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-	glUniform3fv(ul(progID, "selColor"), 1, glm::value_ptr(p->selectionColor));
-	glUniform1i(ul(progID, "isSelection"), 1);
-
-	// set point size
+	// -- Set render options --
 	GLfloat pointSize;
 	glGetFloatv(GL_POINT_SIZE, &pointSize);
 	glPointSize(p->selectionWidth);
 
-	// draw control points
-	glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());
+	// -- Set shader input data --
+	// Discrete curve module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
 
-	// reset gl state
+	// -- Draw call --
+	glDrawArrays(GL_POINTS, 0, GetCtrlPointCount());
+
+	// -- Restore initial OGL state --
 	glPointSize(pointSize);
-
-	return;
+	glUseProgram(0);
 }
 void DiscreteCurve::RenderGUI(std::vector<ModelBase*>* models) {
 	ImGui::Text("Discrete-curve specific options");

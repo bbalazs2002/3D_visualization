@@ -2,12 +2,6 @@
 
 #include "include_all.h"
 
-struct SUpdateInfo
-{
-	float ElapsedTimeInSec = 0.0f;	// Elapsed time since start of the program
-	float DeltaTimeInSec = 0.0f;	// Elapsed time since last update
-};
-
 class CMyApp
 {
 public:
@@ -15,7 +9,12 @@ public:
 	inline static int MeshID = -1;
 
 	CMyApp() {}
-	~CMyApp() {}
+	~CMyApp() {
+		for (int i = 0; i < m_lights.size(); ++i) {
+			delete(m_lights[i]);
+			m_lights[i] = nullptr;
+		} 
+	}
 
 	bool Init();
 	void Clean();
@@ -40,12 +39,22 @@ protected:
 	// Variables
 	//
 	int m_width = 0, m_height = 0;
-	glm::vec2 m_cursorPos = glm::vec2(0, 0);
+	glm::ivec2 m_cursorPos = glm::ivec2(0, 0);
 	float m_ElapsedTimeInSec = 0.0f;
 	int m_selectedModel = -1;
+	int m_selectedLight = -1;
 	float m_selectionWidth = 2.f;
 	float m_lineWidth = 1.f;
 	bool m_cursorMoved = false;
+
+	bool m_showAxes = true;
+	bool m_renderShadows = true;
+	int m_shadowBufferSize = 1024;
+
+	std::vector<glm::vec4> m_newIntpolPoints{};
+	std::vector<float> m_newTParams{};
+
+	glm::vec3 m_selColor{ 1, 0, 0 };
 
 	// Camera
 	Camera m_camera;
@@ -78,9 +87,6 @@ protected:
 	OGLObject m_SkyboxGPU = {};
 	std::vector<ModelBase*> m_models{};
 
-	// Light sources
-	std::vector<Light*> m_lights{};
-
 	// Geometry initialization and termination
 	void InitGeometry();
 	void CleanGeometry();
@@ -95,7 +101,7 @@ protected:
 	GLuint m_shadowTextureID = 0;
 
 	// Lighting
-	glm::vec4 m_lightPos = glm::vec4(1.0, 1.0, 0.0, 0.0);
+	std::vector<Light*> m_lights{new Light()};
 
 	// Texture initialization
 	void InitTexture();
@@ -107,24 +113,16 @@ protected:
 
 	// Buffer IDs
 	GLuint m_ModelIDBufferID = 0;
+	GLuint m_LightsBufferID = 0;
 	GLuint m_FBOShadowID = 0;
 
 	// Buffer initialization
 	void InitBuffers();
+	void InitLightBuffer();
 	void CleanBuffers();
 
 	// rendering methods
 	void DrawAxes() const;
 	void RenderModels() const;
 	void RenderSkybox() const;
-
-	// ImGui stuff
-	bool m_showAxes = true;
-	bool m_renderShadows = true;
-	int m_shadowBufferSize = 1024;
-
-	std::vector<glm::vec4> m_newIntpolPoints{};
-	std::vector<float> m_newTParams{};
-
-	glm::vec3 m_selColor{1, 0, 0};
 };

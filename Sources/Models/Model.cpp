@@ -59,7 +59,6 @@ void Model::Render(RenderParams* p) {
 			mesh->RenderSelection(&msp);
 		}
 	}
-
 	
 }
 void Model::RenderSelection(RenderParams* p) {

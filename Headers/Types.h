@@ -2,13 +2,6 @@
 
 #include "include_all.h"
 
-// Model params
-#define MODEL2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,params.drawMode}
-#define BEZIER2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
-#define BSPLINE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
-#define DISCRETECURVE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}
-#define BEZIERSURFACE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_TRIANGLES}
-
 struct ModelBaseParams {
     GLuint programID = 0;
     GLuint programSelectedID = 0;
@@ -26,7 +19,7 @@ struct ModelParams {
     int drawMode = GL_TRIANGLES;
 };
 
-struct BezierParams {
+struct BezierCurveParams {
     GLuint programID = 0;
     GLuint programSelectedID = 0;
     int smoothness = 10;
@@ -68,10 +61,10 @@ struct ModelLoaderReturn {
 struct RenderParams {
     float lineWidth = 1.f;
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
-    std::vector<glm::vec4> lights{};
+    GLuint lights;                                      // SSBO ID for lights
     int modelIndex = 0;
-    glm::vec2 cursorPos = glm::vec2(0, 0);
-    glm::vec2 windowSize = glm::vec2(0, 0);
+    glm::ivec2 cursorPos = glm::ivec2(0, 0);
+    glm::ivec2 windowSize = glm::ivec2(0, 0);
     glm::mat4 viewProj = glm::identity<glm::mat4>();
     bool selected = false;
     float selectionWidth = 1.f;
@@ -86,10 +79,10 @@ struct RenderShadowParams {
 struct MeshRenderParams {
     float lineWidth;
     glm::vec3 cameraPos;
-    std::vector<glm::vec4> lights;
+    GLuint lights;                                      // SSBO ID for lights
     int modelIndex;
-    glm::vec2 cursorPos;
-    glm::vec2 windowSize;
+    glm::ivec2 cursorPos;
+    glm::ivec2 windowSize;
     glm::mat4 viewProj;
     //
     GLuint progID;
@@ -109,4 +102,10 @@ struct MeshRenderSelectionParams {
     bool applyTransforms;
     glm::mat4 transform;
     int drawMode;
+};
+
+struct SUpdateInfo
+{
+    float ElapsedTimeInSec = 0.0f;	// Elapsed time since start of the program
+    float DeltaTimeInSec = 0.0f;	// Elapsed time since last update
 };

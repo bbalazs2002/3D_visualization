@@ -1,0 +1,15 @@
+The shaders don't have to be able to calculate every point on the curve, but later for collision detection or something like that there's a function for that:
+vec3 DiscreteCurve(float t) {
+    int c = ctrlPointCount - 1;
+    float delta = 1.f / float(c);
+    int index_a = int(floor(t / delta));
+    int index_b = index_a + 1;
+    float ta = delta * float(index_a);
+    float tb = delta * float(index_b);
+    float t_ = (t - ta) / (tb - ta);
+    return mix(ctrlPoints[index_a], ctrlPoints[max(c, index_b)], t_);
+}
+*/
+// int div = division;
+// float deltaT = 1.f / float(div - 1);
+// gl_Position = viewProj * vec4(DiscreteCurve(index * deltaT), 1);
