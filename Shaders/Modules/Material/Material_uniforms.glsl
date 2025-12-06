@@ -5,9 +5,9 @@ struct MaterialUniforms {
     float shininess;
     int hasNormalTex;
 };
-uniform sampler2D MaterialDiffuseTex;
-uniform sampler2D MaterialSpecularTex;
-uniform sampler2D MaterialEmissionTex;
-uniform sampler2D MaterialNormalTex;
+uniform sampler2D materialDiffuseTex;
+uniform sampler2D materialSpecularTex;
+uniform sampler2D materialEmissionTex;
+uniform sampler2D materialNormalTex;
 
 uniform MaterialUniforms materialData;

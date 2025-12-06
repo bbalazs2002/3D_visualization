@@ -12,6 +12,9 @@ void Model::Render(RenderParams* p) {
 		return;
 	}
 
+	return;
+
+	/*
 	// Log::logToConsole("Render model: ", GetName());
 
 	MeshRenderParams mp {
@@ -59,7 +62,7 @@ void Model::Render(RenderParams* p) {
 			mesh->RenderSelection(&msp);
 		}
 	}
-
+	*/
 	
 }
 void Model::RenderSelection(RenderParams* p) {

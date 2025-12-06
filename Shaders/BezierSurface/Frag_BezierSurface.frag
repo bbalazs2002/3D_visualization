@@ -28,7 +28,7 @@ out vec4 fs_out_col;
 
 void main()
 {
-	// click handler
+    // click handler
     ClickHandler();
 
     // material

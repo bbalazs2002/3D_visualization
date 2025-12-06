@@ -1,5 +1,5 @@
 #ifndef CLICK_HANDLER_MODEL_SSBO
-	#error "CLICK_HANDLER_MODEL_SSBO macro is undefined"
+	#error "CLICK_HANDLER_MODEL_SSBO macro is undefined!"
 #endif
 
 layout(early_fragment_tests) in;

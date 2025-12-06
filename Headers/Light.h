@@ -3,54 +3,106 @@
 #include "include_all.h"
 
 // Light
-struct Light {
-	glm::vec3 pos = glm::vec4(1.0, 1.0, 0.0, 0.0);
-	float constantAttenuation = 1.f;
+class Light {
+public:
+	glm::vec3 direction = glm::vec3(0.0, 1.0, 0.0);
+	glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
+	GLfloat constantAttenuation = 1.f;
 	glm::vec3 La = glm::vec3(0.2, 0.2, 0.2);
-	float linearAttenuation = 0;
+	GLfloat linearAttenuation = 0;
 	glm::vec3 Ld = glm::vec3(1.0, 1.0, 1.0);
-	float quadraticAttenuation = 0;
+	GLfloat quadraticAttenuation = 0;
 	glm::vec3 Ls = glm::vec3(0.5, 0.5, 0.5);
-	int type = 0;
+	GLfloat type = 0;	// directional: 0, point: 1, spot: 2
+	GLfloat innerAngle = 0.f;
+	GLfloat outerAngle = 0.f;
 
-	static void UploadLightToShader(GLuint programID, Light* light) {
-        // struct Light {
-        //     vec3 pos;
-        //     float constantAttenuation;
-        //     vec3 La;
-        //     float linearAttenuation;
-        //     vec3 Ld;
-        //     float quadraticAttenuation;
-        //     vec3 Ls;
-        //     int type;
-        // }
-        // uniform Light light;
+	void inline SetType(int newType) {
+		type = static_cast<GLfloat>(newType);
+	}
+	int inline GetType() const {
+		return static_cast<int>(type);
+	}
 
-        // Segédfüggvény a uniform helyek gyors eléréséhez
-        auto setVec3 = [&](const std::string& name, const glm::vec3& v) {
-            GLint loc = glGetUniformLocation(programID, name.c_str());
-            if (loc >= 0) glUniform3fv(loc, 1, &v[0]);
-            };
+	static void UploadLightToSSBO(GLuint SSBOID, int count, const Light* const* light) {
+		//struct Light {
+		//    vec4 La_const;			// xyz: La, w: constant attenuation
+		//    vec4 Ld_linear;			// xyz: Ld, w: linear attenuation
+		//    vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
+		//    vec4 direction;			// xyz: direction, w: padding
+		//    vec4 position;			// xyz: position, w: padding
+		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: padding
+		//};
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOID);
 
-        auto setFloat = [&](const std::string& name, float value) {
-            GLint loc = glGetUniformLocation(programID, name.c_str());
-            if (loc >= 0) glUniform1f(loc, value);
-            };
+		for (int i = 0; i < count; ++i) {
+			size_t padding = i * sizeof(glm::vec4) * 6;
 
-        auto setInt = [&](const std::string& name, int value) {
-            GLint loc = glGetUniformLocation(programID, name.c_str());
-            if (loc >= 0) glUniform1i(loc, value);
-            };
+			// La_const.xyz
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding, sizeof(glm::vec3),
+				&light[i]->La.x
+			);
+			// La_const.w
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec3), sizeof(GLfloat),
+				&light[i]->constantAttenuation
+			);
 
-        setVec3("light.pos", light->pos);
-        setVec3("light.La", light->La);
-        setVec3("light.Ld", light->Ld);
-        setVec3("light.Ls", light->Ls);
+			// Ld_linear.xyz
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4), sizeof(glm::vec3),
+				&light[i]->Ld.x
+			);
+			// Ld_linear.w
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) + sizeof(glm::vec3), sizeof(GLfloat),
+				&light[i]->linearAttenuation
+			);
 
-        setFloat("light.constantAttenuation", light->constantAttenuation);
-        setFloat("light.linearAttenuation", light->linearAttenuation);
-        setFloat("light.quadraticAttenuation", light->quadraticAttenuation);
+			// Ls_quadratic.xyz
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2, sizeof(glm::vec3),
+				&light[i]->Ls.x
+			);
+			// Ls_quadratic.w
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2 + sizeof(glm::vec3), sizeof(GLfloat),
+				&light[i]->quadraticAttenuation
+			);
 
-        setInt("light.type", light->type);
+			// direction.xyz
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 3, sizeof(glm::vec3),
+				&light[i]->direction.x
+			);
+			// direction.w (padding)
+
+			// position.xyz
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 4, sizeof(glm::vec3),
+				&light[i]->position.x
+			);
+			// position.w (padding)
+
+			// type_angle.x
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5, sizeof(GLfloat),
+				&light[i]->type
+				// &Light::testData
+			);
+			// type_angle.y
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat), sizeof(GLfloat),
+				&light[i]->innerAngle
+			);
+			// type_angle.z
+			glBufferSubData(
+				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat) * 2, sizeof(GLfloat),
+				&light[i]->outerAngle
+			);
+		}
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	}
 };

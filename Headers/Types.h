@@ -68,7 +68,7 @@ struct ModelLoaderReturn {
 struct RenderParams {
     float lineWidth = 1.f;
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
-    std::vector<glm::vec4> lights{};
+    GLuint lights;                                      // SSBO ID for lights
     int modelIndex = 0;
     glm::ivec2 cursorPos = glm::ivec2(0, 0);
     glm::ivec2 windowSize = glm::ivec2(0, 0);

@@ -2,18 +2,18 @@ float[13] MaterialPrepare(vec2 texCoord) {
     // --- Material Preparation (Texture Sampling) ---
     vec3 diffuseColor = materialData.diffuseColorTex.xyz;
     if (materialData.diffuseColorTex.w > 0.5) {
-        diffuseColor = texture(MaterialDiffuseTex, texCoord).rgb;
+        diffuseColor = texture(materialDiffuseTex, texCoord).rgb;
     }
 
     vec3 specularColor = materialData.specularColorTex.xyz;
     if (materialData.specularColorTex.w > 0.5) {
-        specularColor = texture(MaterialSpecularTex, texCoord).rgb;
+        specularColor = texture(materialSpecularTex, texCoord).rgb;
     }
 
-    vec3 ambientColor = materialData.ambientColorEmissionTex.xyz;
+    vec3 ambientColor = diffuseColor * materialData.ambientColorEmissionTex.xyz;
     vec3 emissionColor = vec3(0.0);
     if (materialData.ambientColorEmissionTex.w > 0.5) {
-        emissionColor = texture(MaterialEmissionTex, texCoord).rgb;
+        emissionColor = texture(materialEmissionTex, texCoord).rgb;
     }
 
     // --- Packing into float[12]

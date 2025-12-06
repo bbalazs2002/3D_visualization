@@ -35,8 +35,8 @@ const vec3 colors[6] = vec3[6](
 void main()
 {
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/gl_VertexID.xhtml
-	// gl_Position = CameraViewProj(Transform(positions[gl_VertexID]));
-	gl_Position = positions[gl_VertexID];
+	gl_Position = CameraViewProj(Transform(positions[gl_VertexID]));
+	// gl_Position = positions[gl_VertexID];
 	vs_out_color = colors[gl_VertexID];
 }
 

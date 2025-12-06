@@ -20,6 +20,7 @@ void BezierSurface::Render(RenderParams* p) {
 		return;
 	}
 
+	// -- Update ctrlPoints SSBO and transformation matrix if needed --
 	if (GetCtrlPoints().size() < 1) {
 		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" has too few control points");
 		SetShow(false);
@@ -59,6 +60,7 @@ void BezierSurface::Render(RenderParams* p) {
 		WriteCtrlPointsSSBO();
 	}
 
+	// -- Set render options --
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
@@ -71,68 +73,70 @@ void BezierSurface::Render(RenderParams* p) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
+	// -- Activate shader --
 	GLuint progID = GetProgramID();
 	glUseProgram(progID);
 
-	// set SSBO
+	// -- Set shader input data --
+	// Bezier surface module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
-
-	// set uniforms
-	glUniform3fv(ul(progID, "cameraPos"), 1, glm::value_ptr(p->cameraPos));
-	glUniform1i(ul(progID, "modelID"), p->modelIndex);
-	glUniform2iv(ul(progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
-	glUniform2iv(ul(progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
-	glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-	glUniform2iv(ul(progID, "ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
-	glUniform2iv(ul(progID, "division"), 1, glm::value_ptr(GetSmoothness()));
-
-	// set material
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Click handler module
+	// SSBO bind globally to binding point 0
+	glUniform1i(ul(progID, "clickHandlerData.modelID"), p->modelIndex);
+	glUniform2iv(ul(progID, "clickHandlerData.cursorPos"), 1, glm::value_ptr(p->cursorPos));
+	glUniform2iv(ul(progID, "clickHandlerData.windowSize"), 1, glm::value_ptr(p->windowSize));
+	// Material module
 	Material::UploadMaterialToShader(progID, GetMaterial());
+	// Light module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
+	glUniform1i(ul(progID, "lightData.lightCount"), 1);
 
-	// set light
-	Light light = Light();
-	if (p->lights.size() > 0) {
-		light.pos = p->lights[0];
-	}
-	Light::UploadLightToShader(progID, &light);
-
+	// -- Draw call --
 	glDrawArrays(GL_TRIANGLES, 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
 
-	// restore initial OGL state
+	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
 	glLineWidth(defLineWidth);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 	glUseProgram(0);
 
+	// -- Render selection if needed --
 	if (p->selected) {
 		RenderSelection(p);
 	}
 }
 void BezierSurface::RenderSelection(RenderParams* p) {
+	// -- Activate shader --
 	GLuint progID = GetProgramSelectedID();
 	glUseProgram(progID);
 
-	// set SSBO
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
-
-	// set uniforms
-	glUniform2iv(ul(progID, "ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
-	glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-	glUniform3fv(ul(progID, "selColor"), 1, glm::value_ptr(p->selectionColor));
-
-	// set point size
+	// -- Set render options --
 	GLfloat pointSize;
 	glGetFloatv(GL_POINT_SIZE, &pointSize);
 	glPointSize(p->selectionWidth);
 
-	// draw control points
+	// -- Set shader input data --
+	// Bezier surface module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Color module
+	glUniform3fv(ul(progID, "ColorData.color"), 1, glm::value_ptr(p->selectionColor));
+
+	// -- Draw call --
 	glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());
 
-	// reset gl state
+	// -- Restore initial OGL state --
 	glPointSize(pointSize);
-
-	return;
+	glUseProgram(0);
 }
 void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 	ImGui::Text("Bezier-curve specific options");

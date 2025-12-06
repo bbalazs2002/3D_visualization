@@ -1,16 +1,20 @@
 #pragma once
 
 // C++ libraries
-#include <filesystem>
-#include <iterator>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
-#include <memory>
+#include <array>
 #include <cmath>
+#include <filesystem>
+#include <iostream>
+#include <iterator>
+#include <memory>
 #include <numeric>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 // preprocessor config
 #include "config.h"

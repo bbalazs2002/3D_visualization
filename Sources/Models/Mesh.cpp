@@ -6,6 +6,10 @@ void Mesh::Build(std::vector<Vertex> verteces, std::vector<GLuint> indeces) {
 }
 
 void Mesh::Render(MeshRenderParams* p) {
+
+	return;
+
+	/*
 	if (GetMaterial() == nullptr) {
 		Log::errorToConsole("Corrupted material found");
 		exit(1);
@@ -65,6 +69,7 @@ void Mesh::Render(MeshRenderParams* p) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
+	*/
 }
 void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	GLfloat lineWidth;
