@@ -15,6 +15,11 @@ float[13] MaterialPrepare(vec2 texCoord) {
     if (materialData.ambientColorEmissionTex.w > 0.5) {
         emissionColor = texture(materialEmissionTex, texCoord).rgb;
     }
+    if (emissionColor.x > 0.f || emissionColor.y > 0.f || emissionColor.z > 0.f) {
+        ambientColor = vec3(0);
+        diffuseColor = vec3(0);
+        specularColor = vec3(0);
+    }
 
     // --- Packing into float[12]
     float[13] value = float[13](

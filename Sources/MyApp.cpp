@@ -17,7 +17,6 @@ void CMyApp::SetupDebugCallback()
 void CMyApp::InitShaders()
 {
 	// Drawing models
-	/*
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Model.vert")
@@ -29,9 +28,7 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Selected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Selected.frag")
 		.Link();
-	*/
 
-	/*
 	// Bezier
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
@@ -44,10 +41,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
-	*/
 
 	// B-Spline
-	/*
 	m_programBSplineID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
@@ -59,10 +54,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 		.Link();
-	*/
 
 	// DiscreteCurve
-	/*
 	m_programDiscreteCurveID = glCreateProgram();
 	ProgramBuilder{ m_programDiscreteCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
@@ -74,7 +67,6 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
 		.Link();
-	*/
 
 	// Bezier-surface
 	m_programBezierSurfaceID = glCreateProgram();
@@ -229,6 +221,7 @@ void CMyApp::CleanSkyboxGeometry()
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				m_programBezierSurfaceID,
@@ -252,6 +245,7 @@ void CMyApp::InitModels() {
 			32.f,
 			m_modelTextureID, 0, 0, 0
 			});
+		*/
 
 		// Bezier-surface
 		/*
@@ -277,10 +271,10 @@ void CMyApp::InitModels() {
 		});
 		*/
 
-		// Bezier
+		// Bezier-curve
 		/*
-		m_models.push_back(new Bezier(
-			BezierParams{
+		m_models.push_back(new BezierCurve(
+			BezierCurveParams{
 				m_programBezierID,
 				m_programBezierSelectedID,
 				10,
@@ -288,7 +282,7 @@ void CMyApp::InitModels() {
 				true
 			}
 		));
-		((Bezier*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
+		((BezierCurve*)m_models[m_models.size() - 1])->SetCtrlPoints(std::vector<glm::vec4>{
 			glm::vec4{ 0,0,0,1 },
 			glm::vec4{ 5,0,0,1 },
 			glm::vec4{ 0,5,0,1 },
@@ -303,7 +297,7 @@ void CMyApp::InitModels() {
 				m_programModelID,
 				m_programSelectedID,
 				"Cube",
-				false
+				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
@@ -317,13 +311,12 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
 				m_programSelectedID,
 				"Equinox",
-				false
+				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
@@ -334,7 +327,6 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
-		*/
 
 		// B-Spline
 		/*
@@ -772,8 +764,8 @@ void CMyApp::RenderGUI()
 		}
 		// Add new curve
 		if (ImGui::Button("Add Bezier-curve")) {
-			m_models.push_back(new Bezier(
-				BezierParams{
+			m_models.push_back(new BezierCurve(
+				BezierCurveParams{
 					m_programBezierID,
 					m_programBezierSelectedID
 				}

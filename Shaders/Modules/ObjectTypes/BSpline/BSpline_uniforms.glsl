@@ -21,4 +21,4 @@ struct BSplineUniforms {
     int ctrlPointCount;     // number of control points
     int division;           // total number of divisions for the whole B-Spline object
 };
-uniform BSplineUniforms BSplineData;
+uniform BSplineUniforms bSplineData;

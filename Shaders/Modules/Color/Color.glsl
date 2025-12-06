@@ -1,3 +1,3 @@
 vec4 Color() {
-	return vec4(ColorData.color, 1);
+	return vec4(colorData.color, 1);
 }

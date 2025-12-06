@@ -6,17 +6,13 @@ void Mesh::Build(std::vector<Vertex> verteces, std::vector<GLuint> indeces) {
 }
 
 void Mesh::Render(MeshRenderParams* p) {
-
-	return;
-
-	/*
+	// -- Check if the model can be rendered --
 	if (GetMaterial() == nullptr) {
 		Log::errorToConsole("Corrupted material found");
 		exit(1);
 	}
 
-	// Log::logToConsole("Render mesh; vertex count: ", GetVertexCount());
-
+	// -- Set render options --
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
@@ -29,72 +25,84 @@ void Mesh::Render(MeshRenderParams* p) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
+	// -- Activate shader --
 	glUseProgram(p->progID);
 
-	// set material
+	// -- Set shader input data --
+	// Layout for model
+	glBindVertexArray(GetVAO());
+
+	// Camera module
+	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Click handler module
+	// SSBO bind globally to binding point 0
+	glUniform1i(ul(p->progID, "clickHandlerData.modelID"), p->modelIndex);
+	glUniform2iv(ul(p->progID, "clickHandlerData.cursorPos"), 1, glm::value_ptr(p->cursorPos));
+	glUniform2iv(ul(p->progID, "clickHandlerData.windowSize"), 1, glm::value_ptr(p->windowSize));
+	// Material module
 	Material::UploadMaterialToShader(p->progID, GetMaterial());
-
-	// set light
-	Light light = Light();
-	if (p->lights.size() > 0) {
-		light.pos = p->lights[0];
-	}
-	Light::UploadLightToShader(p->progID, &light);
-
-	// uniforms
-	glUniform3fv(ul(p->progID, "cameraPos"), 1, glm::value_ptr(p->cameraPos));
-	glUniform1i(ul(p->progID, "modelID"), p->modelIndex);
-	glUniform2iv(ul(p->progID, "cursorPos"), 1, glm::value_ptr(p->cursorPos));
-	glUniform2iv(ul(p->progID, "windowSize"), 1, glm::value_ptr(p->windowSize));
-	glUniformMatrix4fv(ul(p->progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Light module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
+	glUniform1i(ul(p->progID, "lightData.lightCount"), 1);
+	// Transform module
 	if (p->applyTransforms) {
-		glUniformMatrix4fv(ul(p->progID, "world"), 1, GL_FALSE, glm::value_ptr(p->transform));
+		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->transform));
 	}
 	else {
 		glm::mat4 world = glm::identity<glm::mat4>();
-		glUniformMatrix4fv(ul(p->progID, "world"), 1, GL_FALSE, glm::value_ptr(world));
+		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(world));
 	}
 
-	// bind VAO
-	glBindVertexArray(GetVAO());
-
-	// draw call
+	// -- Draw call --
 	glDrawElements(p->drawMode, GetVertexCount(), GL_UNSIGNED_INT, nullptr);
 
-	// restore initial OGL state
+	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
 	glLineWidth(defLineWidth);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
-	*/
 }
 void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
+	// -- Set render options --
 	GLfloat lineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
 	glLineWidth(p->selectionWidth);
-
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	// -- Activate shader --
 	glUseProgram(p->progID);
 
-	glUniformMatrix4fv(ul(p->progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// -- Set shader input data --
+	// Layout for model
+	glBindVertexArray(GetVAO());
+	// Camera module
+	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Material module
+	Material::UploadMaterialToShader(p->progID, GetMaterial());
+	// Transform module
 	if (p->applyTransforms) {
-		glUniformMatrix4fv(ul(p->progID, "world"), 1, GL_FALSE, glm::value_ptr(p->transform));
+		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->transform));
 	}
 	else {
 		glm::mat4 world = glm::identity<glm::mat4>();
-		glUniformMatrix4fv(ul(p->progID, "world"), 1, GL_FALSE, glm::value_ptr(world));
+		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(world));
 	}
-	glUniform3fv(ul(p->progID, "selColor"), 1, glm::value_ptr(p->selectionColor));
+	// Color module
+	glUniform3fv(ul(p->progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
 
-	glBindVertexArray(GetVAO());
+	// -- Draw call --
 	glDrawElements(p->drawMode, GetVertexCount(), GL_UNSIGNED_INT, nullptr);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// -- Restore initial OGL state --
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
 	glLineWidth(lineWidth);
 	glUseProgram(0);
 	glBindVertexArray(0);
-}
+}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

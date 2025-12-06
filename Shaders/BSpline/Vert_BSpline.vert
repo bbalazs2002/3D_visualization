@@ -11,15 +11,15 @@
 
 void main()
 {
-    int div = max(2, BSplineData.division);
-    float tStart = BSplineGetTStart(GetTParams(BSplineData.degree, BSplineData.knotCount));
-    float tEnd = BSplineGetTEnd(GetTParams(BSplineData.degree, BSplineData.knotCount));
+    int div = max(2, bSplineData.division);
+    float tStart = BSplineGetTStart(GetTParams(bSplineData.degree, bSplineData.knotCount));
+    float tEnd = BSplineGetTEnd(GetTParams(bSplineData.degree, bSplineData.knotCount));
     float deltaT = (tEnd - tStart) / float(div - 1);
     int index = gl_VertexID;
     float t = tStart + deltaT * float(index);
 
     gl_Position = CameraViewProj(vec4(BSpline(BSplineParams(
-        BSplineData.degree, t,
-        BSplineData.knotCount, BSplineData.ctrlPointCount
+        bSplineData.degree, t,
+        bSplineData.knotCount, bSplineData.ctrlPointCount
     )), 1));
 }

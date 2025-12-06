@@ -20,7 +20,7 @@ protected:
     void SetCtrlPointsSSBO();
     void WriteCtrlPointsSSBO();
     void SetInterpolatedPointsSSBO();
-    void WriteInterpolatedPointsSSBO(std::vector<glm::vec4> points);
+    void WriteInterpolatedPointsSSBO();
     void SetKnotsSSBO();
     void WriteKnotsSSBO();
 
@@ -89,6 +89,9 @@ public:
     inline std::vector<glm::vec4> GetCtrlPoints() const {
         return m_ctrlPoints;
     }
+    inline int GetCtrlPointCount() const {
+        return m_ctrlPoints.size();
+    }
     inline GLuint GetCtrlPointsSSBO() const {
         return m_ctrlPointsSSBOID;
     }
@@ -99,9 +102,9 @@ public:
             Log::errorToConsole("Cannot overwrite interpolated points");
             return;
         }
-        SetInterpolatedPointsSSBO();
-        WriteInterpolatedPointsSSBO(points);
         m_interpolatedPoints = points;
+        SetInterpolatedPointsSSBO();
+        WriteInterpolatedPointsSSBO();
     }
     inline void ClearInterpolatedPoints() {
         m_interpolatedPoints.erase(m_interpolatedPoints.begin(), m_interpolatedPoints.end());
@@ -145,6 +148,9 @@ public:
     }
     inline std::vector<float> GetKnots() const {
         return m_knots;
+    }
+    inline int GetKnotCount() const {
+        return m_knots.size();
     }
     inline GLuint GetKnotsSSBO() const {
         return m_knotsSSBOID;

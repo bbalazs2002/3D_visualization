@@ -83,8 +83,6 @@ vec3 LightCalculate(LightCalculateParams params) {
     vec3 emissionColor = vec3(params.material[9],  params.material[10], params.material[11]);
     float shininess    = params.material[12];
 
-    // return ambientColor;
-
     // --- 1. Calculate Ambient Light (The base color component) ---
     // Start with the base ambient contribution, derived from the material's ambient color
     vec3 totalLight = ambientColor;

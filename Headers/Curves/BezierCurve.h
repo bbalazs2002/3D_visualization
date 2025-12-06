@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class Bezier : public ModelBase {
+class BezierCurve : public ModelBase {
 protected:
 	std::vector<glm::vec4> m_ctrlPoints{};
 	GLuint m_ctrlPointsSSBOID = 0;
@@ -53,8 +53,8 @@ protected:
 	}
 
 public:
-	Bezier(BezierParams params);
-	~Bezier();
+	BezierCurve(BezierCurveParams params);
+	~BezierCurve();
 
 	void Render(RenderParams* p) override;
 	void RenderSelection(RenderParams* p) override;
@@ -104,6 +104,9 @@ public:
 	inline std::vector<glm::vec4> GetCtrlPoints() const {
 		return m_ctrlPoints;
 	}
+	inline int GetCtrlPointCount() const {
+		return m_ctrlPoints.size();
+	}
 	inline GLuint GetCtrlPointsSSBO() const {
 		return m_ctrlPointsSSBOID;
 	}
@@ -126,5 +129,5 @@ public:
 
 	void Elevate();
 	void Reduce();
-	void Cut(float t, Bezier*& newCurve2);
+	void Cut(float t, BezierCurve*& newCurve2);
 };

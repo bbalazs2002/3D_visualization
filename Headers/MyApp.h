@@ -2,12 +2,6 @@
 
 #include "include_all.h"
 
-struct SUpdateInfo
-{
-	float ElapsedTimeInSec = 0.0f;	// Elapsed time since start of the program
-	float DeltaTimeInSec = 0.0f;	// Elapsed time since last update
-};
-
 class CMyApp
 {
 public:

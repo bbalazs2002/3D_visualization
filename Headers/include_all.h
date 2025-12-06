@@ -1,5 +1,8 @@
 #pragma once
 
+// preprocessor config
+#include "config.h"
+
 // C++ libraries
 #include <algorithm>
 #include <array>
@@ -13,11 +16,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#define _USE_MATH_DEFINES
 #include <math.h>
-
-// preprocessor config
-#include "config.h"
 
 // GLM
 #include <glm/glm.hpp>
@@ -63,11 +62,11 @@
 #include "Material.h"
 #include "Light.h"
 #include "Types.h"
-#include "Mesh.h"
-#include "ModelLoader.h"
+#include "Models/Mesh.h"
+#include "Models/ModelLoader.h"
 #include "ModelBase.h"
-#include "Model.h"
-#include "Curves/Bezier.h"
+#include "Models/Model.h"
+#include "Curves/BezierCurve.h"
 #include "Curves/BSpline.h"
 #include "Curves/BSplineInterpolation.h"
 #include "Curves/DiscreteCurve.h"

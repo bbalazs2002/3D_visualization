@@ -80,6 +80,9 @@ public:
 	inline std::vector<glm::vec4> GetCtrlPoints() const {
 		return m_ctrlPoints;
 	}
+	inline int GetCtrlPointCount() const {
+		return m_ctrlPoints.size();
+	}
 	inline GLuint GetCtrlPointsSSBO() const {
 		return m_ctrlPointsSSBOID;
 	}

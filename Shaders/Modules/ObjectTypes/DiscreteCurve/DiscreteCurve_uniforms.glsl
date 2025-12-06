@@ -3,5 +3,5 @@
 #endif
 
 layout(std430, binding = DISCRETE_CURVE_CTRL_POINTS_SSBO) buffer DiscreteCurveCtrlPointsSSBO {
-    vec4 DiscreteCurveCtrlPoints[];   // flexible array member
+    vec4 DiscreteCurveCtrlPoints[];
 };

@@ -23,7 +23,7 @@
     <ClCompile Include="Sources\MyApp.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Models\Bezier.cpp">
+    <ClCompile Include="Sources\Models\BezierCurve.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Models\Material.cpp">
@@ -85,15 +85,6 @@
     <ClInclude Include="Headers\include_all.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ModelLoader.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Model.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Mesh.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Types.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -115,7 +106,7 @@
     <ClInclude Include="Headers\Surfaces\BezierSurface.h">
       <Filter>Headers\Surfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Curves\Bezier.h">
+    <ClInclude Include="Headers\Curves\BezierCurve.h">
       <Filter>Headers\Curves</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Curves\BSpline.h">
@@ -126,6 +117,15 @@
     </ClInclude>
     <ClInclude Include="Headers\Curves\DiscreteCurve.h">
       <Filter>Headers\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Models\Mesh.h">
+      <Filter>Headers\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Models\Model.h">
+      <Filter>Headers\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Models\ModelLoader.h">
+      <Filter>Headers\Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,6 +443,9 @@
     </Filter>
     <Filter Include="Shaders\Modules\ObjectTypes\BezierSurface">
       <UniqueIdentifier>{eda74913-6985-4b07-aeda-c71745fda4d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Models">
+      <UniqueIdentifier>{bb4cf1d5-672e-42fb-b061-5c7f360faf8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

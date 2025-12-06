@@ -61,11 +61,20 @@ void BSpline::SetInterpolatedPointsSSBO() {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_interpolatedPointsSSBOID);
 }
 
-void BSpline::WriteInterpolatedPointsSSBO(std::vector<glm::vec4> points) {
+void BSpline::WriteInterpolatedPointsSSBO() {
+    std::vector<glm::vec4> newPoints;
+    for (auto& p : m_interpolatedPoints) {
+        if (m_applyTransforms)
+            newPoints.push_back(GetTransform() * p);
+        else
+            newPoints.push_back(p);
+    }
+    m_interpolatedPoints = newPoints;
+
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_interpolatedPointsSSBOID);
     glBufferData(GL_SHADER_STORAGE_BUFFER,
-        points.size() * sizeof(glm::vec4),
-        points.data(),
+        m_interpolatedPoints.size() * sizeof(glm::vec4),
+        m_interpolatedPoints.data(),
         GL_STATIC_DRAW);
 }
 
@@ -85,13 +94,18 @@ void BSpline::WriteKnotsSSBO() {
 }
 
 void BSpline::Render(RenderParams* p) {
-    if (!GetShow()) return;
+    if (!GetShow()) {
+        return;
+    }
+
+    // -- Check if the curve can be rendered --
     if (m_ctrlPoints.size() < m_degree + 1) {
         Log::errorToConsole("BSpline curve has too few control points");
         SetShow(false);
         return;
     }
 
+    // -- Update ctrlPoints SSBO and transformation matrix if needed --
     bool transformsReset = false;
     bool isDirty = false;
     for (auto t : m_transforms) {
@@ -113,64 +127,84 @@ void BSpline::Render(RenderParams* p) {
 
     if (transformsReset || m_ctrlPointsDirty) {
         WriteCtrlPointsSSBO();
+        WriteInterpolatedPointsSSBO();
     }
     if (m_knotsDirty) {
         WriteKnotsSSBO();
     }
 
-    GLuint progID = GetProgramID();
-    glUseProgram(progID);
-
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ctrlPointsSSBOID);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_knotsSSBOID);
-
-    glUniform1i(ul(progID, "ctrlPointCount"), (int)m_ctrlPoints.size());
-    glUniform1i(ul(progID, "degree"), m_degree);
-    glUniform1i(ul(progID, "division"), m_smoothness);
-    glUniform1i(ul(progID, "knotCount"), (int)m_knots.size());
-    glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-    glUniform3fv(ul(progID, "color"), 1, glm::value_ptr(m_color));
-
+    // -- Set render options --
     GLfloat lineWidth;
     glGetFloatv(GL_LINE_WIDTH, &lineWidth);
     glLineWidth(p->lineWidth);
 
-    glDrawArrays(m_drawMode, 0, GetSmoothness());
-    glLineWidth(lineWidth);
+    // -- Activate shader --
+    GLuint progID = GetProgramID();
+    glUseProgram(progID);
 
+    // -- Set shader input data --
+    // BSpline module
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, GetKnotsSSBO());
+    glUniform1i(ul(progID, "bSplineData.ctrlPointCount"), GetCtrlPointCount());
+    glUniform1i(ul(progID, "bSplineData.knotCount"), GetKnotCount());
+    glUniform1i(ul(progID, "bSplineData.degree"), m_degree);
+    glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
+    // Camera module
+    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+    // Color module
+    glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
+
+    // -- Draw call --
+    glDrawArrays(GetDrawMode(), 0, GetSmoothness());
+
+    // -- Restore initial OGL state --
+    glLineWidth(lineWidth);
+    glUseProgram(0);
+
+    // -- Render selection if needed --
     if (p->selected) {
         RenderSelection(p);
     }
+
+    // -- Render interpolated points if needed --
     if (GetInterpolatedPointsCount() > 0) {
         RenderInterpolatedPoints(p);
     }
 }
 void BSpline::RenderSelection(RenderParams* p) {
+    // -- Activate shader --
     GLuint progID = GetProgramSelectedID();
-
     glUseProgram(progID);
 
-    // set SSBO
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
-
-    // set uniforms
-    glUniform1i(ul(progID, "ctrlPointCount"), GetCtrlPoints().size());
-    glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-    glUniform3fv(ul(progID, "selColor"), 1, glm::value_ptr(p->selectionColor));
-    glUniform1i(ul(progID, "isSelection"), 1);
-
-    // set point size
+    // -- Set render options --
     GLfloat pointSize;
     glGetFloatv(GL_POINT_SIZE, &pointSize);
     glPointSize(p->selectionWidth);
+    
+    // -- Set shader input data --
+    // BSpline module
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+    /* The module defines these uniforms, but the shader doesn't use them
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, GetKnotsSSBO());
+    glUniform1i(ul(progID, "bSplineData.ctrlPointCount"), GetCtrlPointCount());
+    glUniform1i(ul(progID, "bSplineData.knotCount"), GetKnotCount());
+    glUniform1i(ul(progID, "bSplineData.degree"), m_degree);
+    glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
+    */
+    // Camera module
+    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+    // Color module
+    glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
 
-    // draw control points
+    // -- Draw call --
     glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());
 
-    // reset gl state
+    // -- Restore initial OGL state --
     glPointSize(pointSize);
-
-    return;
+    glUseProgram(0);
 }
 void BSpline::RenderGUI(std::vector<ModelBase*>* models) {
     ImGui::Text("B-Spline specific options");
@@ -267,28 +301,35 @@ void BSpline::RenderGUI(std::vector<ModelBase*>* models) {
 }
 
 void BSpline::RenderInterpolatedPoints(RenderParams* p) {
+    // -- Activate shader --
     GLuint progID = GetProgramSelectedID();
     glUseProgram(progID);
 
-    // set SSBO
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetInterpolatedPointsSSBO());
-
-    // set uniforms
-    glUniform1i(ul(progID, "ctrlPointCount"), GetInterpolatedPointsCount());
-    glUniformMatrix4fv(ul(progID, "viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-    glUniform3fv(ul(progID, "selColor"), 1, glm::value_ptr(GetColor()));
-    glUniform1i(ul(progID, "isSelection"), 1);
-
-    // set point size
+    // -- Set render options --
     GLfloat pointSize;
     glGetFloatv(GL_POINT_SIZE, &pointSize);
     glPointSize(p->selectionWidth);
 
-    // draw control points
+    // -- Set shader input data --
+    // BSpline module
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetInterpolatedPointsSSBO());
+    /* The module defines these uniforms, but the shader doesn't use them
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, GetKnotsSSBO());
+    glUniform1i(ul(progID, "bSplineData.ctrlPointCount"), GetCtrlPointCount());
+    glUniform1i(ul(progID, "bSplineData.knotCount"), GetKnotCount());
+    glUniform1i(ul(progID, "bSplineData.degree"), m_degree);
+    glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
+    */
+    // Camera module
+    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+    // Color module
+    glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
+
+    // -- Draw call --
     glDrawArrays(GL_POINTS, 0, GetInterpolatedPointsCount());
 
     // reset gl state
     glPointSize(pointSize);
-
-    return;
+    glUseProgram(0);
 }

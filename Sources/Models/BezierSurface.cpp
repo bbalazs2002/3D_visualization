@@ -20,7 +20,7 @@ void BezierSurface::Render(RenderParams* p) {
 		return;
 	}
 
-	// -- Update ctrlPoints SSBO and transformation matrix if needed --
+	// -- Check if the surface can be rendered --
 	if (GetCtrlPoints().size() < 1) {
 		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" has too few control points");
 		SetShow(false);
@@ -36,6 +36,7 @@ void BezierSurface::Render(RenderParams* p) {
 		exit(1);
 	}
 
+	// -- Update ctrlPoints SSBO and transformation matrix if needed --
 	bool transformsReset = false;
 	// check if any of the transformations is changed
 	bool isDirty = false;
@@ -97,7 +98,7 @@ void BezierSurface::Render(RenderParams* p) {
 	glUniform1i(ul(progID, "lightData.lightCount"), 1);
 
 	// -- Draw call --
-	glDrawArrays(GL_TRIANGLES, 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
+	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
 
 	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);

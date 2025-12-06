@@ -89,7 +89,7 @@
     <ClCompile Include="includes\CameraManipulator.cpp" />
     <ClCompile Include="includes\ObjParser.cpp" />
     <ClCompile Include="includes\ProgramBuilder.cpp" />
-    <ClCompile Include="Sources\Models\Bezier.cpp" />
+    <ClCompile Include="Sources\Models\BezierCurve.cpp" />
     <ClCompile Include="Sources\Models\BezierSurface.cpp" />
     <ClCompile Include="Sources\Models\BSpline.cpp" />
     <ClCompile Include="Sources\Models\DiscreteCurve.cpp" />
@@ -102,7 +102,7 @@
   <ItemGroup>
     <ClInclude Include="Headers\Classes.h" />
     <ClInclude Include="Headers\config.h" />
-    <ClInclude Include="Headers\Curves\Bezier.h" />
+    <ClInclude Include="Headers\Curves\BezierCurve.h" />
     <ClInclude Include="Headers\Curves\BSpline.h" />
     <ClInclude Include="Headers\Curves\BSplineInterpolation.h" />
     <ClInclude Include="Headers\Curves\DiscreteCurve.h" />
@@ -113,9 +113,9 @@
     <ClInclude Include="Headers\Log.h" />
     <ClInclude Include="Headers\Material.h" />
     <ClInclude Include="Headers\ModelBase.h" />
-    <ClInclude Include="Headers\Mesh.h" />
-    <ClInclude Include="Headers\Model.h" />
-    <ClInclude Include="Headers\ModelLoader.h" />
+    <ClInclude Include="Headers\Models\Mesh.h" />
+    <ClInclude Include="Headers\Models\Model.h" />
+    <ClInclude Include="Headers\Models\ModelLoader.h" />
     <ClInclude Include="Headers\MyApp.h" />
     <ClInclude Include="Headers\Surfaces\BezierSurface.h" />
     <ClInclude Include="Headers\Transformation.h" />
