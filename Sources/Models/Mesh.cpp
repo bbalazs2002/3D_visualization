@@ -35,7 +35,7 @@ void Mesh::Render(MeshRenderParams* p) {
 	glBindVertexArray(GetVAO());
 
 	// Camera module
-	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(p->progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Click handler module
 	// SSBO bind globally to binding point 0
@@ -84,7 +84,7 @@ void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	// Layout for model
 	glBindVertexArray(GetVAO());
 	// Camera module
-	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(p->progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Material module
 	Material::UploadMaterialToShader(p->progID, GetMaterial());

@@ -34,10 +34,8 @@ BSpline::~BSpline() {
 void BSpline::SetCtrlPointsSSBO() {
     glGenBuffers(1, &m_ctrlPointsSSBOID);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ctrlPointsSSBOID);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ctrlPointsSSBOID);
     WriteCtrlPointsSSBO();
 }
-
 void BSpline::WriteCtrlPointsSSBO() {
     m_ctrlPointsDirty = false;
     std::vector<glm::vec4> newPoints;
@@ -58,10 +56,11 @@ void BSpline::WriteCtrlPointsSSBO() {
 void BSpline::SetInterpolatedPointsSSBO() {
     glGenBuffers(1, &m_interpolatedPointsSSBOID);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_interpolatedPointsSSBOID);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_interpolatedPointsSSBOID);
 }
-
 void BSpline::WriteInterpolatedPointsSSBO() {
+    if (GetInterpolatedPointsCount() <= 0) {
+        return;
+    }
     std::vector<glm::vec4> newPoints;
     for (auto& p : m_interpolatedPoints) {
         if (m_applyTransforms)
@@ -81,10 +80,8 @@ void BSpline::WriteInterpolatedPointsSSBO() {
 void BSpline::SetKnotsSSBO() {
     glGenBuffers(1, &m_knotsSSBOID);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_knotsSSBOID);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_knotsSSBOID);
     WriteKnotsSSBO();
 }
-
 void BSpline::WriteKnotsSSBO() {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_knotsSSBOID);
     glBufferData(GL_SHADER_STORAGE_BUFFER,
@@ -151,7 +148,7 @@ void BSpline::Render(RenderParams* p) {
     glUniform1i(ul(progID, "bSplineData.degree"), m_degree);
     glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
     // Camera module
-    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
     glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
     // Color module
     glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
@@ -194,7 +191,7 @@ void BSpline::RenderSelection(RenderParams* p) {
     glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
     */
     // Camera module
-    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
     glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
     // Color module
     glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
@@ -321,7 +318,7 @@ void BSpline::RenderInterpolatedPoints(RenderParams* p) {
     glUniform1i(ul(progID, "bSplineData.division"), m_smoothness);
     */
     // Camera module
-    glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+    glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
     glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
     // Color module
     glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));

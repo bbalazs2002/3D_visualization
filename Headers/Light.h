@@ -68,7 +68,7 @@ public:
 
 		// -- Set shader input data --
 		// Camera module
-		glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+		glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 		glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 		// Light module
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);

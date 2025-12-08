@@ -66,7 +66,7 @@ void BezierCurve::Render(RenderParams* p) {
 	glUniform1i(ul(progID, "bezierCurveData.ctrlPointCount"), GetCtrlPointCount());
 	glUniform1i(ul(progID, "bezierCurveData.division"), GetSmoothness());
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Color module
 	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
@@ -99,7 +99,7 @@ void BezierCurve::RenderSelection(RenderParams* p) {
 	glUniform1i(ul(progID, "bezierCurveData.ctrlPointCount"), GetCtrlPointCount());
 	glUniform1i(ul(progID, "bezierCurveData.division"), GetSmoothness());
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Color module
 	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));

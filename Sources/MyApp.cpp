@@ -17,7 +17,6 @@ void CMyApp::SetupDebugCallback()
 void CMyApp::InitShaders()
 {
 	// Drawing models
-	/*
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Model.vert")
@@ -29,10 +28,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Selected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Selected.frag")
 		.Link();
-	*/
 
 	// Bezier
-	/*
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
@@ -44,10 +41,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
-	*/
 
 	// B-Spline
-	/*
 	m_programBSplineID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
@@ -59,10 +54,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 		.Link();
-	*/
 
 	// DiscreteCurve
-	/*
 	m_programDiscreteCurveID = glCreateProgram();
 	ProgramBuilder{ m_programDiscreteCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
@@ -74,10 +67,8 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
 		.Link();
-	*/
 
 	// Bezier-surface
-	/*
 	m_programBezierSurfaceID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSurfaceID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
@@ -89,7 +80,6 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
 		.Link();
-	*/
 
 	// Light selection
 	m_programDirectionLightID = glCreateProgram();
@@ -371,7 +361,6 @@ void CMyApp::InitModels() {
 		*/
 
 		// B-Spline
-		/*
 		m_models.push_back(new BSpline(
 			BSplineParams{
 				m_programBSplineID,
@@ -392,7 +381,6 @@ void CMyApp::InitModels() {
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
 		((BSpline*)m_models[m_models.size() - 1])->SetKnots(std::vector<float>{0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2});
-		*/
 
 		// Semi circle interpolation
 		/*
@@ -407,7 +395,7 @@ void CMyApp::InitModels() {
 			m_programBSplineSelectedID,
 			10,
 			"B-Spline-2",
-			false
+			true
 		});
 		if (semicircle != nullptr) {
 			semicircle->SetColor(glm::vec3(0, 1, 1));
@@ -1051,4 +1039,4 @@ void CMyApp::Resize(int _w, int _h)
 
 void CMyApp::OtherEvent(const SDL_Event& ev)
 {
-}////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
