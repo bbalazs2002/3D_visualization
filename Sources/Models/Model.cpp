@@ -18,6 +18,7 @@ void Model::Render(RenderParams* p) {
 		p->lineWidth,
 		p->cameraPos,
 		p->lights,
+		p->lightCount,
 		p->modelIndex,
 		p->cursorPos,
 		p->windowSize,

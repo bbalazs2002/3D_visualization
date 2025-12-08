@@ -6,10 +6,6 @@ out vec3 vs_out_col;
 #include "../Camera/Camera_uniforms.glsl"
 #include "../Camera/Camera.glsl"
 
-// transform
-#include "../Transform/Transform_uniforms.glsl"
-#include "../Transform/Transform.glsl"
-
 // light
 #define LIGHT_LIGHTS_SSBO 2
 #include "Light_uniforms.glsl"
@@ -98,8 +94,7 @@ void main() {
 	vec3 w = normalize(cross(u, v));
 	mat3 base = mat3(u,v,w);
 
-	gl_Position = CameraViewProj(Transform(vec4(.1 * base * weights[gl_VertexID], 1)));
+	gl_Position = CameraViewProj(vec4(cameraData.at + .1 * base * weights[gl_VertexID], 1));
 
 	vs_out_col = colors[int(floor(float(gl_VertexID) / 3.f))];
-	// vs_out_col = colors[gl_VertexID % 3];
 }

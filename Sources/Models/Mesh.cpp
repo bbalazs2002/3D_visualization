@@ -46,7 +46,7 @@ void Mesh::Render(MeshRenderParams* p) {
 	Material::UploadMaterialToShader(p->progID, GetMaterial());
 	// Light module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(p->progID, "lightData.lightCount"), 1);
+	glUniform1i(ul(p->progID, "lightData.lightCount"), p->lightCount);
 	// Transform module
 	if (p->applyTransforms) {
 		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->transform));

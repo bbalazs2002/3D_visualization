@@ -36,6 +36,7 @@ public:
 		}
 
 		// -- Activate shader --
+		int pointCount = 0;
 		GLuint progID = 0;
 		if (type > 1.5f) {			// render spot
 			progID = spotProgram;
@@ -62,27 +63,43 @@ public:
 		glUseProgram(progID);
 
 		// -- Set render options --
-		GLfloat defLineWidth;
-		glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
-		glLineWidth(p->selectionWidth);
+		GLboolean cullFace = glIsEnabled(GL_CULL_FACE);
+		glDisable(GL_CULL_FACE);
+
+		// -- Extract data from render params --
+		RenderLightParams* rlp = (RenderLightParams*)p->otherData;
 
 		// -- Set shader input data --
 		// Camera module
-		glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 		glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+		glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+		glUniform3fv(ul(progID, "cameraData.at"), 1, glm::value_ptr(rlp->cameraAt));
+		glUniform3fv(ul(progID, "cameraData.up"), 1, glm::value_ptr(rlp->cameraUp));
 		// Light module
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
 		glUniform1i(ul(progID, "lightData.lightCount"), 1);
-		// Transform module
-		glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->globalTransform));
 		// Other data
 		glUniform1i(ul(progID, "lightID"), p->modelIndex);
 
 		// -- Draw call --
-		glDrawArrays(GL_TRIANGLES, 0, 33);
+		if (type > 1.5f) {			// render spot
+			glUniform1i(ul(progID, "isInner"), 0);
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
+			glUniform1i(ul(progID, "isInner"), 1);
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
+		}
+		else if (type > .5f) {		// render point
+			glDrawArrays(GL_TRIANGLES, 0, 24);
+		}
+		else {						// render direction
+			glDrawArrays(GL_TRIANGLES, 0, 33);
+		}
+		
 
 		// -- Restore initial OGL state --
-		glLineWidth(defLineWidth);
+		if (cullFace) {
+			glEnable(GL_CULL_FACE);
+		}
 		glUseProgram(0);
 	}
 	void inline RenderSelection(RenderParams* p) { return; }

@@ -28,9 +28,10 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         if (type == int(LIGHT_TYPE_SPOT)) {
             // Spot Light Calculation
             vec3 spotDir = normalize(params.light.direction.xyz);
-            float theta = dot(lightDir, -spotDir); // angle between light ray and spot direction
-            float innerCutOff = params.light.type_angle.y;
-            float outerCutOff = params.light.type_angle.z;
+            float theta = dot(lightDir, -spotDir);      // cosine of angle between light ray and spot direction
+
+            float innerCutOff = cos(params.light.type_angle.y);
+            float outerCutOff = cos(params.light.type_angle.z);
 
             if (theta > outerCutOff) {
                 // Smooth fade from inner to outer cutoff (soft edges)
@@ -43,7 +44,7 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     }
     
     // If the light is dimmed out by spot or attenuation, skip the expensive calculations
-    if (attenuation == 0.0 || spotIntensity == 0.0) {
+    if (attenuation <= 0.0 || spotIntensity <= 0.0) {
         return vec3(0.0);
     }
     

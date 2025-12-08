@@ -95,7 +95,7 @@ void BezierSurface::Render(RenderParams* p) {
 	Material::UploadMaterialToShader(progID, GetMaterial());
 	// Light module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(progID, "lightData.lightCount"), 1);
+	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
 
 	// -- Draw call --
 	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
