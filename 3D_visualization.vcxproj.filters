@@ -335,6 +335,18 @@
     <None Include="Shaders\Modules\ObjectTypes\BezierSurface\BezierSurface_uniforms.glsl">
       <Filter>Shaders\Modules\ObjectTypes\BezierSurface</Filter>
     </None>
+    <None Include="Shaders\Modules\Light\Vert_DirectionSelection.vert">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light\Frag_LightSelection.frag">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light\Vert_PointSelection.vert">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
+    <None Include="Shaders\Modules\Light\Vert_SpotSelection.vert">
+      <Filter>Shaders\Modules\Light</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\cube.obj">

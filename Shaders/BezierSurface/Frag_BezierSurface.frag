@@ -36,7 +36,7 @@ void main()
 
     // narmalise vectors
     vec3 norm = normalize(vs_out_norm);
-    vec3 viewDir = normalize(cameraData.cameraPos - vs_out_pos);
+    vec3 viewDir = normalize(cameraData.eye - vs_out_pos);
 
     // calculate lights
     fs_out_col = vec4(LightCalculate(LightCalculateParams(

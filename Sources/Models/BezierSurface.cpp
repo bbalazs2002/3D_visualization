@@ -84,7 +84,7 @@ void BezierSurface::Render(RenderParams* p) {
 	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
 	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Click handler module
 	// SSBO bind globally to binding point 0
@@ -95,7 +95,7 @@ void BezierSurface::Render(RenderParams* p) {
 	Material::UploadMaterialToShader(progID, GetMaterial());
 	// Light module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(progID, "lightData.lightCount"), 1);
+	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
 
 	// -- Draw call --
 	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
@@ -127,10 +127,10 @@ void BezierSurface::RenderSelection(RenderParams* p) {
 	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
 	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Color module
-	glUniform3fv(ul(progID, "ColorData.color"), 1, glm::value_ptr(p->selectionColor));
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
 
 	// -- Draw call --
 	glDrawArrays(GL_POINTS, 0, GetCtrlPoints().size());

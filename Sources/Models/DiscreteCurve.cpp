@@ -63,7 +63,7 @@ void DiscreteCurve::Render(RenderParams* p) {
 	// Discrete curve module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Color module
 	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(GetColor()));
@@ -94,7 +94,7 @@ void DiscreteCurve::RenderSelection(RenderParams* p) {
 	// Discrete curve module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
 	// Camera module
-	glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Color module
 	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));

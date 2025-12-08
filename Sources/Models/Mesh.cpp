@@ -16,6 +16,8 @@ void Mesh::Render(MeshRenderParams* p) {
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
 	if (p->wireframe) {
 		glDisable(GL_CULL_FACE);
 		glLineWidth(p->lineWidth);
@@ -33,7 +35,7 @@ void Mesh::Render(MeshRenderParams* p) {
 	glBindVertexArray(GetVAO());
 
 	// Camera module
-	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(p->progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Click handler module
 	// SSBO bind globally to binding point 0
@@ -44,7 +46,7 @@ void Mesh::Render(MeshRenderParams* p) {
 	Material::UploadMaterialToShader(p->progID, GetMaterial());
 	// Light module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(p->progID, "lightData.lightCount"), 1);
+	glUniform1i(ul(p->progID, "lightData.lightCount"), p->lightCount);
 	// Transform module
 	if (p->applyTransforms) {
 		glUniformMatrix4fv(ul(p->progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->transform));
@@ -59,8 +61,9 @@ void Mesh::Render(MeshRenderParams* p) {
 
 	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
 	glLineWidth(defLineWidth);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
@@ -81,7 +84,7 @@ void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	// Layout for model
 	glBindVertexArray(GetVAO());
 	// Camera module
-	glUniform3fv(ul(p->progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+	glUniform3fv(ul(p->progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
 	glUniformMatrix4fv(ul(p->progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Material module
 	Material::UploadMaterialToShader(p->progID, GetMaterial());
@@ -105,4 +108,4 @@ void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	glLineWidth(lineWidth);
 	glUseProgram(0);
 	glBindVertexArray(0);
-}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

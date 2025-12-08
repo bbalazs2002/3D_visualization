@@ -184,8 +184,12 @@
     <None Include="Shaders\Modules\ClickHandler\ClickHandler_uniforms.glsl" />
     <None Include="Shaders\Modules\Color\Color.glsl" />
     <None Include="Shaders\Modules\Color\Color_uniforms.glsl" />
+    <None Include="Shaders\Modules\Light\Frag_LightSelection.frag" />
     <None Include="Shaders\Modules\Light\Light.glsl" />
     <None Include="Shaders\Modules\Light\Light_uniforms.glsl" />
+    <None Include="Shaders\Modules\Light\Vert_DirectionSelection.vert" />
+    <None Include="Shaders\Modules\Light\Vert_PointSelection.vert" />
+    <None Include="Shaders\Modules\Light\Vert_SpotSelection.vert" />
     <None Include="Shaders\Modules\Material\Material.glsl" />
     <None Include="Shaders\Modules\Material\Material_uniforms.glsl" />
     <None Include="Shaders\Modules\Math.glsl" />

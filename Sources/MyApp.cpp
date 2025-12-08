@@ -30,7 +30,7 @@ void CMyApp::InitShaders()
 		.Link();
 
 	// Bezier
-	m_programBezierID = glCreateProgram();
+	/*m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
@@ -40,10 +40,10 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBezierSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
-		.Link();
+		.Link();*/
 
 	// B-Spline
-	m_programBSplineID = glCreateProgram();
+	/*m_programBSplineID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
@@ -53,10 +53,10 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBSplineSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-		.Link();
+		.Link();*/
 
 	// DiscreteCurve
-	m_programDiscreteCurveID = glCreateProgram();
+	/*m_programDiscreteCurveID = glCreateProgram();
 	ProgramBuilder{ m_programDiscreteCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
@@ -66,10 +66,10 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programDiscreteCurveSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
-		.Link();
+		.Link();*/
 
 	// Bezier-surface
-	m_programBezierSurfaceID = glCreateProgram();
+	/*m_programBezierSurfaceID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSurfaceID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
@@ -79,6 +79,23 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBezierSurfaceSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+		.Link();*/
+
+	// Light selection
+	m_programDirectionLightID = glCreateProgram();
+	ProgramBuilder{ m_programDirectionLightID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_DirectionSelection.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
+		.Link();
+	m_programPointLightID = glCreateProgram();
+	ProgramBuilder{ m_programPointLightID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_PointSelection.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
+		.Link();
+	m_programSpotLightID = glCreateProgram();
+	ProgramBuilder{ m_programSpotLightID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_SpotSelection.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
 		.Link();
 
 	// Shadows
@@ -94,7 +111,6 @@ void CMyApp::InitShaders()
 	InitAxesShader();
 	InitSkyboxShader();
 }
-
 void CMyApp::CleanShaders()
 {
 	glDeleteProgram(m_programModelID);
@@ -122,13 +138,19 @@ void CMyApp::CleanShaders()
 	glDeleteProgram(m_programBezierSurfaceSelectedID);
 	m_programBezierSurfaceSelectedID = 0;
 
+	glDeleteProgram(m_programDirectionLightID);
+	m_programDirectionLightID = 0;
+	glDeleteProgram(m_programPointLightID);
+	m_programPointLightID = 0;
+	glDeleteProgram(m_programSpotLightID);
+	m_programSpotLightID = 0;
+
 	glDeleteProgram(m_programShadowID);
 	m_programShadowID = 0;
 
 	CleanSkyboxShader();
 	CleanAxesShader();
 }
-
 void CMyApp::InitSkyboxShader() {
 	m_programSkyboxID = glCreateProgram();
 	ProgramBuilder{ m_programSkyboxID }
@@ -136,12 +158,10 @@ void CMyApp::InitSkyboxShader() {
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Skybox/Frag_skybox_skeleton.frag")
 		.Link();
 }
-
 void CMyApp::CleanSkyboxShader() {
 	glDeleteProgram(m_programSkyboxID);
 	m_programSkyboxID = 0;
 }
-
 void CMyApp::InitAxesShader()
 {
 	m_programAxesID = glCreateProgram();
@@ -150,7 +170,6 @@ void CMyApp::InitAxesShader()
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Axes/Frag_PosCol.frag")
 		.Link();
 }
-
 void CMyApp::CleanAxesShader()
 {
 	glDeleteProgram(m_programAxesID);
@@ -162,13 +181,11 @@ void CMyApp::InitGeometry()
 	InitModels();
 	InitSkyboxGeometry();
 }
-
 void CMyApp::CleanGeometry()
 {
 	CleanModels();
 	CleanSkyboxGeometry();
 }
-
 void CMyApp::InitSkyboxGeometry() {
 	// skybox geo
 	MeshObject<glm::vec3> skyboxCPU =
@@ -212,12 +229,10 @@ void CMyApp::InitSkyboxGeometry() {
 
 	m_SkyboxGPU = CreateGLObjectFromMesh(skyboxCPU, { { 0, offsetof(glm::vec3, x), 3, GL_FLOAT } });
 }
-
 void CMyApp::CleanSkyboxGeometry()
 {
 	CleanOGLObject(m_SkyboxGPU);
 }
-
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
@@ -365,7 +380,7 @@ void CMyApp::InitModels() {
 			m_programBSplineSelectedID,
 			10,
 			"B-Spline-2",
-			false
+			true
 		});
 		if (semicircle != nullptr) {
 			semicircle->SetColor(glm::vec3(0, 1, 1));
@@ -425,12 +440,27 @@ void CMyApp::InitModels() {
 		*/
 	}
 }
-
 void CMyApp::CleanModels() {
 	for (int i = 0; i < m_models.size(); ++i) {
 		delete(m_models[i]);
 	}
 	m_models.clear();
+}
+
+void CMyApp::InitLights() {
+	Light::directionProgram = m_programDirectionLightID;
+	Light::pointProgram = m_programPointLightID;
+	Light::spotProgram = m_programSpotLightID;
+	Light::show = true;
+
+	m_lights.push_back(new Light());
+}
+void CMyApp::CleanLights() {
+	for (int i = 0; i < m_lights.size(); ++i) {
+		delete(m_lights[i]);
+		m_lights[i] = nullptr;
+	}
+	m_lights.clear();
 }
 
 void CMyApp::InitTexture() {
@@ -447,12 +477,10 @@ void CMyApp::InitTexture() {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
-
 void CMyApp::CleanTexture() {
 	glDeleteTextures(1, &m_modelTextureID);
 	CleanSkyboxTexture();
 }
-
 void CMyApp::InitSkyboxTexture() {
 	// skybox texture
 	static const char* skyboxFiles[6] = {
@@ -480,7 +508,6 @@ void CMyApp::InitSkyboxTexture() {
 
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
-
 void CMyApp::CleanSkyboxTexture() {
 	glDeleteTextures(1, &m_skyboxTextureID);
 	m_skyboxTextureID = 0;
@@ -565,6 +592,7 @@ bool CMyApp::Init()
 
 	InitShaders();
 	InitTexture();
+	InitLights();
 	InitGeometry();
 	InitBuffers();
 	// InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
@@ -587,13 +615,13 @@ bool CMyApp::Init()
 
 	return true;
 }
-
 void CMyApp::Clean()
 {
 	CleanShaders();
 	CleanGeometry();
 	CleanTexture();
 	CleanBuffers();
+	CleanLights();
 	CleanResolutionDependentResources();
 }
 
@@ -612,11 +640,33 @@ void CMyApp::DrawAxes() const
 	glProgramUniformMatrix4fv(m_programAxesID, ul(m_programAxesID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(axisWorld));
 
 	// We always want to see it, regardless of whether there is an object in front of it
+	GLboolean depthTest = glIsEnabled(GL_DEPTH_TEST);
 	glDisable(GL_DEPTH_TEST);
 
 	glDrawArrays(GL_LINES, 0, 6);
+
 	glUseProgram(0);
-	glEnable(GL_DEPTH_TEST);
+	if (depthTest) {
+		glEnable(GL_DEPTH_TEST);
+	}
+}
+
+void CMyApp::RenderLightSuorce() const {
+	if (m_selectedLight < 0 || m_selectedLight >= m_lights.size()) {
+		return;
+	}
+	RenderLightParams rlp{
+					m_camera.GetAt(),
+					m_camera.GetWorldUp()
+	};
+	RenderParams rp{
+				m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
+				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
+				m_camera.GetViewProj(), true,
+				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2]),
+				&rlp
+	};
+	m_lights[m_selectedLight]->Render(&rp);
 }
 
 void CMyApp::RenderModels() const {
@@ -637,7 +687,7 @@ void CMyApp::RenderModels() const {
 	int objCount = 0;
 	for (auto m : m_models) {
 		RenderParams rp{
-			m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
+			m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
 			objCount, m_cursorPos, glm::ivec2(m_width, m_height),
 			m_camera.GetViewProj(), (m_selectedModel == objCount),
 			m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
@@ -677,22 +727,13 @@ void CMyApp::Render() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/* TODO : IDrawable for lights
-	m_lights[m_selectedLight]->render(
-		RenderParams rp{
-				m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
-				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
-				m_camera.GetViewProj(), true,
-				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
-		};
-	);
-	*/
-
+	RenderLightSuorce();
 	RenderModels();
+	// RenderSkybox();
+
 	if (m_showAxes) {
 		DrawAxes();
 	}
-	// RenderSkybox();
 
 	// exit(1);
 
@@ -830,8 +871,8 @@ void CMyApp::RenderGUI()
 				m_lights[i]->SetType(type);
 			}
 
-			ImGui::SliderFloat("Inner angle (rad)", &m_lights[i]->innerAngle, 0, M_PI);
-			ImGui::SliderFloat("Outer angle (rad)", &m_lights[i]->outerAngle, 0, M_PI);
+			ImGui::SliderAngle("Inner angle", &m_lights[i]->innerAngle, 0, 80);
+			ImGui::SliderAngle("Outer angle", &m_lights[i]->outerAngle, 0, 80);
 			if (ImGui::Button("Delete Light")) {
 				delete(m_lights[i]);
 				m_lights.erase(m_lights.begin() + i);
@@ -1005,4 +1046,4 @@ void CMyApp::Resize(int _w, int _h)
 
 void CMyApp::OtherEvent(const SDL_Event& ev)
 {
-}////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
