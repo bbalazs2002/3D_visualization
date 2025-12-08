@@ -69,6 +69,7 @@ struct RenderParams {
     bool selected = false;
     float selectionWidth = 1.f;
     glm::vec3 selectionColor = glm::vec3(1.f, 0, 0);
+    glm::mat4 globalTransform = glm::identity<glm::mat4>();
 };
 
 struct RenderShadowParams {

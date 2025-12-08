@@ -16,6 +16,8 @@ void Mesh::Render(MeshRenderParams* p) {
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
 	if (p->wireframe) {
 		glDisable(GL_CULL_FACE);
 		glLineWidth(p->lineWidth);
@@ -59,8 +61,9 @@ void Mesh::Render(MeshRenderParams* p) {
 
 	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
 	glLineWidth(defLineWidth);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
@@ -105,4 +108,4 @@ void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	glLineWidth(lineWidth);
 	glUseProgram(0);
 	glBindVertexArray(0);
-}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

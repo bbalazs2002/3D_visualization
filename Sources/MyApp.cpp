@@ -17,6 +17,7 @@ void CMyApp::SetupDebugCallback()
 void CMyApp::InitShaders()
 {
 	// Drawing models
+	/*
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Model.vert")
@@ -28,8 +29,10 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Selected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Selected.frag")
 		.Link();
+	*/
 
 	// Bezier
+	/*
 	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
@@ -41,8 +44,10 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
+	*/
 
 	// B-Spline
+	/*
 	m_programBSplineID = glCreateProgram();
 	ProgramBuilder{ m_programBSplineID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
@@ -54,8 +59,10 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 		.Link();
+	*/
 
 	// DiscreteCurve
+	/*
 	m_programDiscreteCurveID = glCreateProgram();
 	ProgramBuilder{ m_programDiscreteCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
@@ -67,8 +74,10 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
 		.Link();
+	*/
 
 	// Bezier-surface
+	/*
 	m_programBezierSurfaceID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSurfaceID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
@@ -79,6 +88,14 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBezierSurfaceSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+		.Link();
+	*/
+
+	// Light selection
+	m_programDirectionLightID = glCreateProgram();
+	ProgramBuilder{ m_programDirectionLightID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_DirectionSelection.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
 		.Link();
 
 	// Shadows
@@ -121,6 +138,13 @@ void CMyApp::CleanShaders()
 	m_programBezierSurfaceID = 0;
 	glDeleteProgram(m_programBezierSurfaceSelectedID);
 	m_programBezierSurfaceSelectedID = 0;
+
+	glDeleteProgram(m_programDirectionLightID);
+	m_programDirectionLightID = 0;
+	glDeleteProgram(m_programPointLightID);
+	m_programPointLightID = 0;
+	glDeleteProgram(m_programSpotLightID);
+	m_programSpotLightID = 0;
 
 	glDeleteProgram(m_programShadowID);
 	m_programShadowID = 0;
@@ -218,6 +242,22 @@ void CMyApp::CleanSkyboxGeometry()
 	CleanOGLObject(m_SkyboxGPU);
 }
 
+void CMyApp::InitLights() {
+	Light::directionProgram = m_programDirectionLightID;
+	Light::pointProgram = m_programPointLightID;
+	Light::spotProgram = m_programSpotLightID;
+	Light::show = true;
+
+	m_lights.push_back(new Light());
+}
+void CMyApp::CleanLights() {
+	for (int i = 0; i < m_lights.size(); ++i) {
+		delete(m_lights[i]);
+		m_lights[i] = nullptr;
+	}
+	m_lights.clear();
+}
+
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
@@ -311,6 +351,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -327,6 +368,7 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// B-Spline
 		/*
@@ -425,7 +467,6 @@ void CMyApp::InitModels() {
 		*/
 	}
 }
-
 void CMyApp::CleanModels() {
 	for (int i = 0; i < m_models.size(); ++i) {
 		delete(m_models[i]);
@@ -565,6 +606,7 @@ bool CMyApp::Init()
 
 	InitShaders();
 	InitTexture();
+	InitLights();
 	InitGeometry();
 	InitBuffers();
 	// InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
@@ -587,13 +629,13 @@ bool CMyApp::Init()
 
 	return true;
 }
-
 void CMyApp::Clean()
 {
 	CleanShaders();
 	CleanGeometry();
 	CleanTexture();
 	CleanBuffers();
+	CleanLights();
 	CleanResolutionDependentResources();
 }
 
@@ -617,6 +659,20 @@ void CMyApp::DrawAxes() const
 	glDrawArrays(GL_LINES, 0, 6);
 	glUseProgram(0);
 	glEnable(GL_DEPTH_TEST);
+}
+
+void CMyApp::RenderLightSuorce() const {
+	if (m_selectedLight < 0 || m_selectedLight >= m_lights.size()) {
+		return;
+	}
+	RenderParams rp{
+				m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
+				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
+				m_camera.GetViewProj(), true,
+				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2]),
+				glm::translate(m_camera.GetAt())
+	};
+	m_lights[m_selectedLight]->Render(&rp);
 }
 
 void CMyApp::RenderModels() const {
@@ -677,21 +733,11 @@ void CMyApp::Render() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/* TODO : IDrawable for lights
-	m_lights[m_selectedLight]->render(
-		RenderParams rp{
-				m_lineWidth, m_camera.GetEye(), m_LightsBufferID,
-				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
-				m_camera.GetViewProj(), true,
-				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
-		};
-	);
-	*/
-
-	RenderModels();
 	if (m_showAxes) {
 		DrawAxes();
 	}
+	RenderLightSuorce();
+	RenderModels();
 	// RenderSkybox();
 
 	// exit(1);

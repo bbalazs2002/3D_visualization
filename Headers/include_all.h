@@ -58,10 +58,10 @@
 #include "Interfaces/IPrintable.h"
 
 // Models
+#include "Types.h"
 #include "Transformation.h"
 #include "Material.h"
 #include "Light.h"
-#include "Types.h"
 #include "Models/Mesh.h"
 #include "Models/ModelLoader.h"
 #include "ModelBase.h"

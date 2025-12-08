@@ -9,12 +9,7 @@ public:
 	inline static int MeshID = -1;
 
 	CMyApp() {}
-	~CMyApp() {
-		for (int i = 0; i < m_lights.size(); ++i) {
-			delete(m_lights[i]);
-			m_lights[i] = nullptr;
-		} 
-	}
+	~CMyApp() {}
 
 	bool Init();
 	void Clean();
@@ -71,9 +66,13 @@ protected:
 	GLuint m_programDiscreteCurveSelectedID = 0;	// Draw Discrete curve selection
 	GLuint m_programBSplineID = 0;					// Draw BSpline-curves
 	GLuint m_programBSplineSelectedID = 0;			// Draw BSpline-curve selection
-	GLuint m_programBezierSurfaceID = 0;			// Draw BSpline-curves
-	GLuint m_programBezierSurfaceSelectedID = 0;	// Draw BSpline-curve selection
+	GLuint m_programBezierSurfaceID = 0;			// Draw Bezier-surface
+	GLuint m_programBezierSurfaceSelectedID = 0;	// Draw Bezier-surface selection
 	GLuint m_programShadowID = 0;					// Render shadow texture
+
+	GLuint m_programDirectionLightID = 0;			// Render direction light selection
+	GLuint m_programPointLightID = 0;				// Render point light selection
+	GLuint m_programSpotLightID = 0;				// Render spot light selection
 
 	// Shader initialization and termination
 	void InitShaders();
@@ -101,7 +100,9 @@ protected:
 	GLuint m_shadowTextureID = 0;
 
 	// Lighting
-	std::vector<Light*> m_lights{new Light()};
+	void InitLights();
+	void CleanLights();
+	std::vector<Light*> m_lights{};
 
 	// Texture initialization
 	void InitTexture();
@@ -124,5 +125,6 @@ protected:
 	// rendering methods
 	void DrawAxes() const;
 	void RenderModels() const;
+	void RenderLightSuorce() const;
 	void RenderSkybox() const;
 };

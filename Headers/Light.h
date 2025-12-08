@@ -3,7 +3,7 @@
 #include "include_all.h"
 
 // Light
-class Light {
+class Light : public IDrawable {
 public:
 	glm::vec3 direction = glm::vec3(0.0, 1.0, 0.0);
 	glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
@@ -17,11 +17,80 @@ public:
 	GLfloat innerAngle = 0.f;
 	GLfloat outerAngle = 0.f;
 
+	// parameters for rendering
+	static inline GLuint directionProgram = 0;
+	static inline GLuint pointProgram = 0;
+	static inline GLuint spotProgram = 0;
+	static inline bool show = true;
+
 	void inline SetType(int newType) {
 		type = static_cast<GLfloat>(newType);
 	}
 	int inline GetType() const {
 		return static_cast<int>(type);
+	}
+
+	void inline Render(RenderParams* p) {
+		if (!show) {
+			return;
+		}
+
+		// -- Activate shader --
+		GLuint progID = 0;
+		if (type > 1.5f) {			// render spot
+			progID = spotProgram;
+			if (spotProgram <= 0) {
+				Log::errorToConsole("Shader for rendering spot lightsource is not found");
+			}
+		}
+		else if (type > .5f) {		// render point
+			progID = pointProgram;
+			if (pointProgram <= 0) {
+				Log::errorToConsole("Shader for rendering point lightsource is not found");
+			}
+		}
+		else {						// render direction
+			progID = directionProgram;
+			if (directionProgram <= 0) {
+				Log::errorToConsole("Shader for rendering direction lightsource is not found");
+			}
+		}
+		if (progID <= 0) {
+			show = false;
+			return;
+		}
+		glUseProgram(progID);
+
+		// -- Set render options --
+		GLfloat defLineWidth;
+		glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+		glLineWidth(p->selectionWidth);
+
+		// -- Set shader input data --
+		// Camera module
+		glUniform3fv(ul(progID, "cameraData.cameraPos"), 1, glm::value_ptr(p->cameraPos));
+		glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+		// Light module
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
+		glUniform1i(ul(progID, "lightData.lightCount"), 1);
+		// Transform module
+		glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(p->globalTransform));
+		// Other data
+		glUniform1i(ul(progID, "lightID"), p->modelIndex);
+
+		// -- Draw call --
+		glDrawArrays(GL_TRIANGLES, 0, 33);
+
+		// -- Restore initial OGL state --
+		glLineWidth(defLineWidth);
+		glUseProgram(0);
+	}
+	void inline RenderSelection(RenderParams* p) { return; }
+	void inline RenderGUIBase() {
+	
+	}
+	virtual void RenderGUI(std::vector<ModelBase*>* models) {
+	
 	}
 
 	static void UploadLightToSSBO(GLuint SSBOID, int count, const Light* const* light) {
