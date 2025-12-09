@@ -1,6 +1,6 @@
 # Shader Modules Documentation
 
-<img width="2966" height="1641" alt="Modules" src="https://github.com/user-attachments/assets/97734627-316f-4c0c-9128-e646d564b417" />
+![Modules_diagram](Modules.png)
 
 ## Shader Module Structure and Conventions
 
@@ -9,10 +9,10 @@ To ensure efficient inclusion and usage of shader modules, each module is organi
 ### 1. Module File Structure
 Each module consists of **two files**:
 
-- **`[module]_uniforms.glsl`** – Contains all uniforms, buffers, and preprocessor macros required for the module to function.  
+- **`\[module\]_uniforms.glsl`** – Contains all uniforms, buffers, and preprocessor macros required for the module to function.  
   - If a uniform is a non-primitive type, its definition is included in this file.
 
-- **`[module].glsl`** – Contains the module’s functions.  
+- **`\[module\].glsl`** – Contains the module’s functions.  
   - If a function’s parameters or return type are non-primitive types, their definitions are included here.
 
 ### 2. Buffer Binding Conventions
@@ -31,7 +31,7 @@ If a module uses any buffers, the corresponding **binding points must be defined
 - [DiscreteCurve Module](#discretecurve-module)
 - [Light Module](#light-module)
 - [Material Module](#material-module)
-- [Math module](#math-module)
+- [Math Module](#math-module)
 - [Transform Module](#transform-module)
 
 ---
@@ -43,7 +43,7 @@ The **BezierCurve** module generates points along a Bézier curve based on the c
 ### Functionality
 - The module uses the **closed-form calculation** with the Bernstein basis.  
 - The **basis function** can also be called independently.  
-- This module depends on the **Math** module (`math.glsl`).
+- This module depends on the **Math** module (`Math.glsl`).
 
 ### Include path
 - `./ObjectTypes/BezierCurve/BezierCurve_uniforms.glsl`
@@ -79,6 +79,7 @@ The surface is constructed as a **tensor-product Bézier surface**, formed by B�
 - Generates a Bézier surface from a 2D grid of control points.  
 - Requires the number of control points and division values in **both dimensions**, provided as `ivec2`.  
 - Includes functions for computing surface normals, which are useful for lighting and shading.
+- This module depends on the **BezierCurve** module (`BezierCurve.glsl`), but not includes it's uniorms.
 
 ### Include path
 - `./ObjectTypes/BezierSurface/BezierSurface_uniforms.glsl`
@@ -145,7 +146,7 @@ The **BSpline** module generates points along a B-spline curve based on the cont
 - `BSplineGetTStart(params : GetTParams) : float`
 - `BSplineGetTEnd(params : GetTParams) : float`
 - `BSplineFindKnotSpan(params : BSplineParams) : int`
-- `BSplineEvaluateBasisFunctions(spanIndex : int, params : BSplineParams, N : float*) : void`
+- `BSplineEvaluateBasisFunctions(spanIndex : int, params : BSplineParams, N : float[]) : void`
 - `BSpline(params : BSplineParams) : vec3`
 
 ### Preprocessor Macros
@@ -256,7 +257,7 @@ It reads light sources from an SSBO and evaluates the color of each fragment usi
 
 ### Functionality
 
-- The `LightCalculate` function expects the material data of the model as a `float[13]` array. This array must follow the exact layout produced by the `MaterialPrepare` function from the **Material** module.
+- The `LightCalculate` function expects the material data of the model as a `float\[13\]` array. This array must follow the exact layout produced by the `MaterialPrepare` function from the **Material** module.
 - Additionally, preprocessor macros can be used to define which numeric identifiers correspond to each light source type in the SSBO.
 
 ### Include path
@@ -286,10 +287,10 @@ It reads light sources from an SSBO and evaluates the color of each fragment usi
 - viewDir : vec3
 - position : vec3
 - material : float[13]
-  - [0-2]:  ambient color
-  - [3-5]:  diffuse color
-  - [6-8]:  specular color
-  - [9-11]: emission color
+  - \[0-2\]:  ambient color
+  - \[3-5\]:  diffuse color
+  - \[6-8\]:  specular color
+  - \[9-11\]: emission color
   - \[12\]: shininess
 
 **LightUniforms**
@@ -299,8 +300,8 @@ It reads light sources from an SSBO and evaluates the color of each fragment usi
 - `lightData` : `LightUniforms`
 
 ### Functions
-- `LightCalculateContribution(LightCalculateContributionParams : params) : vec3`
-- `LightCalculate(LightCalculateParams : params) : vec3`
+- `LightCalculateContribution(params : LightCalculateContributionParams) : vec3`
+- `LightCalculate(params : LightCalculateParams) : vec3`
 
 ### Preprocessor Macros
 - `LIGHT_LIGHTS_SSBO`
@@ -338,15 +339,15 @@ The **Material** module handles receiving and preparing a model's material for u
 
 ### Functions
 - MaterialPrepare(texCoord : vec2) : float[13]
-  - [0-2]:  ambient color
-  - [3-5]:  diffuse color
-  - [6-8]:  specular color
-  - [9-11]: emission color
+  - \[0-2\]:  ambient color
+  - \[3-5\]:  diffuse color
+  - \[6-8\]:  specular color
+  - \[9-11\]: emission color
   - \[12\]: shininess
 
 ---
 
-## Math module
+## Math Module
 
 The **Math** module does not use any uniforms, so the `Math_uniforms.glsl` file does not exist.  
 This module is simple and provides utility functions, primarily to support computations related to the Bernstein basis.
