@@ -79,7 +79,7 @@ The surface is constructed as a **tensor-product Bézier surface**, formed by B�
 - Generates a Bézier surface from a 2D grid of control points.  
 - Requires the number of control points and division values in **both dimensions**, provided as `ivec2`.  
 - Includes functions for computing surface normals, which are useful for lighting and shading.
-- This module depends on the **BezierCurve** module (`BezierCurve.glsl`), but not includes it's uniorms.
+- This module depends on the **BezierCurve** module (`BezierCurve.glsl`), but does not includes its uniforms.
 
 ### Include path
 - `./ObjectTypes/BezierSurface/BezierSurface_uniforms.glsl`
