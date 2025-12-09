@@ -11,6 +11,13 @@
 #define MODEL_TYPE_DISCRETECURVE 4
 #define MODEL_TYPE_BEZIERSURFACE 5
 
+// light type id
+#define LIGHT_TYPE_TYPE GLint
+#define LIGHT_TYPE_UNDEFINED -1
+#define LIGHT_TYPE_DIRECTIONAL 0
+#define LIGHT_TYPE_POINT 1
+#define LIGHT_TYPE_SPOT 2
+
 // model - modelBase adapters
 #define MODEL2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,params.drawMode}
 #define BEZIERCURVE2MODELBASE ModelBaseParams{params.programID,params.programSelectedID,params.name,params.show,GL_LINE_STRIP}

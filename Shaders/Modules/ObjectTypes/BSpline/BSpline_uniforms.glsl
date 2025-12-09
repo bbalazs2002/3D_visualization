@@ -6,12 +6,12 @@
 #endif
 
 // === Control points SSBO ===
-layout(std430, binding = BSPLINE_CTRL_POINTS_SSBO) buffer ctrlPointsSSBO {
+layout(std430, binding = BSPLINE_CTRL_POINTS_SSBO) buffer BSplineCtrlPointsSSBO {
     vec4 BSplineCtrlPoints[];
 };
 
 // === Knot vector SSBO ===
-layout(std430, binding = BSPLINE_KNOTS_SSBO) buffer knotSSBO {
+layout(std430, binding = BSPLINE_KNOTS_SSBO) buffer BSplineKnotSSBO {
     float BSplineKnots[];
 };
 

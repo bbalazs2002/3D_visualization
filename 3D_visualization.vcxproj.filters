@@ -100,9 +100,6 @@
     <ClInclude Include="Headers\Classes.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Light.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Surfaces\BezierSurface.h">
       <Filter>Headers\Surfaces</Filter>
     </ClInclude>
@@ -126,6 +123,18 @@
     </ClInclude>
     <ClInclude Include="Headers\Models\ModelLoader.h">
       <Filter>Headers\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Lights\Light.h">
+      <Filter>Headers\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Lights\DirectionalLight.h">
+      <Filter>Headers\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Lights\PointLight.h">
+      <Filter>Headers\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Lights\SpotLight.h">
+      <Filter>Headers\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -458,6 +467,9 @@
     </Filter>
     <Filter Include="Headers\Models">
       <UniqueIdentifier>{bb4cf1d5-672e-42fb-b061-5c7f360faf8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Lights">
+      <UniqueIdentifier>{7a3fead9-bcee-4131-b044-fe4ff9faa161}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

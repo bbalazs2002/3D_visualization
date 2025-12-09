@@ -109,7 +109,10 @@
     <ClInclude Include="Headers\include_all.h" />
     <ClInclude Include="Headers\Interfaces\IDrawable.h" />
     <ClInclude Include="Headers\Interfaces\IPrintable.h" />
-    <ClInclude Include="Headers\Light.h" />
+    <ClInclude Include="Headers\Lights\DirectionalLight.h" />
+    <ClInclude Include="Headers\Lights\Light.h" />
+    <ClInclude Include="Headers\Lights\PointLight.h" />
+    <ClInclude Include="Headers\Lights\SpotLight.h" />
     <ClInclude Include="Headers\Log.h" />
     <ClInclude Include="Headers\Material.h" />
     <ClInclude Include="Headers\ModelBase.h" />

@@ -43,11 +43,7 @@ void main()
     gl_Position = CameraViewProj(p);
     vs_out_pos = CameraViewProj(p).xyz;
 
-    vec3 T_u = BezierSurface_du(
+    vs_out_norm = BezierSurfaceNormal(
         BezierSurfaceParams(u, v, bezierSurfaceData.ctrlPointCount)
     );
-    vec3 T_v = BezierSurface_dv(
-        BezierSurfaceParams(u, v, bezierSurfaceData.ctrlPointCount)
-    );
-    vs_out_norm = normalize(cross(T_v, T_u));
 }
