@@ -9,10 +9,10 @@ To ensure efficient inclusion and usage of shader modules, each module is organi
 ### 1. Module File Structure
 Each module consists of **two files**:
 
-- **`\[module\]_uniforms.glsl`** – Contains all uniforms, buffers, and preprocessor macros required for the module to function.  
+- **`[module]_uniforms.glsl`** – Contains all uniforms, buffers, and preprocessor macros required for the module to function.  
   - If a uniform is a non-primitive type, its definition is included in this file.
 
-- **`\[module\].glsl`** – Contains the module’s functions.  
+- **`[module].glsl`** – Contains the module’s functions.  
   - If a function’s parameters or return type are non-primitive types, their definitions are included here.
 
 ### 2. Buffer Binding Conventions
@@ -257,7 +257,7 @@ It reads light sources from an SSBO and evaluates the color of each fragment usi
 
 ### Functionality
 
-- The `LightCalculate` function expects the material data of the model as a `float\[13\]` array. This array must follow the exact layout produced by the `MaterialPrepare` function from the **Material** module.
+- The `LightCalculate` function expects the material data of the model as a `float[13]` array. This array must follow the exact layout produced by the `MaterialPrepare` function from the **Material** module.
 - Additionally, preprocessor macros can be used to define which numeric identifiers correspond to each light source type in the SSBO.
 
 ### Include path
