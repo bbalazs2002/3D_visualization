@@ -17,9 +17,14 @@ class Mesh;
 class Model;
 class ModelLoader;
 
+// Lights
+class Light;
+class DirectionalLight;
+class PointLight;
+class SpotLight;
+
 // Utilities
 class Transformation;
-class Light;
 struct Material;
 
 // Types

@@ -86,3 +86,9 @@ vec3 BezierSurface(BezierSurfaceParams params) {
     }
     return p;
 }
+
+vec3 BezierSurfaceNormal(BezierSurfaceParams params) {
+    vec3 T_u = BezierSurface_du(params);
+    vec3 T_v = BezierSurface_dv(params);
+    return normalize(cross(T_v, T_u));
+}

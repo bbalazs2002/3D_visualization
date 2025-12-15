@@ -42,46 +42,46 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();*/
 
-	// B-Spline
-	/*m_programBSplineID = glCreateProgram();
-	ProgramBuilder{ m_programBSplineID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-		.Link();
+		// B-Spline
+		/*m_programBSplineID = glCreateProgram();
+		ProgramBuilder{ m_programBSplineID }
+			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
+			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
+			.Link();
 
-	m_programBSplineSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programBSplineSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-		.Link();*/
+		m_programBSplineSelectedID = glCreateProgram();
+		ProgramBuilder{ m_programBSplineSelectedID }
+			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
+			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
+			.Link();*/
 
-	// DiscreteCurve
-	/*m_programDiscreteCurveID = glCreateProgram();
-	ProgramBuilder{ m_programDiscreteCurveID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
-		.Link();
+			// DiscreteCurve
+			/*m_programDiscreteCurveID = glCreateProgram();
+			ProgramBuilder{ m_programDiscreteCurveID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+				.Link();
 
-	m_programDiscreteCurveSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programDiscreteCurveSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
-		.Link();*/
+			m_programDiscreteCurveSelectedID = glCreateProgram();
+			ProgramBuilder{ m_programDiscreteCurveSelectedID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+				.Link();*/
 
-	// Bezier-surface
-	/*m_programBezierSurfaceID = glCreateProgram();
-	ProgramBuilder{ m_programBezierSurfaceID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
-		.Link();
+				// Bezier-surface
+				/*m_programBezierSurfaceID = glCreateProgram();
+				ProgramBuilder{ m_programBezierSurfaceID }
+					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
+					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
+					.Link();
 
-	m_programBezierSurfaceSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programBezierSurfaceSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
-		.Link();*/
+				m_programBezierSurfaceSelectedID = glCreateProgram();
+				ProgramBuilder{ m_programBezierSurfaceSelectedID }
+					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
+					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+					.Link();*/
 
-	// Light selection
+					// Light selection
 	m_programDirectionLightID = glCreateProgram();
 	ProgramBuilder{ m_programDirectionLightID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_DirectionSelection.vert")
@@ -341,7 +341,7 @@ void CMyApp::InitModels() {
 				{ 0, 0, 0, 1 }
 			}
 		));
-		((Model*) m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
 
 		// B-Spline
 		/*
@@ -448,12 +448,12 @@ void CMyApp::CleanModels() {
 }
 
 void CMyApp::InitLights() {
-	Light::directionProgram = m_programDirectionLightID;
-	Light::pointProgram = m_programPointLightID;
-	Light::spotProgram = m_programSpotLightID;
-	Light::show = true;
-
-	m_lights.push_back(new Light());
+	m_lights.push_back(new DirectionalLight());
+	m_lights[m_lights.size() - 1]->SetProgramID(m_programDirectionLightID);
+	m_lights.push_back(new PointLight());
+	m_lights[m_lights.size() - 1]->SetProgramID(m_programPointLightID);
+	m_lights.push_back(new SpotLight());
+	m_lights[m_lights.size() - 1]->SetProgramID(m_programSpotLightID);
 }
 void CMyApp::CleanLights() {
 	for (int i = 0; i < m_lights.size(); ++i) {
@@ -650,7 +650,6 @@ void CMyApp::DrawAxes() const
 		glEnable(GL_DEPTH_TEST);
 	}
 }
-
 void CMyApp::RenderLightSuorce() const {
 	if (m_selectedLight < 0 || m_selectedLight >= m_lights.size()) {
 		return;
@@ -668,7 +667,6 @@ void CMyApp::RenderLightSuorce() const {
 	};
 	m_lights[m_selectedLight]->Render(&rp);
 }
-
 void CMyApp::RenderModels() const {
 
 	// update first vec4 in the buffer to the default model id
@@ -680,8 +678,11 @@ void CMyApp::RenderModels() const {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ModelIDBufferID);
 
 	// update light buffer
-	Light::UploadLightToSSBO(m_LightsBufferID, m_lights.size(), m_lights.data());
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_LightsBufferID);
+	int lcounter = 0;
+	for (auto l : m_lights) {
+		l->UploadToSSBO(m_LightsBufferID, lcounter);
+		++lcounter;
+	}
 
 	// Render all models
 	int objCount = 0;
@@ -696,7 +697,6 @@ void CMyApp::RenderModels() const {
 		++objCount;
 	}
 }
-
 void CMyApp::RenderSkybox() const {
 	glUseProgram(m_programSkyboxID);
 
@@ -722,7 +722,6 @@ void CMyApp::RenderSkybox() const {
 	glBindVertexArray(0);
 	glBindTextureUnit(0, 0);
 }
-
 void CMyApp::Render() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -782,6 +781,7 @@ void CMyApp::RenderGUI()
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::InputInt("Selected light", &m_selectedLight);
 		ImGui::SliderFloat("Selection width", &m_selectionWidth, 1.f, 10.f);
 		ImGui::ColorEdit3("Selection color", &m_selColor.r);
 		ImGui::SliderFloat("Line width", &m_lineWidth, 1.f, 10.f);
@@ -839,6 +839,27 @@ void CMyApp::RenderGUI()
 				}
 			));
 		}
+		// Add new light
+		if (ImGui::Button("Add Directional light")) {
+			DirectionalLight* dl = new DirectionalLight();
+			dl->SetProgramID(m_programDirectionLightID);
+			m_lights.push_back(dl);
+			InitLightBuffer();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add Point light")) {
+			PointLight* pl = new PointLight();
+			pl->SetProgramID(m_programPointLightID);
+			m_lights.push_back(pl);
+			InitLightBuffer();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add Spot light")) {
+			SpotLight* sl = new SpotLight();
+			sl->SetProgramID(m_programSpotLightID);
+			m_lights.push_back(sl);
+			InitLightBuffer();
+		}
 
 		// Log data to console
 		if (ImGui::Button("Log data to console")) {
@@ -852,41 +873,31 @@ void CMyApp::RenderGUI()
 	ImGui::End();
 
 	// LIGHT OPTION WINDOW
-	if (ImGui::Begin("Light options")) {
-		ImGui::InputInt("Selected light", &m_selectedLight);
-		if (m_selectedLight >= 0 && m_selectedLight < m_lights.size()) {
-			int i = m_selectedLight;
-			ImGui::SliderFloat3("Position", &m_lights[i]->position.x, -10.f, 10.f);
-			ImGui::SliderFloat3("Direction", &m_lights[i]->direction.x, -10.f, 10.f);
-			ImGui::SliderFloat3("La", &m_lights[i]->La.x, -10.f, 10.f);
-			ImGui::SliderFloat3("Ld", &m_lights[i]->Ld.x, -10.f, 10.f);
-			ImGui::SliderFloat3("Ls", &m_lights[i]->Ls.x, -10.f, 10.f);
-			ImGui::Text("Attenuation");
-			ImGui::SliderFloat("Constant", &m_lights[i]->constantAttenuation, -10.f, 10.f);
-			ImGui::SliderFloat("Linear", &m_lights[i]->linearAttenuation, -10.f, 10.f);
-			ImGui::SliderFloat("Quadratic", &m_lights[i]->quadraticAttenuation, -10.f, 10.f);
+	if (m_selectedLight >= 0 && m_selectedLight < m_lights.size()) {
 
-			int type = m_lights[i]->GetType();
-			if (ImGui::InputInt("Type", &type)) {
-				m_lights[i]->SetType(type);
-			}
+		Light* l = m_lights[m_selectedLight];
 
-			ImGui::SliderAngle("Inner angle", &m_lights[i]->innerAngle, 0, 80);
-			ImGui::SliderAngle("Outer angle", &m_lights[i]->outerAngle, 0, 80);
-			if (ImGui::Button("Delete Light")) {
-				delete(m_lights[i]);
-				m_lights.erase(m_lights.begin() + i);
-				InitLightBuffer();
-				ImGui::End();
-				return;
-			}
+		// Delete selected light if marked
+		if (l->MarkedForDeletion()) {
+			delete(l);
+			m_lights.erase(m_lights.begin() + m_selectedLight);
+			m_selectedLight = -1;
+			return;
 		}
-		if (ImGui::Button("Add Light")) {
-			m_lights.push_back(new Light());
-			InitLightBuffer();
+
+		if (ImGui::Begin("Light options")) {
+			// Render type specific options
+			l->RenderGUI(nullptr);
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			// Render general options
+			l->RenderGUIBase();
 		}
+		ImGui::End();
 	}
-	ImGui::End();
 
 	// INTERPOLATION WINDOW
 	/*

@@ -8,7 +8,7 @@ struct BezierParams {
     float t;
     int ctrlPointCount;
 };
-vec3 Bezier(BezierParams params) {
+vec3 BezierCurve(BezierParams params) {
     vec3 val = vec3(0);
     int n = params.ctrlPointCount - 1;
     for (int k = 0; k <= n; ++k) {
