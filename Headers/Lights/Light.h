@@ -5,24 +5,12 @@
 // Light
 class Light : public IDrawable {
 protected:
-	glm::vec3 m_direction = glm::vec3(0.0, 1.0, 0.0);
-	glm::vec3 m_position = glm::vec3(0.0, 0.0, 0.0);
-
+	LIGHT_TYPE_TYPE m_type = LIGHT_TYPE_UNDEFINED;	// directional: 0, point: 1, spot: 2
 	glm::vec3 m_La = glm::vec3(0.2, 0.2, 0.2);
 	glm::vec3 m_Ld = glm::vec3(1.0, 1.0, 1.0);
 	glm::vec3 m_Ls = glm::vec3(0.5, 0.5, 0.5);
-
-	GLfloat m_constantAttenuation = 1.f;
-	GLfloat m_linearAttenuation = 0;
-	GLfloat m_quadraticAttenuation = 0;
-
-	GLfloat m_innerAngle = 0.f;
-	GLfloat m_outerAngle = 0.f;
-
-	LIGHT_TYPE_TYPE m_type = LIGHT_TYPE_UNDEFINED;	// directional: 0, point: 1, spot: 2
 	bool m_show = true;
-
-	// parameters for rendering
+	bool m_deleteMarker = false;
 	GLuint m_programID = 0;
 
 public:
@@ -40,6 +28,9 @@ public:
 	GLint inline GetType() const {
 		return static_cast<GLint>(m_type);
 	}
+	glm::vec2 inline GetTypeForSSBO() const {
+		return glm::vec2(static_cast<GLfloat>(m_type), 0.f);
+	}
 
 	void inline SetProgramID(GLuint programID) {
 		m_programID = programID;
@@ -48,174 +39,55 @@ public:
 		return m_programID;
 	}
 
+	void inline SetLa(glm::vec3 La) {
+		m_La = La;
+	}
+	glm::vec3 inline GetLa() const {
+		return m_La;
+	}
+	void inline SetLd(glm::vec3 Ld) {
+		m_Ld = Ld;
+	}
+	glm::vec3 inline GetLd() const {
+		return m_Ld;
+	}
+	void inline SetLs(glm::vec3 Ls) {
+		m_Ls = Ls;
+	}
+	glm::vec3 inline GetLs() const {
+		return m_Ls;
+	}
+
+	void inline MarkForDeletion() {
+		m_deleteMarker = true;
+	}
+	bool inline MarkedForDeletion() const {
+		return m_deleteMarker;
+	}
+
 	virtual void Render(RenderParams* p) = 0;
 	virtual void RenderSelection(RenderParams* p) = 0;
 	virtual void RenderGUI(std::vector<ModelBase*>* models) = 0;
 	void inline RenderGUIBase() {
+		glm::vec3 color = GetLa();
+		if (ImGui::SliderFloat3("La", &color.x, 0.f, 10.f)) {
+			SetLa(color);
+		}
+		color = GetLd();
+		if (ImGui::SliderFloat3("Ld", &color.x, 0.f, 10.f)) {
+			SetLd(color);
+		}
+		color = GetLs();
+		if (ImGui::SliderFloat3("Ls", &color.x, 0.f, 10.f)) {
+			SetLs(color);
+		}
 
-	}
-
-	virtual void UploadToSSBO(GLuint SSBOID, size_t padding, int count) = 0;
-
-
-
-
-	void inline Render(RenderParams* p) {
-		if (!show) {
+		if (ImGui::Button("Delete Light")) {
+			MarkForDeletion();
 			return;
 		}
 
-		// -- Activate shader --
-		int pointCount = 0;
-		GLuint progID = 0;
-		if (type > 1.5f) {			// render spot
-			progID = spotProgram;
-			if (spotProgram <= 0) {
-				Log::errorToConsole("Shader for rendering spot lightsource is not found");
-			}
-		}
-		else if (type > .5f) {		// render point
-			progID = pointProgram;
-			if (pointProgram <= 0) {
-				Log::errorToConsole("Shader for rendering point lightsource is not found");
-			}
-		}
-		else {						// render direction
-			progID = directionProgram;
-			if (directionProgram <= 0) {
-				Log::errorToConsole("Shader for rendering direction lightsource is not found");
-			}
-		}
-		if (progID <= 0) {
-			show = false;
-			return;
-		}
-		glUseProgram(progID);
-
-		// -- Set render options --
-		GLboolean cullFace = glIsEnabled(GL_CULL_FACE);
-		glDisable(GL_CULL_FACE);
-
-		// -- Extract data from render params --
-		RenderLightParams* rlp = (RenderLightParams*)p->otherData;
-
-		// -- Set shader input data --
-		// Camera module
-		glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
-		glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
-		glUniform3fv(ul(progID, "cameraData.at"), 1, glm::value_ptr(rlp->cameraAt));
-		glUniform3fv(ul(progID, "cameraData.up"), 1, glm::value_ptr(rlp->cameraUp));
-		// Light module
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-		glUniform1i(ul(progID, "lightData.lightCount"), 1);
-		// Other data
-		glUniform1i(ul(progID, "lightID"), p->modelIndex);
-
-		// -- Draw call --
-		if (type > 1.5f) {			// render spot
-			glUniform1i(ul(progID, "isInner"), 0);
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
-			glUniform1i(ul(progID, "isInner"), 1);
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
-		}
-		else if (type > .5f) {		// render point
-			glDrawArrays(GL_TRIANGLES, 0, 24);
-		}
-		else {						// render direction
-			glDrawArrays(GL_TRIANGLES, 0, 33);
-		}
-
-
-		// -- Restore initial OGL state --
-		if (cullFace) {
-			glEnable(GL_CULL_FACE);
-		}
-		glUseProgram(0);
-	}
-	void inline RenderSelection(RenderParams* p) { return; }
-	virtual void RenderGUI(std::vector<ModelBase*>* models) {
-
 	}
 
-	static void UploadLightToSSBO(GLuint SSBOID, int count, const Light* const* light) {
-		//struct Light {
-		//    vec4 La_const;			// xyz: La, w: constant attenuation
-		//    vec4 Ld_linear;			// xyz: Ld, w: linear attenuation
-		//    vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
-		//    vec4 direction;			// xyz: direction, w: padding
-		//    vec4 position;			// xyz: position, w: padding
-		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: padding
-		//};
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOID);
-
-		for (int i = 0; i < count; ++i) {
-			size_t padding = i * sizeof(glm::vec4) * 6;
-
-			// La_const.xyz
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding, sizeof(glm::vec3),
-				&light[i]->La.x
-			);
-			// La_const.w
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec3), sizeof(GLfloat),
-				&light[i]->constantAttenuation
-			);
-
-			// Ld_linear.xyz
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4), sizeof(glm::vec3),
-				&light[i]->Ld.x
-			);
-			// Ld_linear.w
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) + sizeof(glm::vec3), sizeof(GLfloat),
-				&light[i]->linearAttenuation
-			);
-
-			// Ls_quadratic.xyz
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2, sizeof(glm::vec3),
-				&light[i]->Ls.x
-			);
-			// Ls_quadratic.w
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2 + sizeof(glm::vec3), sizeof(GLfloat),
-				&light[i]->quadraticAttenuation
-			);
-
-			// direction.xyz
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 3, sizeof(glm::vec3),
-				&light[i]->direction.x
-			);
-			// direction.w (padding)
-
-			// position.xyz
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 4, sizeof(glm::vec3),
-				&light[i]->position.x
-			);
-			// position.w (padding)
-
-			// type_angle.x
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5, sizeof(GLfloat),
-				&light[i]->type
-				// &Light::testData
-			);
-			// type_angle.y
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat), sizeof(GLfloat),
-				&light[i]->innerAngle
-			);
-			// type_angle.z
-			glBufferSubData(
-				GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat) * 2, sizeof(GLfloat),
-				&light[i]->outerAngle
-			);
-		}
-
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	}
+	virtual void UploadToSSBO(GLuint SSBOID, int padding) const = 0;
 };

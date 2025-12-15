@@ -159,6 +159,6 @@ void ModelBase::RenderGUIBase() {
 
 	// Mark object for deletion
 	if (ImGui::Button("Delete")) {
-		m_deleteMarker = true;
+		MarkForDeletion();
 	}
 }

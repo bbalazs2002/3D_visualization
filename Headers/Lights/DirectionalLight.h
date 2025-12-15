@@ -11,7 +11,14 @@ public:
 		m_type = LIGHT_TYPE_DIRECTIONAL;
 	}
 
-	void inline Render(RenderParams* p) {
+	void inline SetDirection(glm::vec3 direction) {
+		m_direction = direction;
+	}
+	glm::vec3 inline GetDirection() const {
+		return m_direction;
+	}
+
+	void inline Render(RenderParams* p) override {
 		if (!GetShow()) {
 			return;
 		}
@@ -20,6 +27,8 @@ public:
 		GLuint progID = GetProgramID();
 		if (progID <= 0) {
 			Log::errorToConsole("Shader for rendering lightsource is not found");
+			SetShow(false);
+			return;
 		}
 		glUseProgram(progID);
 
@@ -50,14 +59,17 @@ public:
 		}
 		glUseProgram(0);
 	}
-	void inline RenderSelection(RenderParams* p) {
+	void inline RenderSelection(RenderParams* p) override {
 		return;
 	}
-	void inline RenderGUI(std::vector<ModelBase*>* models) {
-		return;
+	void inline RenderGUI(std::vector<ModelBase*>* models) override {
+		glm::vec3 dir = GetDirection();
+		if (ImGui::SliderFloat3("Direction", &dir.x, -10.f, 10.f)) {
+			SetDirection(dir);
+		}
 	}
 
-	virtual void UploadToSSBO(GLuint SSBOID, int padding, int count) {
+	void inline UploadToSSBO(GLuint SSBOID, int padding) const override {
 		//struct Light {
 		//    vec4 La_const;			// xyz: La, w: constant attenuation
 		//    vec4 Ld_linear;			// xyz: Ld, w: linear attenuation
@@ -66,74 +78,45 @@ public:
 		//    vec4 position;			// xyz: position, w: padding
 		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: padding
 		//};
+
+		//
+		// 1. Map SSBO
+		//
+		size_t lightSize = sizeof(glm::vec4) * 6;
+		size_t p = padding * lightSize;
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOID);
+		GLfloat* buffer = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, p, lightSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+		if (!buffer) {
+			Log::errorToConsole("Failed to map SSBO for writing directional light data");
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+			return;
+		}
 
-		size_t p = padding * sizeof(glm::vec4) * 6;
+		//
+		// 2. Fill SSBO
+		//
 
-		// La_const.xyz
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding, sizeof(glm::vec3),
-			&light[i]->La.x
-		);
-		// La_const.w
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec3), sizeof(GLfloat),
-			&light[i]->constantAttenuation
-		);
+		// [0-3] La_const (La.xyz és constant attenuation.w)
+		memcpy(&buffer[0], glm::value_ptr(GetLa()), sizeof(glm::vec3));
 
-		// Ld_linear.xyz
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4), sizeof(glm::vec3),
-			&light[i]->Ld.x
-		);
-		// Ld_linear.w
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) + sizeof(glm::vec3), sizeof(GLfloat),
-			&light[i]->linearAttenuation
-		);
+		// [4-7] Ld_linear (Ld.xyz és linear attenuation.w)
+		memcpy(&buffer[4], glm::value_ptr(GetLd()), sizeof(glm::vec3));
 
-		// Ls_quadratic.xyz
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2, sizeof(glm::vec3),
-			&light[i]->Ls.x
-		);
-		// Ls_quadratic.w
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 2 + sizeof(glm::vec3), sizeof(GLfloat),
-			&light[i]->quadraticAttenuation
-		);
+		// [8-11] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
+		memcpy(&buffer[8], glm::value_ptr(GetLs()), sizeof(glm::vec3));
 
-		// direction.xyz
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 3, sizeof(glm::vec3),
-			&light[i]->direction.x
-		);
-		// direction.w (padding)
+		// [12-15] direction (direction.xyz és padding.w)
+		memcpy(&buffer[12], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
 
-		// position.xyz
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 4, sizeof(glm::vec3),
-			&light[i]->position.x
-		);
-		// position.w (padding)
+		// [16-19] position (position.xyz és padding.w)
 
-		// type_angle.x
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5, sizeof(GLfloat),
-			&light[i]->type
-			// &Light::testData
-		);
-		// type_angle.y
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat), sizeof(GLfloat),
-			&light[i]->innerAngle
-		);
-		// type_angle.z
-		glBufferSubData(
-			GL_SHADER_STORAGE_BUFFER, padding + sizeof(glm::vec4) * 5 + sizeof(GLfloat) * 2, sizeof(GLfloat),
-			&light[i]->outerAngle
-		);
+		// [20-23] type_angle (type.x, inner.y, outer.z, padding.w)
+		buffer[20] = (GLfloat)GetType();
 
+		//
+		// 3. Unmap SSBO
+		//
+		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	}
 };

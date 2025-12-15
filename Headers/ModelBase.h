@@ -60,11 +60,14 @@ public:
 	}
 
 	// IDrawable methods
-	// virtual void Render(RenderParams* p) override = 0;
-	// virtual void RenderSelection(RenderParams* p) override = 0;
-	// virtual void RenderGUI(std::vector<ModelBase*>* models) = 0;
+	virtual void Render(RenderParams* p) override = 0;
+	virtual void RenderSelection(RenderParams* p) override = 0;
+	virtual void RenderGUI(std::vector<ModelBase*>* models) = 0;
 	void RenderGUIBase() override;
 
+	void MarkForDeletion() {
+		m_deleteMarker = true;
+	}
 	bool MarkedForDeletion() {
 		return m_deleteMarker;
 	}
