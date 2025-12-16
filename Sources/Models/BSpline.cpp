@@ -29,6 +29,8 @@ BSpline::~BSpline() {
     m_ctrlPointsSSBOID = 0;
     glDeleteBuffers(1, &m_knotsSSBOID);
     m_knotsSSBOID = 0;
+	glDeleteBuffers(1, &m_interpolatedPointsSSBOID);
+	m_interpolatedPointsSSBOID = 0;
 }
 
 void BSpline::SetCtrlPointsSSBO() {

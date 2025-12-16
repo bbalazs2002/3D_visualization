@@ -12,6 +12,7 @@ BezierCurve::BezierCurve(BezierCurveParams params) : ModelBase(BEZIERCURVE2MODEL
 }
 BezierCurve::~BezierCurve() {
 	glDeleteBuffers(1, &m_ctrlPointsSSBOID);
+	m_ctrlPointsSSBOID = 0;
 }
 
 void BezierCurve::Render(RenderParams* p) {

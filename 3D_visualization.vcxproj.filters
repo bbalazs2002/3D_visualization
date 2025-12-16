@@ -136,6 +136,9 @@
     <ClInclude Include="Headers\Lights\SpotLight.h">
       <Filter>Headers\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Surfaces\BezierSurfaceInterpolation.h">
+      <Filter>Headers\Surfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\lab_xneg.png">
