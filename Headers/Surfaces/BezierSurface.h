@@ -4,11 +4,13 @@
 
 class BezierSurface : public ModelBase {
 protected:
+	std::vector<glm::vec4> m_interpolatedPoints{};
 	Material* m_material{};
 	std::vector<glm::vec4> m_ctrlPoints{};
 	glm::ivec2 m_dim{ 0, 0 };
 	GLuint m_ctrlPointsSSBOID = 0;
 	bool m_ctrlPointsDirty = false;
+	GLuint m_interpolatedPointsSSBOID = 0;
 	glm::ivec2 m_smoothness{10, 10};
 	bool m_wireframe = false;
 
@@ -36,6 +38,29 @@ protected:
 			newPoints.data(),
 			GL_STATIC_DRAW);
 	}
+	void SetInterpolatedPointsSSBO() {
+		glGenBuffers(1, &m_interpolatedPointsSSBOID);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_interpolatedPointsSSBOID);
+	}
+	void WriteInterpolatedPointsSSBO() {
+		if (GetInterpolatedPointsCount() <= 0) {
+			return;
+		}
+		std::vector<glm::vec4> newPoints;
+		for (auto& p : m_interpolatedPoints) {
+			if (m_applyTransforms)
+				newPoints.push_back(GetTransform() * p);
+			else
+				newPoints.push_back(p);
+		}
+		m_interpolatedPoints = newPoints;
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_interpolatedPointsSSBOID);
+		glBufferData(GL_SHADER_STORAGE_BUFFER,
+			m_interpolatedPoints.size() * sizeof(glm::vec4),
+			m_interpolatedPoints.data(),
+			GL_STATIC_DRAW);
+	}
 public:
 	BezierSurface(BezierSurfaceParams params);
 	~BezierSurface();
@@ -43,6 +68,8 @@ public:
 	void Render(RenderParams* p) override;
 	void RenderSelection(RenderParams* p) override;
 	void RenderGUI(std::vector<ModelBase*>* models) override;
+
+	void RenderInterpolatedPoints(RenderParams* p);
 
 	inline void SetWireFrame(bool wireframe) {
 		m_wireframe = wireframe;
@@ -106,7 +133,6 @@ public:
 
 		m_ctrlPoints = std::move(new_data);
 	}
-
 	inline void DelCtrlRow(int index) {
 			if (m_dim.x <= 0) {
 				Log::errorToConsole("BezierSurface::DelCtrlRow unable to delete (tere are ", m_dim.x, " rows)");
@@ -170,12 +196,138 @@ public:
 		m_ctrlPoints = points;
 		m_ctrlPointsDirty = true;
 	}
+	inline void SetCtrlPoints(glm::vec2 dim, std::vector<glm::vec3> points) {
+		if (points.size() != dim.x * dim.y) {
+			Log::errorToConsole("BezierSurface::SetCtrlPoints points count and dimensions do not match");
+			return;
+		}
+		m_ctrlPoints.clear();
+		for (auto p : points) {
+			m_ctrlPoints.push_back(glm::vec4(p, 1));
+		}
+		m_dim = dim;
+		m_ctrlPointsDirty = true;
+	}
+	inline void SetCtrlPoints(std::vector<std::vector<glm::vec3>> grid) {
+		// validate grid
+		m_dim = glm::vec2(0, 0);
+		m_ctrlPoints.clear();
+		if (grid.size() <= 0) {
+			return;
+		}
+		size_t cols = grid[0].size();
+		for (auto g : grid) {
+			if (g.size() != cols) {
+				Log::errorToConsole("BezierSurface::SetCtrlPoints invalid grid (uneven columns count)");
+				return;
+			}
+		}
+
+
+		// set ctrl points
+		for (auto row : grid) {
+			for (auto p : row) {
+				m_ctrlPoints.push_back(glm::vec4(p, 1));
+			}
+			++m_dim.x;
+		}
+		m_dim.y = cols;
+	}
+	inline void SetCtrlPoints(std::vector<std::vector<glm::vec4>> grid) {
+		// validate grid
+		m_dim = glm::vec2(0, 0);
+		m_ctrlPoints.clear();
+		if (grid.size() <= 0) {
+			return;
+		}
+		size_t cols = grid[0].size();
+		for (auto g : grid) {
+			if (g.size() != cols) {
+				Log::errorToConsole("BezierSurface::SetCtrlPoints invalid grid (uneven columns count)");
+				return;
+			}
+		}
+
+
+		// set ctrl points
+		for (auto row : grid) {
+			for (auto p : row) {
+				m_ctrlPoints.push_back(p);
+			}
+			++m_dim.x;
+		}
+		m_dim.y = cols;
+	}
+
 	inline std::vector<glm::vec4> GetCtrlPoints() const {
 		return m_ctrlPoints;
 	}
 	inline GLuint GetCtrlPointsSSBO() const {
 		return m_ctrlPointsSSBOID;
 	}
+
+	// Interpolated points
+	inline void SetInterpolatedPoints(std::vector<glm::vec4> points) {
+		if (m_interpolatedPoints.size() > 0) {
+			Log::errorToConsole("Cannot overwrite interpolated points");
+			return;
+		}
+		m_interpolatedPoints = points;
+		SetInterpolatedPointsSSBO();
+		WriteInterpolatedPointsSSBO();
+	}
+	inline void SetInterpolatedPoints(std::vector<glm::vec3> points) {
+		if (m_interpolatedPoints.size() > 0) {
+			Log::errorToConsole("Cannot overwrite interpolated points");
+			return;
+		}
+		for (auto p : points) {
+			m_interpolatedPoints.push_back(glm::vec4(p, 1));
+		}
+		SetInterpolatedPointsSSBO();
+		WriteInterpolatedPointsSSBO();
+	}
+	inline void SetInterpolatedPoints(std::vector<std::vector<glm::vec4>> grid) {
+		if (m_interpolatedPoints.size() > 0) {
+			Log::errorToConsole("Cannot overwrite interpolated points");
+			return;
+		}
+		for (auto row : grid) {
+			for (auto p : row) {
+				m_interpolatedPoints.push_back(p);
+			}
+		}
+		SetInterpolatedPointsSSBO();
+		WriteInterpolatedPointsSSBO();
+	}
+	inline void SetInterpolatedPoints(std::vector<std::vector<glm::vec3>> grid) {
+		if (m_interpolatedPoints.size() > 0) {
+			Log::errorToConsole("Cannot overwrite interpolated points");
+			return;
+		}
+		for (auto row : grid) {
+			for (auto p : row) {
+				m_interpolatedPoints.push_back(glm::vec4(p, 1));
+			}
+		}
+		SetInterpolatedPointsSSBO();
+		WriteInterpolatedPointsSSBO();
+	}
+	inline void ClearInterpolatedPoints() {
+		m_interpolatedPoints.erase(m_interpolatedPoints.begin(), m_interpolatedPoints.end());
+		glDeleteBuffers(1, &m_interpolatedPointsSSBOID);
+		m_interpolatedPointsSSBOID = 0;
+	}
+	inline std::vector<glm::vec4> GetInterpolatedPoints() {
+		return m_interpolatedPoints;
+	}
+	inline GLuint GetInterpolatedPointsSSBO() const {
+		return m_interpolatedPointsSSBOID;
+	}
+	inline int GetInterpolatedPointsCount() const {
+		return m_interpolatedPoints.size();
+	}
+
 	inline void SetApplyTransforms(bool apply) {
 		m_applyTransforms = apply;
 		m_transformDirty = true;

@@ -11,6 +11,7 @@ DiscreteCurve::DiscreteCurve(DiscreteCurveParams params) : ModelBase(DISCRETECUR
 }
 DiscreteCurve::~DiscreteCurve() {
 	glDeleteBuffers(1, &m_ctrlPointsSSBOID);
+	m_ctrlPointsSSBOID = 0;
 }
 
 void DiscreteCurve::Render(RenderParams* p) {

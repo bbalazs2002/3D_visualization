@@ -9,6 +9,8 @@ BezierSurface::BezierSurface(BezierSurfaceParams params) : ModelBase(BEZIERSURFA
 BezierSurface::~BezierSurface() {
 	glDeleteBuffers(1, &m_ctrlPointsSSBOID);
 	m_ctrlPointsSSBOID = 0;
+	glDeleteBuffers(1, &m_interpolatedPointsSSBOID);
+	m_interpolatedPointsSSBOID = 0;
 
 	if (m_material != nullptr) {
 		delete(m_material);
@@ -16,6 +18,11 @@ BezierSurface::~BezierSurface() {
 }
 
 void BezierSurface::Render(RenderParams* p) {
+	// -- Render selection if needed --
+	if (p->selected) {
+		RenderSelection(p);
+	}
+
 	if (!GetShow()) {
 		return;
 	}
@@ -59,14 +66,17 @@ void BezierSurface::Render(RenderParams* p) {
 
 	if (transformsReset || m_ctrlPointsDirty) {
 		WriteCtrlPointsSSBO();
+		WriteInterpolatedPointsSSBO();
 	}
 
 	// -- Set render options --
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
 	if (GetWireFrame()) {
-		glDisable(GL_CULL_FACE);
 		glLineWidth(p->lineWidth);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -103,14 +113,16 @@ void BezierSurface::Render(RenderParams* p) {
 	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
 	glLineWidth(defLineWidth);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
 	glUseProgram(0);
 
-	// -- Render selection if needed --
 	if (p->selected) {
-		RenderSelection(p);
+		RenderInterpolatedPoints(p);
 	}
 }
+
+/* SELECTION - POINT CLOUD */
 void BezierSurface::RenderSelection(RenderParams* p) {
 	// -- Activate shader --
 	GLuint progID = GetProgramSelectedID();
@@ -139,6 +151,77 @@ void BezierSurface::RenderSelection(RenderParams* p) {
 	glPointSize(pointSize);
 	glUseProgram(0);
 }
+
+/* SELECTION - TRIANGLES */
+/*
+void BezierSurface::RenderSelection(RenderParams* p) {
+	// -- Set render options --
+	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	GLfloat defLineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	glLineWidth(p->selectionWidth);
+
+	// -- Activate shader --
+	GLuint progID = GetProgramSelectedID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	// Bezier surface module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetDimensions()));
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
+
+	// -- Draw call --
+	glDrawArrays(GetDrawMode(), 0, (GetDimensions().x - 1) * (GetDimensions().y - 1) * 2 * 3);
+
+	// -- Restore initial OGL state --
+	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glLineWidth(defLineWidth);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
+	glUseProgram(0);
+}
+*/
+
+/* INTERPOLATED POINTS - POINT CLOUD */
+void BezierSurface::RenderInterpolatedPoints(RenderParams* p) {
+	// -- Activate shader --
+	GLuint progID = GetProgramSelectedID();
+	glUseProgram(progID);
+
+	// -- Set render options --
+	GLfloat pointSize;
+	glGetFloatv(GL_POINT_SIZE, &pointSize);
+	glPointSize(p->selectionWidth);
+
+	// -- Set shader input data --
+	// Bezier surface module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetInterpolatedPointsSSBO());
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(glm::vec3(1) - p->selectionColor));
+
+	// -- Draw call --
+	glDrawArrays(GL_POINTS, 0, GetInterpolatedPointsCount());
+
+	// -- Restore initial OGL state --
+	glPointSize(pointSize);
+	glUseProgram(0);
+}
+
 void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 	ImGui::Text("Bezier-curve specific options");
 	ImGui::Spacing();

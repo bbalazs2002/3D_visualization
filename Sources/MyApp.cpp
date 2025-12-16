@@ -30,7 +30,8 @@ void CMyApp::InitShaders()
 		.Link();
 
 	// Bezier
-	/*m_programBezierID = glCreateProgram();
+	/*
+	m_programBezierID = glCreateProgram();
 	ProgramBuilder{ m_programBezierID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
@@ -40,10 +41,12 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBezierSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
-		.Link();*/
+		.Link();
+		*/
 
 		// B-Spline
-		/*m_programBSplineID = glCreateProgram();
+		/*
+		m_programBSplineID = glCreateProgram();
 		ProgramBuilder{ m_programBSplineID }
 			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
 			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
@@ -53,10 +56,12 @@ void CMyApp::InitShaders()
 		ProgramBuilder{ m_programBSplineSelectedID }
 			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
 			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-			.Link();*/
+			.Link();
+			*/
 
 			// DiscreteCurve
-			/*m_programDiscreteCurveID = glCreateProgram();
+			/*
+			m_programDiscreteCurveID = glCreateProgram();
 			ProgramBuilder{ m_programDiscreteCurveID }
 				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
 				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
@@ -66,22 +71,23 @@ void CMyApp::InitShaders()
 			ProgramBuilder{ m_programDiscreteCurveSelectedID }
 				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
 				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
-				.Link();*/
+				.Link();
+				*/
 
 				// Bezier-surface
-				/*m_programBezierSurfaceID = glCreateProgram();
-				ProgramBuilder{ m_programBezierSurfaceID }
-					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
-					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
-					.Link();
+	m_programBezierSurfaceID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
+		.Link();
 
-				m_programBezierSurfaceSelectedID = glCreateProgram();
-				ProgramBuilder{ m_programBezierSurfaceSelectedID }
-					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
-					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
-					.Link();*/
+	m_programBezierSurfaceSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceSelectedID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+		.Link();
 
-					// Light selection
+	// Light selection
 	m_programDirectionLightID = glCreateProgram();
 	ProgramBuilder{ m_programDirectionLightID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_DirectionSelection.vert")
@@ -275,15 +281,15 @@ void CMyApp::InitModels() {
 		));
 		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 3, 3 }, std::vector<glm::vec4>{
 			glm::vec4{ -2,0,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 },
-			glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,5,-1,1 }, glm::vec4{ 0,0,-1,1 },
-			glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,0,0,1 }
+				glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,5,-1,1 }, glm::vec4{ 0,0,-1,1 },
+				glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,0,0,1 }
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
 			"Bezier-surface-material",
 			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
-		});
+			});
 		*/
 
 		// Bezier-curve
@@ -326,6 +332,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				m_programModelID,
@@ -342,6 +349,7 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// B-Spline
 		/*
@@ -438,6 +446,121 @@ void CMyApp::InitModels() {
 			glm::vec4{ 5.0, -5.0, 7.0, 1 }
 		});
 		*/
+
+		// Bezier-surface interpolation getOvershootTestGrid()
+		{
+			int count_u = 0;
+			for (auto param_u : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+				int count_v = 0;
+				for (auto param_v : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+
+					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
+					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
+
+					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+
+					m_models.push_back(new BezierSurface(
+						BezierSurfaceParams{
+							m_programBezierSurfaceID,
+							m_programBezierSurfaceSelectedID,
+							glm::vec2{10, 10},
+							name.c_str(),
+							true, false
+						}
+					));
+					std::vector<std::vector<glm::vec3>> p = BezierSurfaceInterpolation::getOvershootTestGrid();
+					((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(BezierSurfaceInterpolation::interpolateBezierSurface(p));
+					((BezierSurface*)m_models[m_models.size() - 1])->SetInterpolatedPoints(p);
+					((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
+						"Bezier-surface-material",
+						glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
+						32.f,
+						m_modelTextureID, 0, 0, 0
+						});
+					m_models[m_models.size() - 1]->AddTransform(glm::translate(glm::mat4(1.0f), glm::vec3(6.f * count_u, 0, 6.f * count_v)));
+					++count_v;
+				}
+				++count_u;
+			}
+		}
+
+		// Bezier-surface interpolation getLShapedDensityGrid()
+		/*
+		{
+			int count_u = 0;
+			for (auto param_u : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+				int count_v = 0;
+				for (auto param_v : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+
+					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
+					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
+
+					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+
+					m_models.push_back(new BezierSurface(
+						BezierSurfaceParams{
+							m_programBezierSurfaceID,
+							m_programBezierSurfaceSelectedID,
+							glm::vec2{10, 10},
+							name.c_str(),
+							true, false
+						}
+					));
+					std::vector<std::vector<glm::vec3>> p = BezierSurfaceInterpolation::getLShapedDensityGrid();
+					((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(BezierSurfaceInterpolation::interpolateBezierSurface(p));
+					((BezierSurface*)m_models[m_models.size() - 1])->SetInterpolatedPoints(p);
+					((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
+						"Bezier-surface-material",
+						glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
+						32.f,
+						m_modelTextureID, 0, 0, 0
+						});
+					m_models[m_models.size() - 1]->AddTransform(glm::translate(glm::mat4(1.0f), glm::vec3(35.f * count_u, 0, 35.f * count_v)));
+					++count_v;
+				}
+				++count_u;
+			}
+		}
+		*/
+
+		// Bezier-surface interpolation getStretchingTestGrid()
+		/*
+		{
+			int count_u = 0;
+			for (auto param_u : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+				int count_v = 0;
+				for (auto param_v : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
+
+					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
+					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
+
+					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+
+					m_models.push_back(new BezierSurface(
+						BezierSurfaceParams{
+							m_programBezierSurfaceID,
+							m_programBezierSurfaceSelectedID,
+							glm::vec2{10, 10},
+							name.c_str(),
+							true, false
+						}
+					));
+					std::vector<std::vector<glm::vec3>> p = BezierSurfaceInterpolation::getStretchingTestGrid();
+					((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(BezierSurfaceInterpolation::interpolateBezierSurface(p));
+					((BezierSurface*)m_models[m_models.size() - 1])->SetInterpolatedPoints(p);
+					((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
+						"Bezier-surface-material",
+						glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
+						32.f,
+						m_modelTextureID, 0, 0, 0
+						});
+					m_models[m_models.size() - 1]->AddTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.f * count_u, 0, 7.f * count_v)));
+					++count_v;
+				}
+				++count_u;
+			}
+		}
+		*/
 	}
 }
 void CMyApp::CleanModels() {
@@ -450,10 +573,13 @@ void CMyApp::CleanModels() {
 void CMyApp::InitLights() {
 	m_lights.push_back(new DirectionalLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programDirectionLightID);
+
+	/*
 	m_lights.push_back(new PointLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programPointLightID);
 	m_lights.push_back(new SpotLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programSpotLightID);
+	*/
 }
 void CMyApp::CleanLights() {
 	for (int i = 0; i < m_lights.size(); ++i) {
@@ -737,7 +863,6 @@ void CMyApp::Render() const
 	// exit(1);
 
 }
-
 void CMyApp::RenderGUI()
 {
 	// OBJECT OPTIONS WINDOW
