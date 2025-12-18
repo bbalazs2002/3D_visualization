@@ -242,7 +242,6 @@ void CMyApp::CleanSkyboxGeometry()
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
-		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				m_programBezierSurfaceID,
@@ -266,7 +265,6 @@ void CMyApp::InitModels() {
 			32.f,
 			m_modelTextureID, 0, 0, 0
 			});
-		*/
 
 		// Bezier-surface
 		/*
@@ -448,6 +446,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Bezier-surface interpolation getOvershootTestGrid()
+		/*
 		{
 			int count_u = 0;
 			for (auto param_u : std::vector<BezierSurfaceInterpolation::ParametrizationMethod>{ BezierSurfaceInterpolation::ChordLength, BezierSurfaceInterpolation::Uniform }) {
@@ -457,7 +456,7 @@ void CMyApp::InitModels() {
 					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
 					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
 
-					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+					std::string name = "Bezier-surface_Overshoot_" + std::to_string(count_u) + "_" + std::to_string(count_v);
 
 					m_models.push_back(new BezierSurface(
 						BezierSurfaceParams{
@@ -483,6 +482,7 @@ void CMyApp::InitModels() {
 				++count_u;
 			}
 		}
+		*/
 
 		// Bezier-surface interpolation getLShapedDensityGrid()
 		/*
@@ -495,7 +495,7 @@ void CMyApp::InitModels() {
 					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
 					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
 
-					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+					std::string name = "Bezier-surface_LShaped_" + std::to_string(count_u) + "_" + std::to_string(count_v);
 
 					m_models.push_back(new BezierSurface(
 						BezierSurfaceParams{
@@ -522,7 +522,7 @@ void CMyApp::InitModels() {
 			}
 		}
 		*/
-
+		
 		// Bezier-surface interpolation getStretchingTestGrid()
 		/*
 		{
@@ -534,7 +534,7 @@ void CMyApp::InitModels() {
 					BezierSurfaceInterpolation::setParametrizationMethodU(param_u);
 					BezierSurfaceInterpolation::setParametrizationMethodV(param_v);
 
-					std::string name = "Bezier-surface_" + std::to_string(count_u) + "_" + std::to_string(count_v);
+					std::string name = "Bezier-surface_Stretching_" + std::to_string(count_u) + "_" + std::to_string(count_v);
 
 					m_models.push_back(new BezierSurface(
 						BezierSurfaceParams{
@@ -1129,7 +1129,6 @@ void CMyApp::KeyboardDown(const SDL_KeyboardEvent& key)
 	}
 	m_cameraManipulator.KeyboardDown(key);
 }
-
 void CMyApp::KeyboardUp(const SDL_KeyboardEvent& key)
 {
 	m_cameraManipulator.KeyboardUp(key);
@@ -1150,7 +1149,6 @@ void CMyApp::MouseDown(const SDL_MouseButtonEvent& mouse)
 {
 	m_cursorMoved = false;
 }
-
 void CMyApp::MouseUp(const SDL_MouseButtonEvent& mouse)
 {
 	if (!m_cursorMoved) {
@@ -1182,4 +1180,4 @@ void CMyApp::Resize(int _w, int _h)
 
 void CMyApp::OtherEvent(const SDL_Event& ev)
 {
-}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

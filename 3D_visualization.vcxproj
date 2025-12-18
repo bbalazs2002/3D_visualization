@@ -112,6 +112,7 @@
     <ClInclude Include="Headers\Lights\DirectionalLight.h" />
     <ClInclude Include="Headers\Lights\Light.h" />
     <ClInclude Include="Headers\Lights\PointLight.h" />
+    <ClInclude Include="Headers\Lights\ShadowMapArray.h" />
     <ClInclude Include="Headers\Lights\SpotLight.h" />
     <ClInclude Include="Headers\Log.h" />
     <ClInclude Include="Headers\Material.h" />
