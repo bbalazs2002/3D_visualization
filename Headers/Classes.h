@@ -41,6 +41,7 @@ struct ModelLoaderReturn;
 struct ModelParams;
 struct RenderParams;
 struct RenderShadowParams;
+struct ShaderProgramCollection;
 struct SUpdateInfo;
 
 // Interfaces

@@ -2,6 +2,7 @@
 
 Model::Model(ModelParams params) : ModelBase(MODEL2MODELBASE) {
 	m_wireframe = params.wireFrame;
+	m_shadowProgramID = params.shaderPrograms.programShadowID;
 }
 Model::~Model() {
 	CleanGeometry();
@@ -164,7 +165,7 @@ void Model::RenderShadowMap(RenderParams* p) {
 	};
 
 	// -- Activate shader --
-	GLuint progID = GetProgramSelectedID();
+	GLuint progID = GetProgramShadowID();
 	glUseProgram(progID);
 
 	// -- Set shader input data --
@@ -173,8 +174,6 @@ void Model::RenderShadowMap(RenderParams* p) {
 	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Transform module
 	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
-	// Color module
-	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
 
 	if (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()) {
 		// Render all meshes

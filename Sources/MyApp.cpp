@@ -20,30 +20,36 @@ void CMyApp::InitShaders()
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Model.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Lighting.frag")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Model.frag")
 		.Link();
 
-	m_programSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Selected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Selected.frag")
+	m_programModelSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programModelSelectedID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_ModelSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_ModelSelected.frag")
+		.Link();
+
+	m_programModelShadowID = glCreateProgram();
+	ProgramBuilder{ m_programModelShadowID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_ModelShadow.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_ModelShadow.frag")
 		.Link();
 
 	// Bezier
-	/*m_programBezierID = glCreateProgram();
-	ProgramBuilder{ m_programBezierID }
+	/*m_programBezierCurveID = glCreateProgram();
+	ProgramBuilder{ m_programBezierCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
-	m_programBezierSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programBezierSelectedID }
+	m_programBezierCurveSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programBezierCurveSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();*/
 
-		// B-Spline
-		/*m_programBSplineID = glCreateProgram();
+	// B-Spline
+	/*m_programBSplineID = glCreateProgram();
 		ProgramBuilder{ m_programBSplineID }
 			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
 			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
@@ -55,8 +61,8 @@ void CMyApp::InitShaders()
 			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 			.Link();*/
 
-			// DiscreteCurve
-			/*m_programDiscreteCurveID = glCreateProgram();
+	// DiscreteCurve
+	/*m_programDiscreteCurveID = glCreateProgram();
 			ProgramBuilder{ m_programDiscreteCurveID }
 				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
 				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
@@ -68,8 +74,8 @@ void CMyApp::InitShaders()
 				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
 				.Link();*/
 
-				// Bezier-surface
-				/*m_programBezierSurfaceID = glCreateProgram();
+	// Bezier-surface
+	/*m_programBezierSurfaceID = glCreateProgram();
 				ProgramBuilder{ m_programBezierSurfaceID }
 					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
 					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
@@ -81,7 +87,7 @@ void CMyApp::InitShaders()
 					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
 					.Link();*/
 
-					// Light selection
+	// Light selection
 	m_programDirectionLightID = glCreateProgram();
 	ProgramBuilder{ m_programDirectionLightID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Modules/Light/Vert_DirectionSelection.vert")
@@ -98,14 +104,6 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
 		.Link();
 
-	// Shadows
-	/*
-	m_programShadowID = glCreateProgram();
-	ProgramBuilder{ m_programShadowID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Shadow/vert_Shadow.vert")
-		.Link();
-	*/
-
 	// exit(1);
 
 	InitAxesShader();
@@ -115,13 +113,15 @@ void CMyApp::CleanShaders()
 {
 	glDeleteProgram(m_programModelID);
 	m_programModelID = 0;
-	glDeleteProgram(m_programSelectedID);
-	m_programSelectedID = 0;
+	glDeleteProgram(m_programModelSelectedID);
+	m_programModelSelectedID = 0;
+	glDeleteProgram(m_programModelShadowID);
+	m_programModelShadowID = 0;
 
-	glDeleteProgram(m_programBezierID);
-	m_programBezierID = 0;
-	glDeleteProgram(m_programBezierSelectedID);
-	m_programBezierSelectedID = 0;
+	glDeleteProgram(m_programBezierCurveID);
+	m_programBezierCurveID = 0;
+	glDeleteProgram(m_programBezierCurveSelectedID);
+	m_programBezierCurveSelectedID = 0;
 
 	glDeleteProgram(m_programBSplineID);
 	m_programBSplineID = 0;
@@ -144,9 +144,6 @@ void CMyApp::CleanShaders()
 	m_programPointLightID = 0;
 	glDeleteProgram(m_programSpotLightID);
 	m_programSpotLightID = 0;
-
-	glDeleteProgram(m_programShadowID);
-	m_programShadowID = 0;
 
 	CleanSkyboxShader();
 	CleanAxesShader();
@@ -328,8 +325,11 @@ void CMyApp::InitModels() {
 		// Equinox
 		m_models.push_back(new Model(
 			ModelParams{
-				m_programModelID,
-				m_programSelectedID,
+				ShaderProgramCollection{
+					m_programModelID,
+					m_programModelSelectedID,
+					m_programModelShadowID
+				},
 				"Equinox",
 				true
 			}

@@ -5,7 +5,6 @@
 // Light
 class Light : public IDrawable {
 protected:
-	LIGHT_TYPE_TYPE m_type = LIGHT_TYPE_UNDEFINED;	// directional: 0, point: 1, spot: 2
 	glm::vec3 m_La = glm::vec3(0.2, 0.2, 0.2);
 	glm::vec3 m_Ld = glm::vec3(1.0, 1.0, 1.0);
 	glm::vec3 m_Ls = glm::vec3(0.5, 0.5, 0.5);
@@ -13,6 +12,7 @@ protected:
 	bool m_deleteMarker = false;
 	GLuint m_programID = 0;
 	GLuint m_shadowLayer = 0;
+	bool m_castShadow = true;
 
 public:
 
@@ -24,21 +24,19 @@ public:
 	}
 
 	void SetShadow() {
+		m_castShadow = true;
 		ShadowMapController::ReserveLayer(&m_shadowLayer);
 	}
 	void ClearShadow() {
+		m_castShadow = false;
 		ShadowMapController::ReleaseLayer(m_shadowLayer);
 		m_shadowLayer = 0;
 	}
-
-	void inline SetType(GLint newType) {
-		m_type = static_cast<LIGHT_TYPE_TYPE>(newType);
+	GLuint GetShadowLayer() const {
+		return m_shadowLayer;
 	}
-	GLint inline GetType() const {
-		return static_cast<GLint>(m_type);
-	}
-	glm::vec2 inline GetTypeForSSBO() const {
-		return glm::vec2(static_cast<GLfloat>(m_type), 0.f);
+	bool GetCastShadow() const {
+		return m_castShadow;
 	}
 
 	void inline SetProgramID(GLuint programID) {

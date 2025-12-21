@@ -33,21 +33,18 @@ public:
 	GLfloat inline GetConstantAttenuation() const {
 		return m_attenuation.x;
 	}
-
 	void inline SetLinearAttenuation(GLfloat linear) {
 		m_attenuation.y = linear;
 	}
 	GLfloat inline GetLinearAttenuation() const {
 		return m_attenuation.y;
 	}
-
 	void inline SetQuadraticAttenuation(GLfloat quadratic) {
 		m_attenuation.z = quadratic;
 	}
 	GLfloat inline GetQuadraticAttenuation() const {
 		return m_attenuation.z;
 	}
-
 	glm::vec3 inline GetAttenuation() const {
 		return m_attenuation;
 	}
@@ -58,14 +55,12 @@ public:
 	GLfloat inline GetInnerAngle() const {
 		return m_angles.x;
 	}
-
 	void inline SetOuterAngle(GLfloat outer) {
 		m_angles.y = outer;
 	}
 	GLfloat inline GetOuterAngle() const {
 		return m_angles.y;
 	}
-
 	glm::vec2 inline GetAngles() const {
 		return m_angles;
 	}
@@ -157,7 +152,8 @@ public:
 		//    vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
 		//    vec4 direction;			// xyz: direction, w: padding
 		//    vec4 position;			// xyz: position, w: padding
-		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: padding
+		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: flags
+		//    mat4 lightSpaceMatrix;	// 
 		//};
 
 		//
@@ -195,9 +191,16 @@ public:
 		// [16-19] position (position.xyz és padding.w)
 		memcpy(&buffer[16], glm::value_ptr(GetPosition()), sizeof(glm::vec3));
 
-		// [20-23] type_angle (type.x, inner.y, outer.z, padding.w)
-		buffer[20] = (GLfloat)GetType();
+		// [20-23] type_angle (flags.x, inner.y, outer.z)
+		GLuint flags = LIGHT_FLAG_IS_SPOT;
+		if (GetCastShadow()) {
+			flags = flags | LIGHT_FLAG_CASTS_SHADOW;
+		}
+		buffer[20] = flags;
 		memcpy(&buffer[21], glm::value_ptr(GetAngles()), sizeof(glm::vec2));
+
+		// [24-40] lightSpaceMatrix
+
 
 		//
 		// 3. Unmap SSBO

@@ -2,62 +2,71 @@
 
 #include "include_all.h"
 
-struct ModelBaseParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
-    const char* name = "";
-    bool show = true;
-    int drawMode = GL_TRIANGLES;
-};
-
-struct ModelParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
-    const char* name = "";
-    bool show = true;
-    bool wireFrame = false;
-    int drawMode = GL_TRIANGLES;
-};
-
 struct BezierCurveParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
+	ShaderProgramCollection shaderPrograms;
     int smoothness = 10;
-    const char* name = "";
-    bool show = true;
-};
-
-struct BSplineParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
-    int smoothness = 10;
-    const char* name = "";
-    bool show = true;
-};
-
-struct DiscreteCurveParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
     const char* name = "";
     bool show = true;
 };
 
 struct BezierSurfaceParams {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
+	ShaderProgramCollection shaderPrograms;
     glm::vec2 smoothness{ 10, 10 };
     const char* name = "";
     bool show = true;
     bool wireframe = false;
 };
 
-// ModelLoader
+struct BSplineParams {
+	ShaderProgramCollection shaderPrograms;
+    int smoothness = 10;
+    const char* name = "";
+    bool show = true;
+};
+
+struct DiscreteCurveParams {
+	ShaderProgramCollection shaderPrograms;
+    const char* name = "";
+    bool show = true;
+};
+
+struct MeshRenderParams {
+    GLuint progID;
+    int drawMode;
+};
+struct MeshRenderSelectionParams {
+    GLuint progID;
+    int drawMode;
+};
+struct MeshRenderShadowParams {
+    int drawMode;
+};
+
+struct ModelBaseParams {
+	ShaderProgramCollection shaderPrograms;
+    const char* name = "";
+    bool show = true;
+    int drawMode = GL_TRIANGLES;
+};
+
 struct ModelLoaderReturn {
     std::vector<Material*> materials;
     std::vector<Mesh*> meshes;
 };
 
-// Render options
+struct ModelParams {
+	ShaderProgramCollection shaderPrograms;
+    const char* name = "";
+    bool show = true;
+    bool wireFrame = false;
+    int drawMode = GL_TRIANGLES;
+};
+
+struct RenderLightParams {
+    glm::vec3 cameraAt{ 0,0,0 };
+    glm::vec3 cameraUp{ 0,1,0 };
+};
+
 struct RenderParams {
     float lineWidth = 1.f;
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
@@ -73,26 +82,10 @@ struct RenderParams {
     void* otherData = nullptr;
 };
 
-struct RenderLightParams {
-    glm::vec3 cameraAt{0,0,0};
-    glm::vec3 cameraUp{0,1,0};
-};
-
-struct RenderShadowParams {
-    float lineWidth = 1.f;
-    glm::mat4 viewProj = glm::identity<glm::mat4>();
-};
-
-struct MeshRenderParams {
-    GLuint progID;
-    int drawMode;
-};
-struct MeshRenderSelectionParams {
-    GLuint progID;
-    int drawMode;
-};
-struct MeshRenderShadowParams {
-	int drawMode;
+struct ShaderProgramCollection {
+    GLuint programID = 0;
+    GLuint programSelectedID = 0;
+    GLuint programShadowID = 0;
 };
 
 struct SUpdateInfo

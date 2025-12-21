@@ -25,6 +25,18 @@ public:
 
 	// ICastShadow methods
 	void RenderShadowMap(RenderParams* p) override;
+	inline void SetProgramShadowID(GLuint id) override {
+		m_shadowProgramID = id;
+	}
+	inline GLuint GetProgramShadowID() const override {
+		return m_shadowProgramID;
+	}
+	inline void SetShadowCasting(bool cast) override {
+		m_castShadow = cast;
+	}
+	inline bool GetShadowCasting() const override {
+		return m_castShadow;
+	}
 
 	inline void AddMaterial(Material* material) {
 		m_materials.push_back(material);
@@ -46,19 +58,6 @@ public:
 		SetObjPath();
 	}
 	void SetObjPath();
-
-	inline void SetShadowProgramID(GLuint id) {
-		m_shadowProgramID = id;
-	}
-	inline GLuint GetShadowProgramID() const {
-		return m_shadowProgramID;
-	}
-	inline void SetShadowCasting(bool cast) {
-		m_castShadow = cast;
-	}
-	inline bool GetShadowCasting() const {
-		return m_castShadow;
-	}
 
 	inline void CleanGeometry() {
 		for (Mesh* p : m_meshes) {

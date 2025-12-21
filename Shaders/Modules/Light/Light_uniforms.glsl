@@ -18,7 +18,7 @@ struct Light {
 	vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
 	vec4 direction;			// xyz: direction, w: padding
 	vec4 position;			// xyz: position, w: padding
-	vec4 type_angle;		// x: type, y: inner angle, z: outer angle, w: padding
+	vec4 type_angle;		// x: flags, y: inner angle, z: outer angle, w: padding
 };
 
 layout(std430, binding = LIGHT_LIGHTS_SSBO) buffer LightBuffer {
