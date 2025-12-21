@@ -18,6 +18,9 @@ struct Material {
 
 	~Material();
 
+	// static utilities
+	static inline std::array<std::pair<GLuint, GLuint>, 4> lastTextureTargets;
+
 	/**
 	 * @brief Loads an image from a file, creates an OpenGL texture object, and configures its parameters.
 	 *
@@ -98,6 +101,9 @@ struct Material {
 			if (loc >= 0) glUniform1i(loc, value);
 			};
 
+		// save texture data
+		lastTextureTargets = textureTargets;
+
 		// --- Upload Scalar and Color Uniforms (materialData struct) ---
 		setVec4("materialData.diffuseColorTex", glm::vec4(material->diffuseColor, material->diffuseTex));
 		setVec4("materialData.specularColorTex", glm::vec4(material->specularColor, material->specularTex));
@@ -130,6 +136,23 @@ struct Material {
 			glBindTexture(GL_TEXTURE_2D, material->normalTex);
 			setInt("materialNormalTex", textureTargets[3].second);
 		}
+
+		// Restore the active texture unit to GL_TEXTURE0 for safety after all bindings.
+		glActiveTexture(GL_TEXTURE0);
+	}
+
+	static inline void ClearMaterialFromShader() {
+		glActiveTexture(lastTextureTargets[0].first);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		// 2. Specular Map
+		glActiveTexture(lastTextureTargets[1].first);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		// 3. Emission Map
+		glActiveTexture(lastTextureTargets[2].first);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		// 4. Normal Map
+		glActiveTexture(lastTextureTargets[3].first);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Restore the active texture unit to GL_TEXTURE0 for safety after all bindings.
 		glActiveTexture(GL_TEXTURE0);

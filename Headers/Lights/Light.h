@@ -12,6 +12,7 @@ protected:
 	bool m_show = true;
 	bool m_deleteMarker = false;
 	GLuint m_programID = 0;
+	GLuint m_shadowLayer = 0;
 
 public:
 
@@ -20,6 +21,14 @@ public:
 	}
 	bool inline GetShow() const {
 		return m_show;
+	}
+
+	void SetShadow() {
+		ShadowMapController::ReserveLayer(&m_shadowLayer);
+	}
+	void ClearShadow() {
+		ShadowMapController::ReleaseLayer(m_shadowLayer);
+		m_shadowLayer = 0;
 	}
 
 	void inline SetType(GLint newType) {

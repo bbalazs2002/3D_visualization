@@ -7,63 +7,126 @@ Model::~Model() {
 	CleanGeometry();
 }
 
+// Drawable methods
 void Model::Render(RenderParams* p) {
 	if (!GetShow()) {
 		return;
 	}
 
-	// Log::logToConsole("Render model: ", GetName());
+	glm::mat4 modelTransform = glm::identity<glm::mat4>();
+	if (GetApplyTransforms()) {
+		modelTransform = GetTransform();
+	}
 
-	MeshRenderParams mp {
-		p->lineWidth,
-		p->cameraPos,
-		p->lights,
-		p->lightCount,
-		p->modelIndex,
-		p->cursorPos,
-		p->windowSize,
-		p->viewProj,
+	MeshRenderParams mp{
 		GetProgramID(),
-		GetWireFrame(),
-		GetApplyTransforms(),
-		GetTransform(),
 		GetDrawMode()
 	};
-	MeshRenderSelectionParams msp {
-		p->cameraPos,
-		p->viewProj,
-		p->selectionWidth,
-		p->selectionColor,
-		GetProgramSelectedID(),
-		GetApplyTransforms(),
-		GetTransform(),
-		GetDrawMode()
-	};
+
+	// -- Set render options --
+	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	GLfloat defLineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
+	if (GetWireFrame()) {
+		glDisable(GL_CULL_FACE);
+		glLineWidth(p->lineWidth);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	// -- Activate shader --
+	GLuint progID = GetProgramID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Click handler module
+	// SSBO bind globally to binding point 0
+	glUniform1i(ul(progID, "clickHandlerData.modelID"), p->modelIndex);
+	glUniform2iv(ul(progID, "clickHandlerData.cursorPos"), 1, glm::value_ptr(p->cursorPos));
+	glUniform2iv(ul(progID, "clickHandlerData.windowSize"), 1, glm::value_ptr(p->windowSize));
+	// Light module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
+	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
+	// Transform module
+	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
 
 	if (
 		!p->selected ||
 		(p->selected && (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()))
-	) {
+		) {
 		// Render all meshes
 		for (Mesh* mesh : m_meshes) {
 			mesh->Render(&mp);
-			if (p->selected) {
-				mesh->RenderSelection(&msp);
-			}
 		}
 	}
 	else {
 		// render only one mesh
 		Mesh* mesh = m_meshes[CMyApp::MeshID];
 		mesh->Render(&mp);
-		if (p->selected && p->selectionWidth > 0) {
+	}
+
+	// -- Restore initial OGL state --
+	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
+	glLineWidth(defLineWidth);
+	glUseProgram(0);
+
+	if (p->selected && p->selectionWidth > 0) {
+		RenderSelection(p);
+	}
+
+}
+void Model::RenderSelection(RenderParams* p) {
+	glm::mat4 modelTransform = glm::identity<glm::mat4>();
+	if (GetApplyTransforms()) {
+		modelTransform = GetTransform();
+	}
+	MeshRenderSelectionParams msp{
+		GetProgramSelectedID(),
+		GetDrawMode()
+	};
+
+	// -- Set render options --
+	GLfloat defLineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
+	glLineWidth(p->selectionWidth);
+
+	// -- Activate shader --
+	GLuint progID = GetProgramSelectedID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Transform module
+	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
+
+	if (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()) {
+		// Render all meshes
+		for (Mesh* mesh : m_meshes) {
 			mesh->RenderSelection(&msp);
 		}
 	}
-	
-}
-void Model::RenderSelection(RenderParams* p) {
-	return;
+	else {
+		// render only one mesh
+		Mesh* mesh = m_meshes[CMyApp::MeshID];
+		mesh->RenderSelection(&msp);
+	}
+
+	// -- Restore initial OGL state --
+	glLineWidth(defLineWidth);
+	glUseProgram(0);
 }
 void Model::RenderGUI(std::vector<ModelBase*>*) {
 	ImGui::Text("Model specific options");
@@ -87,6 +150,46 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
+}
+
+// ICastShadow methods
+void Model::RenderShadowMap(RenderParams* p) {
+	glm::mat4 modelTransform = glm::identity<glm::mat4>();
+	if (GetApplyTransforms()) {
+		modelTransform = GetTransform();
+	}
+
+	MeshRenderShadowParams msp{
+		GetDrawMode()
+	};
+
+	// -- Activate shader --
+	GLuint progID = GetProgramSelectedID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	// Camera module
+	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
+	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
+	// Transform module
+	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
+	// Color module
+	glUniform3fv(ul(progID, "colorData.color"), 1, glm::value_ptr(p->selectionColor));
+
+	if (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()) {
+		// Render all meshes
+		for (Mesh* mesh : m_meshes) {
+			mesh->RenderShadowMap(&msp);
+		}
+	}
+	else {
+		// render only one mesh
+		Mesh* mesh = m_meshes[CMyApp::MeshID];
+		mesh->RenderShadowMap(&msp);
+	}
+
+	// -- Restore initial OGL state --
+	glUseProgram(0);
 }
 
 void Model::SetObjPath() {

@@ -104,6 +104,7 @@ void BezierSurface::Render(RenderParams* p) {
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
 	glLineWidth(defLineWidth);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	Material::ClearMaterialFromShader();
 	glUseProgram(0);
 
 	// -- Render selection if needed --

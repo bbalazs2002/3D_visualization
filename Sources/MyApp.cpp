@@ -520,9 +520,6 @@ void CMyApp::InitBuffers() {
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_COPY);
 
 	InitLightBuffer();
-
-	// framebuffer for shadow texture
-	// glCreateFramebuffers(1, &m_FBOShadowID);
 }
 void CMyApp::InitLightBuffer() {
 	// clear old buffer if exists
@@ -540,45 +537,6 @@ void CMyApp::CleanBuffers() {
 
 	glDeleteBuffers(1, &m_LightsBufferID);
 	m_LightsBufferID = 0;
-
-	// glDeleteFramebuffers(1, &m_FBOShadowID);
-	// m_FBOShadowID = 0;
-}
-
-void CMyApp::InitResolutionDependentResources(glm::vec2 bufferSize) {
-	return;
-	// We use texture instead of renderbuffer,
-	// because we will sample it in the shader	
-
-	glCreateTextures(GL_TEXTURE_2D, 1, &m_shadowTextureID);
-	glTextureStorage2D(m_shadowTextureID, 1, GL_DEPTH_COMPONENT24, bufferSize.x, bufferSize.y);
-
-	glNamedFramebufferTexture(m_FBOShadowID, GL_DEPTH_ATTACHMENT, m_shadowTextureID, 0);
-
-	// Completeness check
-	GLenum status = glCheckNamedFramebufferStatus(m_FBOShadowID, GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE)
-	{
-		switch (status) {
-		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT!");
-			break;
-		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT!");
-			break;
-		case GL_FRAMEBUFFER_UNSUPPORTED:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_UNSUPPORTED!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_UNSUPPORTED!");
-			break;
-		}
-	}
-}
-void CMyApp::CleanResolutionDependentResources()
-{
-	glDeleteTextures(1, &m_shadowTextureID);
-	m_shadowTextureID = 0;
 }
 
 bool CMyApp::Init()
@@ -595,7 +553,9 @@ bool CMyApp::Init()
 	InitLights();
 	InitGeometry();
 	InitBuffers();
-	// InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
+
+	// Init shadow maps
+	ShadowMapController::Init(m_shadowBufferSize, m_shadowBufferSize);
 
 	//
 	// Other
@@ -622,7 +582,8 @@ void CMyApp::Clean()
 	CleanTexture();
 	CleanBuffers();
 	CleanLights();
-	CleanResolutionDependentResources();
+
+	ShadowMapController::Clean();
 }
 
 void CMyApp::Update(const SUpdateInfo& updateInfo)
@@ -790,8 +751,6 @@ void CMyApp::RenderGUI()
 		if (ImGui::SliderInt("Shadow resolution level", &bufferResolutionLevel, 5, 12, bufferResolutionText.c_str()))
 		{
 			m_shadowBufferSize = 1 << bufferResolutionLevel;
-			CleanResolutionDependentResources();
-			InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
 		}
 
 		// Add new model
@@ -1057,4 +1016,4 @@ void CMyApp::Resize(int _w, int _h)
 
 void CMyApp::OtherEvent(const SDL_Event& ev)
 {
-}//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

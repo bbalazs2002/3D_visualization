@@ -84,32 +84,15 @@ struct RenderShadowParams {
 };
 
 struct MeshRenderParams {
-    float lineWidth;
-    glm::vec3 cameraPos;
-    GLuint lights;                                      // SSBO ID for lights
-    int lightCount;
-    int modelIndex;
-    glm::ivec2 cursorPos;
-    glm::ivec2 windowSize;
-    glm::mat4 viewProj;
-    //
     GLuint progID;
-    bool wireframe;
-    bool applyTransforms;
-    glm::mat4 transform;
     int drawMode;
 };
-
 struct MeshRenderSelectionParams {
-    glm::vec3 cameraPos;
-    glm::mat4 viewProj;
-    float selectionWidth;
-    glm::vec3 selectionColor;
-    //
     GLuint progID;
-    bool applyTransforms;
-    glm::mat4 transform;
     int drawMode;
+};
+struct MeshRenderShadowParams {
+	int drawMode;
 };
 
 struct SUpdateInfo

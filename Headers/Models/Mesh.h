@@ -39,4 +39,5 @@ class Mesh {
 
 		void Render(MeshRenderParams* p);
 		void RenderSelection(MeshRenderSelectionParams* p);
+		void RenderShadowMap(MeshRenderShadowParams* p);
 };

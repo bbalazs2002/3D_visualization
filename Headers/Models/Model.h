@@ -2,12 +2,15 @@
 
 #include "../include_all.h"
 
-class Model : public ModelBase {
+class Model : public ModelBase, public ICastShadow {
 protected:
 	std::vector<Material*> m_materials;
 	std::vector<Mesh*> m_meshes;
 	bool m_wireframe = false;
 	std::string m_objPath;
+
+	bool m_castShadow = true;
+	GLuint m_shadowProgramID = 0;
 
 public:
 	char m_objPathBuffer[256] = "";
@@ -15,9 +18,13 @@ public:
 	Model(ModelParams params);
 	~Model();
 
+	// IDrawable methods
 	void Render(RenderParams* p) override;
 	void RenderSelection(RenderParams* p) override;
 	void RenderGUI(std::vector<ModelBase*>*) override;
+
+	// ICastShadow methods
+	void RenderShadowMap(RenderParams* p) override;
 
 	inline void AddMaterial(Material* material) {
 		m_materials.push_back(material);
@@ -39,6 +46,19 @@ public:
 		SetObjPath();
 	}
 	void SetObjPath();
+
+	inline void SetShadowProgramID(GLuint id) {
+		m_shadowProgramID = id;
+	}
+	inline GLuint GetShadowProgramID() const {
+		return m_shadowProgramID;
+	}
+	inline void SetShadowCasting(bool cast) {
+		m_castShadow = cast;
+	}
+	inline bool GetShadowCasting() const {
+		return m_castShadow;
+	}
 
 	inline void CleanGeometry() {
 		for (Mesh* p : m_meshes) {
