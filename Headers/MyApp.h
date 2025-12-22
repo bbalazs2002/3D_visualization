@@ -15,7 +15,7 @@ public:
 	void Clean();
 
 	void Update(const SUpdateInfo&);
-	void Render() const;
+	void Render();
 	void RenderGUI();
 
 	void KeyboardDown(const SDL_KeyboardEvent&);
@@ -103,14 +103,13 @@ protected:
 	void InitLights();
 	void CleanLights();
 	std::vector<Light*> m_lights{};
+	bool m_lightBufferDirty = true;
 
 	// Texture initialization
 	void InitTexture();
 	void CleanTexture();
 	void InitSkyboxTexture();
 	void CleanSkyboxTexture();
-	void InitResolutionDependentResources(glm::vec2 bufferSize);
-	void CleanResolutionDependentResources();
 
 	// Buffer IDs
 	GLuint m_ModelIDBufferID = 0;
@@ -126,5 +125,6 @@ protected:
 	void DrawAxes() const;
 	void RenderModels() const;
 	void RenderLightSuorce() const;
+	void UpdateLights();
 	void RenderSkybox() const;
 };

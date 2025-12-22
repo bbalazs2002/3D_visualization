@@ -1,3 +1,26 @@
+float CalculateShadow(vec4 fragPosLightSpace, uint layer) {
+    // 1. Perspective divide (NDC koordináták: -1 és 1 között)
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    // 2. Skálázás [0, 1] tartományba (mivel a textúra koordináták itt kezdõdnek)
+    projCoords = projCoords * 0.5f + 0.5f;
+
+    // 3. Ha a pont távolabb van, mint a farPlane, ne legyen árnyékban
+    if (projCoords.z > 1.0f) return 1.0f;     // not in shadow
+
+    // 4. Mintavételezés a tömbbõl
+    float closestDepth = texture(lightShadowMapArray, vec3(projCoords.xy, float(layer))).r; 
+    
+    // 5. Aktuális pixel mélysége
+    float currentDepth = projCoords.z;
+
+    // 6. Összehasonlítás (egyszerû shadow bias-szal az acne ellen)
+    float bias = 0.005f;
+    float shadow = currentDepth - bias > closestDepth ? 0.0f : 1.0f;      // 0: in shadow; 1 not in shadow
+
+    return shadow;
+}
+
 struct LightCalculateContributionParams {
     Light light;
     vec3 position;
@@ -11,12 +34,19 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     vec3 lightDir;
     float attenuation = 1.0;
     float spotIntensity = 1.0;
-    int type = int(params.light.type_angle.x);
+    int flags = int(params.light.flags_angle_shadow.x);
     
+    float shadow = 1.0f;
+    if ((LIGHT_FLAG_CASTS_SHADOW & flags) != 0u) {
+        mat4 viewProj = params.light.lightSpaceMatrix;
+        uint layer = uint(params.light.flags_angle_shadow.w);
+        shadow = CalculateShadow(viewProj * vec4(params.position, 1), layer);
+    }
+
     // 1. Determine Light Direction and Attenuation
-    if (type == int(LIGHT_TYPE_DIRECTIONAL)) {
+    if ((LIGHT_FLAG_IS_DIR & flags) != 0u) {
         lightDir = normalize(-params.light.direction.xyz);
-    } 
+    }
     else { // Point or Spot Light
         vec3 lightToFrag = params.light.position.xyz - params.position;
         float dist = length(lightToFrag);
@@ -25,13 +55,13 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         // Attenuation calculation (constant, linear, quadratic)
         attenuation = 1.0 / (params.light.La_const.w + params.light.Ld_linear.w * dist + params.light.Ls_quadratic.w * dist * dist);
         
-        if (type == int(LIGHT_TYPE_SPOT)) {
+        if ((LIGHT_FLAG_IS_SPOT & flags) != 0u) {
             // Spot Light Calculation
             vec3 spotDir = normalize(params.light.direction.xyz);
             float theta = dot(lightDir, -spotDir);      // cosine of angle between light ray and spot direction
 
-            float innerCutOff = cos(params.light.type_angle.y);
-            float outerCutOff = cos(params.light.type_angle.z);
+            float innerCutOff = cos(params.light.flags_angle_shadow.y);
+            float outerCutOff = cos(params.light.flags_angle_shadow.z);
 
             if (theta > outerCutOff) {
                 // Smooth fade from inner to outer cutoff (soft edges)
@@ -58,7 +88,7 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     vec3 specular = params.light.Ls_quadratic.xyz * params.specularColor * spec;
 
     // 4. Combine and apply attenuation/spot factor
-    return (diffuse + specular) * attenuation * spotIntensity;
+    return shadow * (diffuse + specular) * attenuation * spotIntensity;
 }
 
 struct LightCalculateParams{

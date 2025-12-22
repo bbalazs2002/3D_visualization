@@ -58,6 +58,9 @@
 #include "Interfaces/IPrintable.h"
 #include "Interfaces/ICastShadow.h"
 
+// Utilities
+#include "Utilities.h"
+
 // Models
 #include "Types.h"
 #include "Transformation.h"

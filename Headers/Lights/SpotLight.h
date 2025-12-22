@@ -9,11 +9,13 @@ protected:
 	glm::vec3 m_attenuation = glm::vec3(1.0, 0.0, 0.0); // constant, linear, quadratic
 	glm::vec2 m_angles = glm::vec2(.2f, .3f); // inner, outer
 public:
-	SpotLight() {
-		m_type = LIGHT_TYPE_SPOT;
-	}
+	SpotLight() {}
 
 	void inline SetDirection(glm::vec3 direction) {
+		if (direction == m_direction) {
+			return;
+		}
+		DirtySSBO();
 		m_direction = direction;
 	}
 	glm::vec3 inline GetDirection() const {
@@ -21,6 +23,10 @@ public:
 	}
 
 	void inline SetPosition(glm::vec3 position) {
+		if (position == m_position) {
+			return;
+		}
+		DirtySSBO();
 		m_position = position;
 	}
 	glm::vec3 inline GetPosition() const {
@@ -28,18 +34,30 @@ public:
 	}
 
 	void inline SetConstantAttenuation(GLfloat constant) {
+		if (m_attenuation.x == constant) {
+			return;
+		}
+		DirtySSBO();
 		m_attenuation.x = constant;
 	}
 	GLfloat inline GetConstantAttenuation() const {
 		return m_attenuation.x;
 	}
 	void inline SetLinearAttenuation(GLfloat linear) {
+		if (m_attenuation.y == linear) {
+			return;
+		}
+		DirtySSBO();
 		m_attenuation.y = linear;
 	}
 	GLfloat inline GetLinearAttenuation() const {
 		return m_attenuation.y;
 	}
 	void inline SetQuadraticAttenuation(GLfloat quadratic) {
+		if (m_attenuation.z == quadratic) {
+			return;
+		}
+		DirtySSBO();
 		m_attenuation.z = quadratic;
 	}
 	GLfloat inline GetQuadraticAttenuation() const {
@@ -50,12 +68,20 @@ public:
 	}
 
 	void inline SetInnerAngle(GLfloat inner) {
+		if (m_angles.x == inner) {
+			return;
+		}
+		DirtySSBO();
 		m_angles.x = inner;
 	}
 	GLfloat inline GetInnerAngle() const {
 		return m_angles.x;
 	}
 	void inline SetOuterAngle(GLfloat outer) {
+		if (m_angles.y == outer) {
+			return;
+		}
+		DirtySSBO();
 		m_angles.y = outer;
 	}
 	GLfloat inline GetOuterAngle() const {
@@ -63,6 +89,41 @@ public:
 	}
 	glm::vec2 inline GetAngles() const {
 		return m_angles;
+	}
+
+	virtual float CalculateFarPlane() override {
+		glm::vec3 combined = GetLd() + GetLs();
+		float I0 = std::max({ combined.r, combined.g, combined.b });
+		const float minI = 0.01f;
+
+		float a = GetQuadraticAttenuation();
+		float b = GetLinearAttenuation();
+		float c = GetConstantAttenuation() - (I0 / minI);
+
+		float distance = 100.0f; // Alapértelmezett bukóérték
+
+		// EPSILON vizsgálat a 0-val való osztás elkerülésére
+		if (std::abs(a) < 0.00001f) {
+			// Elsõfokú egyenlet: bx + c = 0  => x = -c / b
+			if (std::abs(b) > 0.00001f) {
+				distance = -c / b;
+			}
+			else {
+				// Ha a és b is 0, akkor a fény nem gyengül, 
+				// ilyenkor egy fix nagy távolságot kell adni.
+				distance = 500.0f;
+			}
+		}
+		else {
+			// Teljes másodfokú megoldóképlet
+			float discriminant = b * b - 4 * a * c;
+			if (discriminant >= 0) {
+				distance = (-b + std::sqrt(discriminant)) / (2.0f * a);
+			}
+		}
+
+		// Biztonsági korlátok: ne legyen negatív és ne legyen túl kicsi
+		return std::max(1.0f, distance);
 	}
 
 	void inline Render(RenderParams* p) override {
@@ -145,21 +206,23 @@ public:
 
 	}
 
-	void inline UploadToSSBO(GLuint SSBOID, int padding) const override {
+	void inline UploadToSSBO(GLuint SSBOID, int padding) override {
 		//struct Light {
+		//    mat4 lightSpaceMatrix;	// 
 		//    vec4 La_const;			// xyz: La, w: constant attenuation
 		//    vec4 Ld_linear;			// xyz: Ld, w: linear attenuation
 		//    vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
 		//    vec4 direction;			// xyz: direction, w: padding
 		//    vec4 position;			// xyz: position, w: padding
-		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: flags
-		//    mat4 lightSpaceMatrix;	// 
+		//    vec4 flags_angle_shadow;	// x: type, y: inner angle, z: outer angle, w: shadowLayer
 		//};
+
+		CleanSSBO();
 
 		//
 		// 1. Map SSBO
 		//
-		size_t lightSize = sizeof(glm::vec4) * 6;
+		size_t lightSize = sizeof(glm::vec4) * 10;
 		size_t p = padding * lightSize;
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOID);
 		GLfloat* buffer = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, p, lightSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
@@ -173,34 +236,48 @@ public:
 		// 2. Fill SSBO
 		//
 
-		// [0-3] La_const (La.xyz és constant attenuation.w)
-		memcpy(&buffer[0], glm::value_ptr(GetLa()), sizeof(glm::vec3));
-		buffer[3] = GetConstantAttenuation();
+		// [0-15] lightSpaceMatrix
+		glm::vec3 up{ 0,1,0 };
+		float dot = glm::dot(GetDirection(), up);
+		if (abs(dot) > .8f) {		// direction and word up is nearly paralell
+			up = glm::vec3(0, 0, 1);
+		}
+		glm::mat4 lightView = glm::lookAt(GetPosition(), GetPosition() + GetDirection(), up);
+		float fov = GetOuterAngle() * 2.0f;
+		float aspect = 1.0f;
+		float nearPlane = 0.01f;
+		float farPlane = CalculateFarPlane();
+		// glm::mat4 lightProjection = glm::perspective(fov, aspect, nearPlane, farPlane);
+		glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+		memcpy(&buffer[0], glm::value_ptr(lightSpaceMatrix), sizeof(glm::mat4));
 
-		// [4-7] Ld_linear (Ld.xyz és linear attenuation.w)
-		memcpy(&buffer[4], glm::value_ptr(GetLd()), sizeof(glm::vec3));
-		buffer[7] = GetLinearAttenuation();
+		// [16-19] La_const (La.xyz és constant attenuation.w)
+		memcpy(&buffer[16], glm::value_ptr(GetLa()), sizeof(glm::vec3));
+		buffer[19] = GetConstantAttenuation();
 
-		// [8-11] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
-		memcpy(&buffer[8], glm::value_ptr(GetLs()), sizeof(glm::vec3));
-		buffer[11] = GetQuadraticAttenuation();
+		// [20-23] Ld_linear (Ld.xyz és linear attenuation.w)
+		memcpy(&buffer[20], glm::value_ptr(GetLd()), sizeof(glm::vec3));
+		buffer[23] = GetLinearAttenuation();
 
-		// [12-15] direction (direction.xyz és padding.w)
-		memcpy(&buffer[12], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
+		// [24-27] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
+		memcpy(&buffer[24], glm::value_ptr(GetLs()), sizeof(glm::vec3));
+		buffer[27] = GetQuadraticAttenuation();
 
-		// [16-19] position (position.xyz és padding.w)
-		memcpy(&buffer[16], glm::value_ptr(GetPosition()), sizeof(glm::vec3));
+		// [28-31] direction (direction.xyz és padding.w)
+		memcpy(&buffer[28], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
 
-		// [20-23] type_angle (flags.x, inner.y, outer.z)
+		// [32-35] position (position.xyz és padding.w)
+		memcpy(&buffer[32], glm::value_ptr(GetPosition()), sizeof(glm::vec3));
+
+		// [36-39] flags_angle_shadow (flags.x, inner.y, outer.z, shadowLayer.w)
 		GLuint flags = LIGHT_FLAG_IS_SPOT;
 		if (GetCastShadow()) {
 			flags = flags | LIGHT_FLAG_CASTS_SHADOW;
 		}
-		buffer[20] = flags;
-		memcpy(&buffer[21], glm::value_ptr(GetAngles()), sizeof(glm::vec2));
-
-		// [24-40] lightSpaceMatrix
-
+		buffer[36] = flags;
+		memcpy(&buffer[37], glm::value_ptr(GetAngles()), sizeof(glm::vec2));
+		buffer[39] = GetShadowLayer();
 
 		//
 		// 3. Unmap SSBO

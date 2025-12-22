@@ -2,13 +2,19 @@
 
 #include "include_all.h"
 
+struct ShaderProgramCollection {
+    GLuint programID = 0;
+    GLuint programSelectedID = 0;
+    GLuint programShadowID = 0;
+};
+
+// Model params
 struct BezierCurveParams {
 	ShaderProgramCollection shaderPrograms;
     int smoothness = 10;
     const char* name = "";
     bool show = true;
 };
-
 struct BezierSurfaceParams {
 	ShaderProgramCollection shaderPrograms;
     glm::vec2 smoothness{ 10, 10 };
@@ -16,20 +22,26 @@ struct BezierSurfaceParams {
     bool show = true;
     bool wireframe = false;
 };
-
 struct BSplineParams {
 	ShaderProgramCollection shaderPrograms;
     int smoothness = 10;
     const char* name = "";
     bool show = true;
 };
-
 struct DiscreteCurveParams {
 	ShaderProgramCollection shaderPrograms;
     const char* name = "";
     bool show = true;
 };
+struct ModelParams {
+    ShaderProgramCollection shaderPrograms;
+    const char* name = "";
+    bool show = true;
+    bool wireFrame = false;
+    int drawMode = GL_TRIANGLES;
+};
 
+// Render params
 struct MeshRenderParams {
     GLuint progID;
     int drawMode;
@@ -48,25 +60,10 @@ struct ModelBaseParams {
     bool show = true;
     int drawMode = GL_TRIANGLES;
 };
-
-struct ModelLoaderReturn {
-    std::vector<Material*> materials;
-    std::vector<Mesh*> meshes;
-};
-
-struct ModelParams {
-	ShaderProgramCollection shaderPrograms;
-    const char* name = "";
-    bool show = true;
-    bool wireFrame = false;
-    int drawMode = GL_TRIANGLES;
-};
-
 struct RenderLightParams {
     glm::vec3 cameraAt{ 0,0,0 };
     glm::vec3 cameraUp{ 0,1,0 };
 };
-
 struct RenderParams {
     float lineWidth = 1.f;
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
@@ -82,12 +79,13 @@ struct RenderParams {
     void* otherData = nullptr;
 };
 
-struct ShaderProgramCollection {
-    GLuint programID = 0;
-    GLuint programSelectedID = 0;
-    GLuint programShadowID = 0;
+// ModelLoader
+struct ModelLoaderReturn {
+    std::vector<Material*> materials;
+    std::vector<Mesh*> meshes;
 };
 
+// Update info
 struct SUpdateInfo
 {
     float ElapsedTimeInSec = 0.0f;	// Elapsed time since start of the program

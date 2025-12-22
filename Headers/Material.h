@@ -79,10 +79,10 @@ struct Material {
 	static inline void UploadMaterialToShader(
 		GLuint programID, const Material* material,
 		std::array<std::pair<GLuint, GLuint>, 4> textureTargets = {
-			std::make_pair(GL_TEXTURE0, 0),
-			std::make_pair(GL_TEXTURE1, 1),
-			std::make_pair(GL_TEXTURE2, 2),
-			std::make_pair(GL_TEXTURE3, 3)
+			std::make_pair(GL_TEXTURE0, 0),		// diffuse
+			std::make_pair(GL_TEXTURE1, 1),		// specular
+			std::make_pair(GL_TEXTURE2, 2),		// emission
+			std::make_pair(GL_TEXTURE3, 3)		// normal
 		}
 	) {
 		// --- Uniform Helper Lambdas ---

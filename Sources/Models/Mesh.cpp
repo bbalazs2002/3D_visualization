@@ -37,6 +37,8 @@ void Mesh::RenderSelection(MeshRenderSelectionParams* p) {
 	glBindVertexArray(0);
 }
 void Mesh::RenderShadowMap(MeshRenderShadowParams* p) {
+	// -- Set shader input data --
+	// Layout for model
 	glBindVertexArray(GetVAO());
 
 	// -- Draw call --

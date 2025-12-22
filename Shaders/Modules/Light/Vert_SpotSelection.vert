@@ -32,11 +32,11 @@ void main() {
 	float delta = 2. * 3.14159265 / n;
 	float i = float(gl_VertexID - 1);
 
-	float angle = isInner * lightSources[lightID].type_angle.z + (1 - isInner) * lightSources[lightID].type_angle.y;
+	float angle = isInner * lightSources[lightID].flags_angle_shadow.z + (1 - isInner) * lightSources[lightID].flags_angle_shadow.y;
 	float dist = length(lightSources[lightID].position.xyz - cameraData.eye);
-	float m = dist * lightSources[lightID].type_angle.z / 10.;	// height of the cone (scaled by distance from the camera and outer angle size)
-	float r = m * tan(angle);									// radius of the base circle
-	vec3 P = vec3(m, r * cos(i * delta), r * sin(i * delta));	// point on the base circle contour
+	float m = dist * lightSources[lightID].flags_angle_shadow.z / 10.;	// height of the cone (scaled by distance from the camera and outer angle size)
+	float r = m * tan(angle);											// radius of the base circle
+	vec3 P = vec3(m, r * cos(i * delta), r * sin(i * delta));			// point on the base circle contour
 
 	gl_Position = CameraViewProj(vec4(lightSources[lightID].position.xyz + base * (float(isCenter) * vec3(0) + float(1 - isCenter) * P), 1));
 

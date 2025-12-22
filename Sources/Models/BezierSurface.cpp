@@ -2,7 +2,6 @@
 
 BezierSurface::BezierSurface(BezierSurfaceParams params) : ModelBase(BEZIERSURFACE2MODELBASE) {
 	m_wireframe = params.wireframe;
-	m_type = MODEL_TYPE_BEZIERSURFACE;
 	m_smoothness = params.smoothness;
 	SetCtrlPointsSSBO();
 }

@@ -7,11 +7,11 @@ protected:
 	glm::vec3 m_direction = glm::vec3(0.0, 1.0, 0.0);
 
 public:
-	DirectionalLight() {
-		m_type = LIGHT_TYPE_DIRECTIONAL;
-	}
-
 	void inline SetDirection(glm::vec3 direction) {
+		if (m_direction == direction) {
+			return;
+		}
+		DirtySSBO();
 		m_direction = direction;
 	}
 	glm::vec3 inline GetDirection() const {
@@ -69,20 +69,23 @@ public:
 		}
 	}
 
-	void inline UploadToSSBO(GLuint SSBOID, int padding) const override {
+	void inline UploadToSSBO(GLuint SSBOID, int padding) override {
 		//struct Light {
+		//    mat4 lightSpaceMatrix;	// 
 		//    vec4 La_const;			// xyz: La, w: constant attenuation
 		//    vec4 Ld_linear;			// xyz: Ld, w: linear attenuation
 		//    vec4 Ls_quadratic;		// xyz: Ls, w: quadratic attenuation
 		//    vec4 direction;			// xyz: direction, w: padding
 		//    vec4 position;			// xyz: position, w: padding
-		//    vec4 type_angle;		    // x: type, y: inner angle, z: outer angle, w: padding
+		//    vec4 flags_angle_shadow;	// x: type, y: inner angle, z: outer angle, w: shadowLayer
 		//};
+
+		CleanSSBO();
 
 		//
 		// 1. Map SSBO
 		//
-		size_t lightSize = sizeof(glm::vec4) * 6;
+		size_t lightSize = sizeof(glm::vec4) * 10;
 		size_t p = padding * lightSize;
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOID);
 		GLfloat* buffer = (GLfloat*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, p, lightSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
@@ -96,22 +99,25 @@ public:
 		// 2. Fill SSBO
 		//
 
-		// [0-3] La_const (La.xyz és constant attenuation.w)
-		memcpy(&buffer[0], glm::value_ptr(GetLa()), sizeof(glm::vec3));
+		// [0-15] lightSpaceMatrix
 
-		// [4-7] Ld_linear (Ld.xyz és linear attenuation.w)
-		memcpy(&buffer[4], glm::value_ptr(GetLd()), sizeof(glm::vec3));
+		// [16-19] La_const (La.xyz és constant attenuation.w)
+		memcpy(&buffer[16], glm::value_ptr(GetLa()), sizeof(glm::vec3));
 
-		// [8-11] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
-		memcpy(&buffer[8], glm::value_ptr(GetLs()), sizeof(glm::vec3));
+		// [20-23] Ld_linear (Ld.xyz és linear attenuation.w)
+		memcpy(&buffer[20], glm::value_ptr(GetLd()), sizeof(glm::vec3));
 
-		// [12-15] direction (direction.xyz és padding.w)
-		memcpy(&buffer[12], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
+		// [24-27] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
+		memcpy(&buffer[24], glm::value_ptr(GetLs()), sizeof(glm::vec3));
 
-		// [16-19] position (position.xyz és padding.w)
+		// [28-31] direction (direction.xyz és padding.w)
+		memcpy(&buffer[28], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
 
-		// [20-23] type_angle (type.x, inner.y, outer.z, padding.w)
-		buffer[20] = (GLfloat)GetType();
+		// [32-35] position (position.xyz és padding.w)
+
+		// [36-39] type_angle (flags.x, inner.y, outer.z, shadowLayer.w)
+		GLuint flags = LIGHT_FLAG_IS_DIR;
+		buffer[36] = flags;
 
 		//
 		// 3. Unmap SSBO

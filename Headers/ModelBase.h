@@ -14,7 +14,6 @@ protected:
 	std::string m_name;
 	bool m_transformDirty = true;
 	bool m_applyTransforms = true;
-	MODEL_TYPE_TYPE m_type;
 	bool m_deleteMarker = false;
 
 	// ImGui buffers
@@ -42,9 +41,8 @@ protected:
 	
 public:
 	ModelBase(ModelBaseParams params) {
-		m_type = MODEL_TYPE_MODEL;
-		m_programID = params.programID;
-		m_programSelectedID = params.programSelectedID;
+		m_programID = params.shaderPrograms.programID;
+		m_programSelectedID = params.shaderPrograms.programSelectedID;
 		m_show = params.show;
 		m_drawMode = params.drawMode;
 		AddTransform();
@@ -179,10 +177,6 @@ public:
 	}
 	bool GetApplyTransforms() const {
 		return m_applyTransforms;
-	}
-
-	MODEL_TYPE_TYPE GetType() const {
-		return m_type;
 	}
 
 	// iterator

@@ -53,7 +53,9 @@ void Model::Render(RenderParams* p) {
 	glUniform2iv(ul(progID, "clickHandlerData.cursorPos"), 1, glm::value_ptr(p->cursorPos));
 	glUniform2iv(ul(progID, "clickHandlerData.windowSize"), 1, glm::value_ptr(p->windowSize));
 	// Light module
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
+	// SSBO bind globally to binding point 2
+	// Shadow texture globally uploaded to unit #4
+	glUniform1i(ul(progID, "lightShadowMapArray"), 4);
 	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
 	// Transform module
 	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
@@ -141,6 +143,12 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 		m->SetWireFrame(wireframe);
 	}
 
+	// Shadow
+	bool shadow = m->GetCastShadow();
+	if (ImGui::Checkbox("Cast shadow", &shadow)) {
+		SetCastShadow(shadow);
+	}
+
 	// OBJ file
 	ImGui::InputText("Obj file path", m->m_objPathBuffer, IM_ARRAYSIZE(m->m_objPathBuffer));
 	ImGui::SameLine();
@@ -154,7 +162,7 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 }
 
 // ICastShadow methods
-void Model::RenderShadowMap(RenderParams* p) {
+void Model::RenderShadowMap(int lightID) {
 	glm::mat4 modelTransform = glm::identity<glm::mat4>();
 	if (GetApplyTransforms()) {
 		modelTransform = GetTransform();
@@ -164,16 +172,30 @@ void Model::RenderShadowMap(RenderParams* p) {
 		GetDrawMode()
 	};
 
+	// -- Set render options --
+	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+
+	GLint depthFunc;
+	glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
+	GLint depthMask;
+	glGetIntegerv(GL_DEPTH_WRITEMASK, &depthMask);
+	bool depthTestEnabled = glIsEnabled(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+
 	// -- Activate shader --
 	GLuint progID = GetProgramShadowID();
 	glUseProgram(progID);
 
 	// -- Set shader input data --
-	// Camera module
-	glUniform3fv(ul(progID, "cameraData.eye"), 1, glm::value_ptr(p->cameraPos));
-	glUniformMatrix4fv(ul(progID, "cameraData.viewProj"), 1, GL_FALSE, glm::value_ptr(p->viewProj));
 	// Transform module
 	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
+	// Light module
+	// SSBO bind globally to binding point 2
+	// Shader data
+	glUniform1i(ul(progID, "lightID"), lightID);
 
 	if (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()) {
 		// Render all meshes
@@ -189,6 +211,14 @@ void Model::RenderShadowMap(RenderParams* p) {
 
 	// -- Restore initial OGL state --
 	glUseProgram(0);
+	if (cullFaceEnabled) {
+		glEnable(GL_CULL_FACE);
+	}
+	if (depthTestEnabled) {
+		glEnable(GL_DEPTH_TEST);
+	}
+	glDepthFunc(depthFunc);
+	glDepthMask(depthMask);
 }
 
 void Model::SetObjPath() {

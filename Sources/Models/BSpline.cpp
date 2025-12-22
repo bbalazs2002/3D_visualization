@@ -1,7 +1,6 @@
 #include "../../Headers/include_all.h"
 
 BSpline::BSpline(BSplineParams params) : ModelBase(BSPLINE2MODELBASE) {
-    m_type = MODEL_TYPE_BSPLINE;
     m_smoothness = params.smoothness;
 
     // Alap vezérlõpontok

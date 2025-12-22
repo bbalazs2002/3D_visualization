@@ -9,8 +9,8 @@ protected:
 	bool m_wireframe = false;
 	std::string m_objPath;
 
-	bool m_castShadow = true;
 	GLuint m_shadowProgramID = 0;
+	bool m_castShadow = true;
 
 public:
 	char m_objPathBuffer[256] = "";
@@ -24,17 +24,17 @@ public:
 	void RenderGUI(std::vector<ModelBase*>*) override;
 
 	// ICastShadow methods
-	void RenderShadowMap(RenderParams* p) override;
+	void RenderShadowMap(int lightID) override;
 	inline void SetProgramShadowID(GLuint id) override {
 		m_shadowProgramID = id;
 	}
 	inline GLuint GetProgramShadowID() const override {
 		return m_shadowProgramID;
 	}
-	inline void SetShadowCasting(bool cast) override {
+	inline void SetCastShadow(bool cast) override {
 		m_castShadow = cast;
 	}
-	inline bool GetShadowCasting() const override {
+	inline bool GetCastShadow() const override {
 		return m_castShadow;
 	}
 
