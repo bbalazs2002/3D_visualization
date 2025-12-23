@@ -171,7 +171,7 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 
 // ICastShadow methods
 void Model::RenderShadowMap(int lightID) {
-	if (!GetShow()) {
+	if (!GetShow() || GetWireFrame()) {
 		return;
 	}
 

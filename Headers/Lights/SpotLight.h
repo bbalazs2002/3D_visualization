@@ -8,6 +8,10 @@ protected:
 	glm::vec3 m_position = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 m_attenuation = glm::vec3(1.0, 0.0, 0.0); // constant, linear, quadratic
 	glm::vec2 m_angles = glm::vec2(.2f, .3f); // inner, outer
+	float m_nearPlane = .5f;
+	float m_farPlane = 100.f;
+	bool m_farPlaneAuto = false;
+
 public:
 	SpotLight() {}
 
@@ -65,6 +69,37 @@ public:
 	}
 	glm::vec3 inline GetAttenuation() const {
 		return m_attenuation;
+	}
+
+	void inline SetNearPlane(float nearPlane) {
+		if (m_nearPlane == nearPlane) {
+			return;
+		}
+		DirtySSBO();
+		m_nearPlane = nearPlane;
+	}
+	float inline GetNearPlane() const {
+		return m_nearPlane;
+	}
+	void inline SetFarPlane(float farPlane) {
+		if (m_farPlane == farPlane) {
+			return;
+		}
+		DirtySSBO();
+		m_farPlane = farPlane;
+	}
+	float inline GetFarPlane() const {
+		return m_farPlane;
+	}
+	void inline SetFarPlaneAuto(bool autoCalc) {
+		if (m_farPlaneAuto == autoCalc) {
+			return;
+		}
+		DirtySSBO();
+		m_farPlaneAuto = autoCalc;
+	} 
+	bool inline GetFarPlaneAuto() const {
+		return m_farPlaneAuto;
 	}
 
 	void inline SetInnerAngle(GLfloat inner) {
@@ -126,7 +161,7 @@ public:
 		return std::max(1.0f, distance);
 	}
 
-	void inline Render(RenderParams* p) override {
+	void Render(RenderParams* p) override {
 		if (!GetShow()) {
 			return;
 		}
@@ -170,10 +205,10 @@ public:
 		}
 		glUseProgram(0);
 	}
-	void inline RenderSelection(RenderParams* p) override {
+	void RenderSelection(RenderParams* p) override {
 		return;
 	}
-	virtual void RenderGUI(std::vector<ModelBase*>* models) override {
+	void RenderGUI(std::vector<ModelBase*>* models) override {
 		glm::vec3 buffer = GetPosition();
 		if (ImGui::SliderFloat3("Position", &buffer.x, -10.f, 10.f)) {
 			SetPosition(buffer);
@@ -202,6 +237,19 @@ public:
 		}
 		if (ImGui::SliderAngle("Outer angle", &buffer.y, 0, 80)) {
 			SetOuterAngle(buffer.y);
+		}
+
+		float nearPlane = GetNearPlane();
+		if (ImGui::SliderFloat("Near plane", &nearPlane, .1f, 5.f, "%.1f")) {
+			SetNearPlane(nearPlane);
+		}
+		float farPlane = GetFarPlane();
+		if (ImGui::SliderFloat("Far plane", &farPlane, .1f, 100.f, "%.1f")) {
+			SetFarPlane(farPlane);
+		}
+		bool farPlaneAuto = GetFarPlaneAuto();
+		if (ImGui::Checkbox("Auto calculate far plane", &farPlaneAuto)) {
+			SetFarPlaneAuto(farPlaneAuto);
 		}
 
 	}
@@ -243,14 +291,22 @@ public:
 			up = glm::vec3(0, 0, 1);
 		}
 		glm::mat4 lightView = glm::lookAt(GetPosition(), GetPosition() + GetDirection(), up);
+
 		float fov = GetOuterAngle() * 2.0f;
 		float aspect = 1.0f;
-		float nearPlane = 0.01f;
-		float farPlane = CalculateFarPlane();
-		// glm::mat4 lightProjection = glm::perspective(fov, aspect, nearPlane, farPlane);
-		glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
-		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
-		memcpy(&buffer[0], glm::value_ptr(lightSpaceMatrix), sizeof(glm::mat4));
+		float nearPlane = GetNearPlane();
+		float farPlane;
+		if (GetFarPlaneAuto()) {
+			farPlane = CalculateFarPlane();
+		}
+		else {
+			farPlane = GetFarPlane();
+		}
+		glm::mat4 light_proj = glm::perspective(fov, aspect, nearPlane, farPlane);;
+		glm::mat4 light_view = glm::lookAt<float>(GetPosition(), GetPosition() + glm::normalize(GetDirection()), up);
+		glm::mat4 light_mvp = light_proj * light_view; // This matrix will tell us how to read the distances in the shadow map
+
+		memcpy(&buffer[0], glm::value_ptr(light_mvp), sizeof(glm::mat4));
 
 		// [16-19] La_const (La.xyz és constant attenuation.w)
 		memcpy(&buffer[16], glm::value_ptr(GetLa()), sizeof(glm::vec3));

@@ -49,7 +49,7 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         
         if ((LIGHT_FLAG_IS_SPOT & flags) != 0u) {
             // Spot Light Calculation
-            vec3 spotDir = normalize(vec3(0,-1,0)); // normalize(params.light.direction.xyz);
+            vec3 spotDir = normalize(params.light.direction.xyz);
             float theta = dot(lightDir, -spotDir);      // cosine of angle between light ray and spot direction
 
             float innerCutOff = cos(params.light.flags_angle_shadow.y);
@@ -65,6 +65,11 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         }
     }
 
+    // If the light is dimmed out by spot or attenuation, skip the expensive calculations
+    if (attenuation <= 0.0 || spotIntensity <= 0.0) {
+        return vec3(0.0);
+    }
+
     // Calculat shadow
     float shadow = 1.0f;
     if(dot(params.norm, lightDir) <= 0) {
@@ -75,11 +80,6 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         uint layer = uint(params.light.flags_angle_shadow.w);
         float bias = max(0.05 * (1.0 - dot(params.norm, lightDir)), 0.005);
         shadow = CalculateShadow(viewProj * vec4(params.position, 1), layer, bias);
-    }
-    
-    // If the light is dimmed out by spot or attenuation, skip the expensive calculations
-    if (attenuation <= 0.0 || spotIntensity <= 0.0) {
-        return vec3(0.0);
     }
     
     // 2. Diffuse Component
