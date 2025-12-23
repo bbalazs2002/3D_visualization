@@ -101,6 +101,11 @@ void Model::RenderSelection(RenderParams* p) {
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
 	glLineWidth(p->selectionWidth);
+	GLint polygonMode[2];
+	glGetIntegerv(GL_POLYGON_MODE, polygonMode);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	bool cullface = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 
 	// -- Activate shader --
 	GLuint progID = GetProgramSelectedID();
@@ -129,6 +134,9 @@ void Model::RenderSelection(RenderParams* p) {
 
 	// -- Restore initial OGL state --
 	glLineWidth(defLineWidth);
+	if (cullface) glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT, polygonMode[0]);
+	glPolygonMode(GL_BACK, polygonMode[1]);
 	glUseProgram(0);
 }
 void Model::RenderGUI(std::vector<ModelBase*>*) {
@@ -163,6 +171,10 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 
 // ICastShadow methods
 void Model::RenderShadowMap(int lightID) {
+	if (!GetShow()) {
+		return;
+	}
+
 	glm::mat4 modelTransform = glm::identity<glm::mat4>();
 	if (GetApplyTransforms()) {
 		modelTransform = GetTransform();

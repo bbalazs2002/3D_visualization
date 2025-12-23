@@ -44,6 +44,17 @@ public:
 	inline Material* GetMaterial(int id) const {
 		return m_materials[id];
 	}
+	inline void SetMaterial(Material* material) {
+		for (auto m : m_materials) {
+			delete(m);
+			m = nullptr;
+		}
+		m_materials.clear();
+		m_materials.push_back(material);
+		for (auto m : m_meshes) {
+			m->SetMaterial(material);
+		}
+	}
 	inline void AddMesh(Mesh* mesh) {
 		m_meshes.push_back(mesh);
 	}

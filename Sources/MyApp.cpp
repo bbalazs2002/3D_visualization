@@ -48,44 +48,50 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();*/
 
-	// B-Spline
-	/*m_programBSplineID = glCreateProgram();
-		ProgramBuilder{ m_programBSplineID }
-			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
-			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-			.Link();
-
-		m_programBSplineSelectedID = glCreateProgram();
-		ProgramBuilder{ m_programBSplineSelectedID }
-			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
-			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-			.Link();*/
-
-	// DiscreteCurve
-	/*m_programDiscreteCurveID = glCreateProgram();
-			ProgramBuilder{ m_programDiscreteCurveID }
-				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
-				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+		// B-Spline
+		/*m_programBSplineID = glCreateProgram();
+			ProgramBuilder{ m_programBSplineID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 				.Link();
 
-			m_programDiscreteCurveSelectedID = glCreateProgram();
-			ProgramBuilder{ m_programDiscreteCurveSelectedID }
-				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
-				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+			m_programBSplineSelectedID = glCreateProgram();
+			ProgramBuilder{ m_programBSplineSelectedID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 				.Link();*/
 
-	// Bezier-surface
-	/*m_programBezierSurfaceID = glCreateProgram();
-				ProgramBuilder{ m_programBezierSurfaceID }
-					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
-					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
-					.Link();
+				// DiscreteCurve
+				/*m_programDiscreteCurveID = glCreateProgram();
+						ProgramBuilder{ m_programDiscreteCurveID }
+							.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
+							.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+							.Link();
 
-				m_programBezierSurfaceSelectedID = glCreateProgram();
-				ProgramBuilder{ m_programBezierSurfaceSelectedID }
-					.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
-					.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
-					.Link();*/
+						m_programDiscreteCurveSelectedID = glCreateProgram();
+						ProgramBuilder{ m_programDiscreteCurveSelectedID }
+							.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
+							.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+							.Link();*/
+
+							// Bezier-surface
+	m_programBezierSurfaceID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurface.frag")
+		.Link();
+
+	m_programBezierSurfaceSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceSelectedID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+		.Link();
+
+	m_programBezierSurfaceShadowID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceShadowID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceShadow.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceShadow.frag")
+		.Link();
 
 	// Light selection
 	m_programDirectionLightID = glCreateProgram();
@@ -137,6 +143,8 @@ void CMyApp::CleanShaders()
 	m_programBezierSurfaceID = 0;
 	glDeleteProgram(m_programBezierSurfaceSelectedID);
 	m_programBezierSurfaceSelectedID = 0;
+	glDeleteProgram(m_programBezierSurfaceShadowID);
+	m_programBezierSurfaceShadowID = 0;
 
 	glDeleteProgram(m_programDirectionLightID);
 	m_programDirectionLightID = 0;
@@ -233,11 +241,13 @@ void CMyApp::CleanSkyboxGeometry()
 void CMyApp::InitModels() {
 	{
 		// Bezier-surface
-		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
-				m_programBezierSurfaceID,
-				m_programBezierSurfaceSelectedID,
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
 				glm::vec2{10, 10},
 				"Bezier-surface",
 				true, false
@@ -257,14 +267,45 @@ void CMyApp::InitModels() {
 			32.f,
 			m_modelTextureID, 0, 0, 0
 			});
-		*/
+
+		// Bezier-surface
+		m_models.push_back(new BezierSurface(
+			BezierSurfaceParams{
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
+				glm::vec2{10, 10},
+				"Bezier-surface-2",
+				true, false
+			}
+		));
+		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 6, 5 }, std::vector<glm::vec4>{
+			glm::vec4{ -2,2,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
+				glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,2,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
+				glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,10,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
+				glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,2,1,1 }, glm::vec4{ 2,0,1,1 },
+				glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,2,2,1 },
+				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
+		});
+		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
+			"Bezier-surface-material",
+			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
+			32.f,
+			m_modelTextureID, 0, 0, 0
+			});
+		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
 
 		// Bezier-surface
 		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
-				m_programBezierSurfaceID,
-				m_programBezierSurfaceSelectedID,
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
 				glm::vec2{10, 10},
 				"Bezier-surface-2",
 				true, false
@@ -277,11 +318,12 @@ void CMyApp::InitModels() {
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
 			"Bezier-surface-material",
-			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
+			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
 		});
 		*/
+		// ((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0,3,0)));
 
 		// Bezier-curve
 		/*
@@ -303,26 +345,34 @@ void CMyApp::InitModels() {
 		*/
 
 		// Cube
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
-				m_programModelID,
-				m_programSelectedID,
+				ShaderProgramCollection{
+					m_programModelID,
+					m_programModelSelectedID,
+					m_programModelShadowID
+				},
 				"Cube",
 				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
 				{ 1, 0, 0, 0 },
-				{ 0, 1, 0, 0 },
+				{ 0, 1, 0, 5 },
 				{ 0, 0, 1, 0 },
 				{ 0, 0, 0, 1 }
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\Transforms\\Assets\\cube.obj");
-		*/
+		((Model*)m_models[m_models.size() - 1])->SetMaterial(new Material{
+			"Bezier-surface-material",
+			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
+			32.f,
+			m_modelTextureID, 0, 0, 0
+		});
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				ShaderProgramCollection{
@@ -342,8 +392,10 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// Equinox
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				ShaderProgramCollection{
@@ -363,6 +415,7 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+		*/
 
 		// B-Spline
 		/*
@@ -469,15 +522,20 @@ void CMyApp::CleanModels() {
 }
 
 void CMyApp::InitLights() {
+
 	/*
 	m_lights.push_back(new DirectionalLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programDirectionLightID);
+	*/
+
+	/*
 	m_lights.push_back(new PointLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programPointLightID);
 	*/
+
 	m_lights.push_back(new SpotLight());
 	m_lights[m_lights.size() - 1]->SetProgramID(m_programSpotLightID);
-	((SpotLight*)m_lights[m_lights.size() - 1])->SetPosition(glm::vec3(0, 8, 0));
+	((SpotLight*)m_lights[m_lights.size() - 1])->SetPosition(glm::vec3(0, 4, 0));
 	m_lights[m_lights.size() - 1]->SetShadow();
 }
 void CMyApp::CleanLights() {
@@ -759,7 +817,6 @@ void CMyApp::Render()
 void CMyApp::RenderGUI()
 {
 	// SHADOW MAP WINDOW
-	/*
 	GLuint shadowMapID = ShadowMapController::GetLayerTextureID(0);
 	if (shadowMapID > 0) {
 		if (ImGui::Begin("Shadow map window")) {
@@ -767,7 +824,6 @@ void CMyApp::RenderGUI()
 		}
 		ImGui::End();
 	}
-	*/
 
 	// OBJECT OPTIONS WINDOW
 	if (m_selectedModel >= 0 && m_selectedModel < m_models.size()) {
@@ -828,7 +884,7 @@ void CMyApp::RenderGUI()
 					m_programModelID,
 					m_programModelSelectedID,
 					m_programModelShadowID
-				}}
+				} }
 			));
 		}
 		// Add new curve
@@ -838,7 +894,7 @@ void CMyApp::RenderGUI()
 					m_programBezierCurveID,
 					m_programBezierCurveSelectedID,
 					0
-				}}
+				} }
 			));
 		}
 		ImGui::SameLine();
@@ -848,7 +904,7 @@ void CMyApp::RenderGUI()
 					m_programBSplineID,
 					m_programBSplineSelectedID,
 					0
-				}}
+				} }
 			));
 		}
 		ImGui::SameLine();
@@ -858,7 +914,7 @@ void CMyApp::RenderGUI()
 					m_programDiscreteCurveID,
 					m_programDiscreteCurveSelectedID,
 					0
-				}}
+				} }
 			));
 		}
 		// Add new surface
@@ -868,7 +924,7 @@ void CMyApp::RenderGUI()
 					m_programBezierSurfaceID,
 					m_programBezierSurfaceSelectedID,
 					0
-				}}
+				} }
 			));
 		}
 		// Add new light

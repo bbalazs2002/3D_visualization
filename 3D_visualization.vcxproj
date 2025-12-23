@@ -167,6 +167,8 @@
     <None Include="Shaders\BezierCurve\Frag_Bezier.frag" />
     <None Include="Shaders\BezierCurve\Vert_Bezier.vert" />
     <None Include="Shaders\BezierCurve\Vert_BezierSelected.vert" />
+    <None Include="Shaders\BezierSurface\Frag_BezierSurfaceShadow.frag" />
+    <None Include="Shaders\BezierSurface\Vert_BezierSurfaceShadow.vert" />
     <None Include="Shaders\BSpline\Vert_BSplineSelected.vert" />
     <None Include="Shaders\DiscreteCurve\Frag_DiscreteCurve.frag" />
     <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurve.vert" />
@@ -211,7 +213,6 @@
     <None Include="Shaders\Modules\ObjectTypes\DiscreteCurve\DiscreteCurve_uniforms.glsl" />
     <None Include="Shaders\Modules\Transform\Transform.glsl" />
     <None Include="Shaders\Modules\Transform\Transform_uniforms.glsl" />
-    <None Include="Shaders\Shadow\Vert_Shadow.vert" />
     <None Include="Shaders\Skybox\Frag_skybox_skeleton.frag" />
     <None Include="Shaders\Skybox\Vert_skybox.vert" />
     <None Include="Shaders\Vert_PosNormTex.vert">

@@ -1,10 +1,8 @@
-#version 330 core
+#version 430 core
 
-void main()
-{
-    // Intentionally left blank (The gl_FragCoord.z value is written to the GL_DEPTH_ATTACHMENT automaticly)
+void main () {
+	// Intentionally left blank (The gl_FragCoord.z value is written to the GL_DEPTH_ATTACHMENT automaticly)
     // gl_FragDepth = gl_FragCoord.z; // default
-    // gl_FragDepth = .5;
 
     /*
     float depth = gl_FragCoord.z;

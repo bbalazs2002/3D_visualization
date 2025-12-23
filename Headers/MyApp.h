@@ -69,6 +69,7 @@ protected:
 	GLuint m_programBSplineSelectedID = 0;			// Draw BSpline-curve selection
 	GLuint m_programBezierSurfaceID = 0;			// Draw Bezier-surface
 	GLuint m_programBezierSurfaceSelectedID = 0;	// Draw Bezier-surface selection
+	GLuint m_programBezierSurfaceShadowID = 0;		// Draw Bezier-surface shadow
 
 	GLuint m_programDirectionLightID = 0;			// Render direction light selection
 	GLuint m_programPointLightID = 0;				// Render point light selection

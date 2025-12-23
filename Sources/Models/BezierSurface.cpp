@@ -3,6 +3,7 @@
 BezierSurface::BezierSurface(BezierSurfaceParams params) : ModelBase(BEZIERSURFACE2MODELBASE) {
 	m_wireframe = params.wireframe;
 	m_smoothness = params.smoothness;
+	m_shadowProgramID = params.shaderPrograms.programShadowID;
 	SetCtrlPointsSSBO();
 }
 BezierSurface::~BezierSurface() {
@@ -14,6 +15,7 @@ BezierSurface::~BezierSurface() {
 	}
 }
 
+// IDrawable
 void BezierSurface::Render(RenderParams* p) {
 	if (!GetShow()) {
 		return;
@@ -62,10 +64,10 @@ void BezierSurface::Render(RenderParams* p) {
 
 	// -- Set render options --
 	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	GLfloat defLineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &defLineWidth);
 	if (GetWireFrame()) {
-		glDisable(GL_CULL_FACE);
 		glLineWidth(p->lineWidth);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -192,4 +194,71 @@ void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 
 	ImGui::Separator();
 	ImGui::Spacing();
+}
+
+// ICastShadow
+void BezierSurface::RenderShadowMap(int lightID) {
+	if (!GetShow() || GetWireFrame()) {
+		return;
+	}
+
+	// -- Check if the surface can be rendered --
+	if (GetCtrlPoints().size() < 1) {
+		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" has too few control points");
+		SetShow(false);
+		return;
+	}
+	if (GetCtrlPoints().size() != GetRowsCount() * GetColsCount()) {
+		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" dimensions do not match");
+		SetShow(false);
+		return;
+	}
+
+	// -- Update ctrlPoints SSBO and transformation matrix if needed --
+	bool transformsReset = false;
+	// check if any of the transformations is changed
+	bool isDirty = false;
+	for (auto t : m_transforms) {
+		if (t->IsDirty()) {
+			isDirty = true;
+		}
+		t->Clean();
+	}
+	// calculate transformation and set SSBO if changed
+	if (isDirty || m_transformDirty) {
+		m_transformDirty = false;
+		glm::mat4 acc = glm::identity<glm::mat4>();
+		for (int i = m_transforms.size() - 1; i >= 0; --i) {
+			acc *= m_transforms[i]->Get();
+		}
+		m_transform = acc;
+		transformsReset = true;
+	}
+
+	if (transformsReset || m_ctrlPointsDirty) {
+		WriteCtrlPointsSSBO();
+	}
+
+	// -- Set render options --
+	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+
+	// -- Activate shader --
+	GLuint progID = GetProgramShadowID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	// Bezier surface module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
+	// Light module
+	// SSBO bind globally to binding point 2
+
+	// -- Draw call --
+	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
+
+	// -- Restore initial OGL state --
+	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glUseProgram(0);
 }
