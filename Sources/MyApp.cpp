@@ -269,7 +269,6 @@ void CMyApp::InitModels() {
 			});
 
 		// Bezier-surface
-		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				ShaderProgramCollection{
@@ -297,7 +296,6 @@ void CMyApp::InitModels() {
 			m_modelTextureID, 0, 0, 0
 			});
 		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
-		*/
 
 		// Bezier-surface
 		/*

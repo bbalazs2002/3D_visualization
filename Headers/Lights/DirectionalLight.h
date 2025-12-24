@@ -113,23 +113,17 @@ public:
 
 		// [16-19] La_const (La.xyz és constant attenuation.w)
 		memcpy(&buffer[16], glm::value_ptr(GetLa()), sizeof(glm::vec3));
-		buffer[16] = 0;
 
 		// [20-23] Ld_linear (Ld.xyz és linear attenuation.w)
 		memcpy(&buffer[20], glm::value_ptr(GetLd()), sizeof(glm::vec3));
-		buffer[23] = 0;
 
 		// [24-27] Ls_quadratic (Ls.xyz és quadratic attenuation.w)
 		memcpy(&buffer[24], glm::value_ptr(GetLs()), sizeof(glm::vec3));
-		buffer[27] = 0;
 
 		// [28-31] direction (direction.xyz és padding.w)
 		memcpy(&buffer[28], glm::value_ptr(GetDirection()), sizeof(glm::vec3));
-		buffer[31] = 0;
 
 		// [32-35] position (position.xyz és padding.w)
-		memcpy(&buffer[32], glm::value_ptr(glm::vec3(0,0,0)), sizeof(glm::vec3));
-		buffer[35] = 0;
 
 		// [36-39] type_angle (flags.x, inner.y, outer.z, shadowLayer.w)
 		GLuint flags = LIGHT_FLAG_IS_DIR;
@@ -137,8 +131,7 @@ public:
 			flags = flags |= LIGHT_FLAG_CASTS_SHADOW;
 		}
 		buffer[36] = flags;
-		memcpy(&buffer[37], glm::value_ptr(glm::vec2(0,0)), sizeof(glm::vec2));
-		buffer[39] = 0;
+		buffer[39] = GetShadowLayer();
 
 		//
 		// 3. Unmap SSBO
