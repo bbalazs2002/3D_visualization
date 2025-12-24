@@ -613,6 +613,10 @@ void CMyApp::InitLightBuffer() {
 	glGenBuffers(1, &m_LightsBufferID);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightsBufferID);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 10 * m_lights.size(), nullptr, GL_DYNAMIC_DRAW);
+	// SSBO for light viewProj matrices
+	glGenBuffers(1, &m_LightViewProjID);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightViewProjID);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::mat4) * ShadowMapController::CountViewProjMatrices(), nullptr, GL_DYNAMIC_DRAW);
 
 	m_lightBufferDirty = true;
 }
@@ -634,7 +638,7 @@ bool CMyApp::Init()
 	glClearColor(0, 0, 0, 1.0f);
 
 	// Init shadow maps
-	ShadowMapController::Init(m_shadowBufferSize, m_shadowBufferSize);
+	ShadowMapController::Init(m_shadow2DBufferSize, m_shadow2DBufferSize, m_shadowCubeBufferSize);
 
 	InitShaders();
 	InitTexture();
@@ -755,9 +759,10 @@ void CMyApp::RenderModels() const {
 
 	// bind lights buffer to binding point 2
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_LightsBufferID);
+	// bind light viewProj matrices SSBO to binding point 3
 
 	// bind shadow maps
-	ShadowMapController::BindForReading(4);
+	ShadowMapController::BindAllForReading(4, 5);
 
 	// Render all models
 	int objCount = 0;
@@ -771,6 +776,8 @@ void CMyApp::RenderModels() const {
 		m->Render(&rp);
 		++objCount;
 	}
+
+	ShadowMapController::Unbind();
 }
 void CMyApp::RenderSkybox() const {
 	glUseProgram(m_programSkyboxID);
@@ -817,6 +824,7 @@ void CMyApp::Render()
 void CMyApp::RenderGUI()
 {
 	// SHADOW MAP WINDOW
+	/*
 	GLuint shadowMapID = ShadowMapController::GetLayerTextureID(0);
 	if (shadowMapID > 0) {
 		if (ImGui::Begin("Shadow map window")) {
@@ -824,6 +832,7 @@ void CMyApp::RenderGUI()
 		}
 		ImGui::End();
 	}
+	*/
 
 	// OBJECT OPTIONS WINDOW
 	if (m_selectedModel >= 0 && m_selectedModel < m_models.size()) {
@@ -870,11 +879,19 @@ void CMyApp::RenderGUI()
 		ImGui::SliderFloat("Selection width", &m_selectionWidth, 1.f, 10.f);
 		ImGui::ColorEdit3("Selection color", &m_selColor.r);
 		ImGui::SliderFloat("Line width", &m_lineWidth, 1.f, 10.f);
-		static int bufferResolutionLevel = 10;
-		std::string bufferResolutionText = std::to_string(1 << bufferResolutionLevel);
-		if (ImGui::SliderInt("Shadow resolution level", &bufferResolutionLevel, 5, 12, bufferResolutionText.c_str()))
+
+		// Shadow map texture size
+		static int buffer2DResolutionLevel = 10;
+		std::string buffer2DResolutionText = std::to_string(1 << buffer2DResolutionLevel);
+		if (ImGui::SliderInt("Shadow 2D resolution level", &buffer2DResolutionLevel, 5, 12, buffer2DResolutionText.c_str()))
 		{
-			m_shadowBufferSize = 1 << bufferResolutionLevel;
+			m_shadow2DBufferSize = 1 << buffer2DResolutionLevel;
+		}
+		static int bufferCubeResolutionLevel = 9;
+		std::string bufferCubeResolutionText = std::to_string(1 << bufferCubeResolutionLevel);
+		if (ImGui::SliderInt("Shadow Cube resolution level", &bufferCubeResolutionLevel, 5, 12, bufferCubeResolutionText.c_str()))
+		{
+			m_shadowCubeBufferSize = 1 << bufferCubeResolutionLevel;
 		}
 
 		// Add new model

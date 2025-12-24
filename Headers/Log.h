@@ -9,7 +9,6 @@
 #define NOMINMAX
 #include <windows.h>
 
-
 #define DEBUG
 
 class Log {

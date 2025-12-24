@@ -22,7 +22,7 @@ out vec4 fs_out_col;
 #include "../Modules/Material/Material.glsl"
 
 // light
-#define LIGHT_LIGHTS_SSBO 2
+#define LIGHT_LIGHTS_SSBO 3
 #include "../Modules/Light/Light_uniforms.glsl"
 #include "../Modules/Light/Light.glsl"
 

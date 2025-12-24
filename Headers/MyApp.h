@@ -44,7 +44,8 @@ protected:
 
 	bool m_showAxes = true;
 	bool m_renderShadows = true;
-	int m_shadowBufferSize = 1024;
+	int m_shadow2DBufferSize = 1024;
+	int m_shadowCubeBufferSize = 512;
 
 	std::vector<glm::vec4> m_newIntpolPoints{};
 	std::vector<float> m_newTParams{};
@@ -115,7 +116,7 @@ protected:
 	// Buffer IDs
 	GLuint m_ModelIDBufferID = 0;
 	GLuint m_LightsBufferID = 0;
-	GLuint m_FBOShadowID = 0;
+	GLuint m_LightViewProjID = 0;
 
 	// Buffer initialization
 	void InitBuffers();
