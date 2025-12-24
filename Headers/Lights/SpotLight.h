@@ -126,7 +126,7 @@ public:
 		return m_angles;
 	}
 
-	virtual float CalculateFarPlane() override {
+	float CalculateFarPlane() {
 		glm::vec3 combined = GetLd() + GetLs();
 		float I0 = std::max({ combined.r, combined.g, combined.b });
 		const float minI = 0.01f;
@@ -290,8 +290,6 @@ public:
 		if (abs(dot) > .8f) {		// direction and word up is nearly paralell
 			up = glm::vec3(0, 0, 1);
 		}
-		glm::mat4 lightView = glm::lookAt(GetPosition(), GetPosition() + GetDirection(), up);
-
 		float fov = GetOuterAngle() * 2.0f;
 		float aspect = 1.0f;
 		float nearPlane = GetNearPlane();
@@ -302,9 +300,9 @@ public:
 		else {
 			farPlane = GetFarPlane();
 		}
-		glm::mat4 light_proj = glm::perspective(fov, aspect, nearPlane, farPlane);;
+		glm::mat4 light_proj = glm::perspective(fov, aspect, nearPlane, farPlane);
 		glm::mat4 light_view = glm::lookAt<float>(GetPosition(), GetPosition() + glm::normalize(GetDirection()), up);
-		glm::mat4 light_mvp = light_proj * light_view; // This matrix will tell us how to read the distances in the shadow map
+		glm::mat4 light_mvp = light_proj * light_view;
 
 		memcpy(&buffer[0], glm::value_ptr(light_mvp), sizeof(glm::mat4));
 

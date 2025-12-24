@@ -107,28 +107,6 @@ public:
 		return m_dirtySSBO;
 	}
 
-	virtual float CalculateFarPlane() {
-		// 1. Kezdeti intenzitás meghatározása
-		glm::vec3 combined = GetLd() + GetLs();
-		float I0 = std::max({ combined.r, combined.g, combined.b });
-
-		// 2. Küszöbérték (pl. 0.01f a látható tartomány alja)
-		const float minI = 0.01f;
-
-		// 3. Másodfokú egyenlet együtthatói
-		float a = 0;				// quadraticAttenuation;
-		float b = 0;				// linearAttenuation;
-		float c = 0 - (I0 / minI);	// constantAttenuation;
-
-		// 4. Megoldóképlet (távolság kiszámítása)
-		float distance = 100.0f; // Biztonsági alapérték
-		float discriminant = b * b - 4 * a * c;
-		if (discriminant >= 0) {
-			distance = (-b + std::sqrt(discriminant)) / (2.0f * a);
-		}
-		return distance;
-	}
-
 	virtual void Render(RenderParams* p) = 0;
 	virtual void RenderSelection(RenderParams* p) = 0;
 	virtual void RenderGUI(std::vector<ModelBase*>* models) = 0;

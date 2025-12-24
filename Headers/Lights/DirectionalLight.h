@@ -100,7 +100,16 @@ public:
 		//
 
 		// [0-15] lightSpaceMatrix
-		memcpy(&buffer[0], glm::value_ptr(glm::identity<glm::mat4>()), sizeof(glm::mat4));
+		glm::vec3 up{ 0,1,0 };
+		float dot = glm::dot(GetDirection(), up);
+		if (abs(dot) > .8f) {		// direction and word up is nearly paralell
+			up = glm::vec3(0, 0, 1);
+		}
+		glm::mat4 light_proj = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
+		glm::mat4 light_view = glm::lookAt<float>(glm::vec3(0, 0, 0), glm::normalize(GetDirection()), up);
+		glm::mat4 light_mvp = light_proj * light_view;
+
+		memcpy(&buffer[0], glm::value_ptr(light_mvp), sizeof(glm::mat4));
 
 		// [16-19] La_const (La.xyz és constant attenuation.w)
 		memcpy(&buffer[16], glm::value_ptr(GetLa()), sizeof(glm::vec3));
@@ -124,6 +133,9 @@ public:
 
 		// [36-39] type_angle (flags.x, inner.y, outer.z, shadowLayer.w)
 		GLuint flags = LIGHT_FLAG_IS_DIR;
+		if (GetCastShadow()) {
+			flags = flags |= LIGHT_FLAG_CASTS_SHADOW;
+		}
 		buffer[36] = flags;
 		memcpy(&buffer[37], glm::value_ptr(glm::vec2(0,0)), sizeof(glm::vec2));
 		buffer[39] = 0;

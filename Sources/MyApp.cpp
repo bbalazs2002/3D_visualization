@@ -254,12 +254,12 @@ void CMyApp::InitModels() {
 			}
 		));
 		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 6, 5 }, std::vector<glm::vec4>{
-			glm::vec4{ -2,0,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
-			glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,0,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
-			glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,0,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
-			glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,0,1,1 }, glm::vec4{ 2,0,1,1 },
-			glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,0,2,1 },
-			glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,0,3,1 }
+			glm::vec4{ -2,2,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
+			glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,2,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
+			glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,10,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
+			glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,2,1,1 }, glm::vec4{ 2,0,1,1 },
+			glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,2,2,1 },
+			glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
 			"Bezier-surface-material",
@@ -269,6 +269,7 @@ void CMyApp::InitModels() {
 			});
 
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				ShaderProgramCollection{
@@ -296,6 +297,7 @@ void CMyApp::InitModels() {
 			m_modelTextureID, 0, 0, 0
 			});
 		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
+		*/
 
 		// Bezier-surface
 		/*
