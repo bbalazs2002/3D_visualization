@@ -24,7 +24,7 @@ public:
 	void RenderGUI(std::vector<ModelBase*>*) override;
 
 	// ICastShadow methods
-	void RenderShadowMap(int lightID) override;
+	void RenderShadowMap(GLint lightID, GLint faceID) override;
 	inline void SetProgramShadowID(GLuint id) override {
 		m_shadowProgramID = id;
 	}
@@ -79,5 +79,12 @@ public:
 			delete(p);
 		}
 		m_materials.erase(m_materials.begin(), m_materials.end());
+	}
+	inline void CleanMaterials() {
+		for (auto m : m_materials) {
+			delete(m);
+			m = nullptr;
+		}
+		m_materials.clear();
 	}
 };

@@ -12,6 +12,7 @@ protected:
 	GLuint m_programID = 0;
 	GLuint m_shadowLayer = 0;
 	bool m_castShadow = false;
+	GLuint m_lightSpaceMatIndex = 0;
 
 	bool m_dirtySSBO = true;
 
@@ -22,14 +23,22 @@ protected:
 		m_dirtySSBO = true;
 	}
 
-public:
+	// static utils
+	static inline GLuint lightsSSBOID = 0;
+	static inline std::vector<Light*> lights;
 
-	virtual ~Light() {
-		if (m_castShadow) {
-			ShadowMapController::ReleaseLayer(m_shadowLayer);
+	static inline void AllocateLightsSSBO() {
+		if (lightsSSBOID > 0) {
+			glDeleteBuffers(1, &lightsSSBOID);
+		}
+
+		if (lights.size() > 0) {
+			glCreateBuffers(1, &lightsSSBOID);
+			glNamedBufferStorage(lightsSSBOID, lights.size() * sizeof(glm::vec4) * 6, nullptr, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
 		}
 	}
 
+public:
 	void inline SetShow(bool show) {
 		if (show == m_dirtySSBO) {
 			return;
@@ -41,28 +50,20 @@ public:
 		return m_show;
 	}
 
-	void SetShadow() {
-		if (m_castShadow) {
-			return;
-		}
-		DirtySSBO();
-		m_castShadow = true;
-		ShadowMapController::ReserveLayer(&m_shadowLayer);
-	}
-	void ClearShadow() {
-		if (!m_castShadow) {
-			return;
-		}
-		DirtySSBO();
-		m_castShadow = false;
-		ShadowMapController::ReleaseLayer(m_shadowLayer);
-		m_shadowLayer = 0;
-	}
+	virtual void SetShadow() = 0;
+	virtual void ClearShadow() = 0;
 	GLuint GetShadowLayer() const {
 		return m_shadowLayer;
 	}
 	bool GetCastShadow() const {
 		return m_castShadow;
+	}
+
+	void inline SetLightSpaceMatIndex(GLuint index) {
+		m_lightSpaceMatIndex = index;
+	}
+	GLuint inline GetLightSpaceMatIndex() {
+		return m_lightSpaceMatIndex;
 	}
 
 	void inline SetProgramID(GLuint programID) {
@@ -134,5 +135,82 @@ public:
 		}
 	}
 
-	virtual void UploadToSSBO(GLuint SSBOID, int padding) = 0;
+	virtual void UploadToSSBO(GLuint lightsSSBOID, int padding, GLuint lightSpaceSSBOID) = 0;
+
+	// static utils
+	static inline void AddLight(Light* l) {
+		lights.push_back(l);
+		AllocateLightsSSBO();
+	}
+	static inline void DelLight(int index) {
+		if (index < 0 || index >= lights.size()) {
+			Log::errorToConsole("Light::DelLight invalid index");
+			return;
+		}
+		size_t lastIndex = lights.size() - 1;
+
+		delete(lights[index]);
+		if (index != lastIndex) {
+			lights[index] = lights[lastIndex];
+			lights[index]->DirtySSBO();
+		}
+		lights.pop_back();
+
+		AllocateLightsSSBO();
+	}
+	static inline Light* GetLight(int index) {
+		if (index < 0 || index >= lights.size()) {
+			Log::errorToConsole("Light::GetLight invalid index");
+			return nullptr;
+		}
+		return lights[index];
+	}
+	static inline size_t GetLightCount() {
+		return lights.size();
+	}
+	static inline GLuint GetLightsSSBO() {
+		return lightsSSBOID;
+	}
+	static inline void UpdateLights() {
+		int count = 0;
+		for (auto l : lights) {
+			if (l->IsDirtySSBO()) {
+				l->UploadToSSBO(lightsSSBOID, count, l->GetLightSpaceMatIndex());
+				l->CleanSSBO();
+			}
+			++count;
+		}
+	}
+	static inline bool MapLightsSSBO(size_t padding, GLfloat*& buffer) {
+		size_t lightSize = sizeof(glm::vec4) * 6;
+		size_t p = padding * lightSize;
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, lightsSSBOID);
+		buffer = (GLfloat*)glMapNamedBufferRange(lightsSSBOID, p, lightSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+		if (!buffer) {
+			Log::errorToConsole("Failed to map lights SSBO");
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+			return false;
+		}
+		return true;
+	}
+	static inline void BindLightsSSBO(GLint bindingPoint) {
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bindingPoint, lightsSSBOID);
+	}
+	static inline void UnmapLightsSSBO() {
+		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	}
+	static inline void RenderSelected(int selected, RenderParams* p) {
+		if (selected < 0 || selected >= lights.size()) {
+			return;
+		}
+		lights[selected]->Render(p);
+	}
+	static void RenderShadowMap(std::vector<ModelBase*>* models);
+	static inline void Clean() {
+		if (lightsSSBOID > 0) {
+			glDeleteBuffers(1, &lightsSSBOID);
+			lightsSSBOID = 0;
+		}
+	}
 };

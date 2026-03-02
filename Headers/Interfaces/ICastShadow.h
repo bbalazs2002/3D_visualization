@@ -3,7 +3,7 @@
 #include "../include_all.h"
 
 interface ICastShadow{
-	virtual void RenderShadowMap(int lightID) = 0;
+	virtual void RenderShadowMap(GLint lightID, GLint faceID = 0) = 0;
 	virtual void SetProgramShadowID(GLuint id) = 0;
 	virtual GLuint GetProgramShadowID() const = 0;
 	virtual void SetCastShadow(bool cast) = 0;

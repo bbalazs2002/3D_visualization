@@ -95,8 +95,12 @@ void BezierSurface::Render(RenderParams* p) {
 	// Material module
 	Material::UploadMaterialToShader(progID, GetMaterial());
 	// Light module
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
+	// Lights SSBO bind globally to binding point 3
+	// Light viewProj matrices SSBO bind globally to binding point 4
+	// Shadow maps bind globally to textures 4 and 5
+	glUniform1i(ul(progID, "light2DShadowMapArray"), 4);
+	glUniform1i(ul(progID, "lightCubeShadowMapArray"), 5);
+	glUniform1i(ul(progID, "lightData.lightCount"), Light::GetLightCount());
 
 	// -- Draw call --
 	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
@@ -197,7 +201,7 @@ void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 }
 
 // ICastShadow
-void BezierSurface::RenderShadowMap(int lightID) {
+void BezierSurface::RenderShadowMap(GLint lightID, GLint faceID = 0) {
 	if (!GetShow() || GetWireFrame()) {
 		return;
 	}
@@ -248,12 +252,15 @@ void BezierSurface::RenderShadowMap(int lightID) {
 	glUseProgram(progID);
 
 	// -- Set shader input data --
+	glUniform1i(ul(progID, "lightID"), lightID);
+	glUniform1i(ul(progID, "faceID"), faceID);
 	// Bezier surface module
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
 	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
 	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
 	// Light module
-	// SSBO bind globally to binding point 2
+	// Lights SSBO bind globally to binding point 3
+	// Light viewProj matrices SSBO bind globally to binding point 4
 
 	// -- Draw call --
 	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);

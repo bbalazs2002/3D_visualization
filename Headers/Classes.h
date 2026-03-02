@@ -23,9 +23,11 @@ class DirectionalLight;
 class PointLight;
 class SpotLight;
 
+// Material
+class Material;
+
 // Utilities
 class Transformation;
-struct Material;
 class ShadowMapController;
 
 // Types

@@ -67,8 +67,6 @@ struct RenderLightParams {
 struct RenderParams {
     float lineWidth = 1.f;
     glm::vec3 cameraPos = glm::vec3(0, 0, 0);
-    GLuint lights;                                      // SSBO ID for lights
-    int lightCount = 0;
     int modelIndex = 0;
     glm::ivec2 cursorPos = glm::ivec2(0, 0);
     glm::ivec2 windowSize = glm::ivec2(0, 0);

@@ -103,9 +103,6 @@ protected:
 
 	// Lighting
 	void InitLights();
-	void CleanLights();
-	std::vector<Light*> m_lights{};
-	bool m_lightBufferDirty = true;
 
 	// Texture initialization
 	void InitTexture();
@@ -115,18 +112,15 @@ protected:
 
 	// Buffer IDs
 	GLuint m_ModelIDBufferID = 0;
-	GLuint m_LightsBufferID = 0;
-	GLuint m_LightViewProjID = 0;
 
 	// Buffer initialization
 	void InitBuffers();
-	void InitLightBuffer();
 	void CleanBuffers();
 
 	// rendering methods
 	void DrawAxes() const;
 	void RenderModels() const;
 	void RenderLightSuorce() const;
-	void UpdateLights();
+	void RenderShadowMaps();
 	void RenderSkybox() const;
 };

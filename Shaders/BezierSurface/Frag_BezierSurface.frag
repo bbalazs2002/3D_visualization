@@ -1,4 +1,4 @@
-#version 430
+#version 430 core
 
 // pipeline-ból bejövõ per-fragment attribútumok
 in vec3 vs_out_pos;
@@ -19,6 +19,7 @@ out vec4 fs_out_col;
 
 // light
 #define LIGHT_LIGHTS_SSBO 3
+#define LIGHT_SPACE_MATRICES_SSBO 4
 #include "../Modules/Light/Light_uniforms.glsl"
 #include "../Modules/Light/Light.glsl"
 

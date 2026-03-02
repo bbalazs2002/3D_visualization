@@ -60,20 +60,20 @@ public:
         }
         for (const auto& mat : materials) {
             auto material = new Material();
-            material->name = mat.name;
-            material->diffuseColor = glm::vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);
-            material->specularColor = glm::vec3(mat.specular[0], mat.specular[1], mat.specular[2]);
-            material->ambientColor = glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
-            material->shininess = mat.shininess;
+            material->SetName(mat.name);
+            material->SetDiffuseColor(glm::vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]));
+            material->SetSpecularColor(glm::vec3(mat.specular[0], mat.specular[1], mat.specular[2]));
+            material->SetAmbientColor(glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]));
+            material->SetShininess(mat.shininess);
 
             if (!mat.diffuse_texname.empty())
-                material->diffuseTex = Material::LoadTexture(ResolveTexturePath(mat.diffuse_texname, absMtlSearchPath));
+                material->SetDiffuseTex(Material::LoadTexture(ResolveTexturePath(mat.diffuse_texname, absMtlSearchPath)));
             if (!mat.specular_texname.empty())
-                material->specularTex = Material::LoadTexture(ResolveTexturePath(mat.specular_texname, absMtlSearchPath));
+                material->SetSpecularTex(Material::LoadTexture(ResolveTexturePath(mat.specular_texname, absMtlSearchPath)));
             if (!mat.emissive_texname.empty())
-                material->emissionTex = Material::LoadTexture(ResolveTexturePath(mat.emissive_texname, absMtlSearchPath));
+                material->SetEmissionTex(Material::LoadTexture(ResolveTexturePath(mat.emissive_texname, absMtlSearchPath)));
             if (!mat.normal_texname.empty())
-                material->normalTex = Material::LoadTexture(ResolveTexturePath(mat.normal_texname, absMtlSearchPath));
+                material->SetNormalTex(Material::LoadTexture(ResolveTexturePath(mat.normal_texname, absMtlSearchPath)));
 
             retVal.materials.push_back(material);
         }

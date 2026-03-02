@@ -1,28 +1,77 @@
-float CalculateShadow(vec4 fragPosLightSpace, uint layer, float bias) {
-    // 1. Perspective divide (NDC koordináták: -1 és 1 között)
+/**
+ * Helper function to determine the CubeMap face index based on a direction vector.
+ * The indexing follows the order used in the mat_buffer:
+ * 0: +X, 1: -X, 2: +Y, 3: -Y, 4: +Z, 5: -Z
+ */
+int GetCubeFaceIndex(vec3 direction) {
+    vec3 absDir = abs(direction);
+    float maxVal = max(absDir.x, max(absDir.y, absDir.z));
+    
+    if (maxVal == absDir.x) {
+        return (direction.x > 0.0) ? 0 : 1;
+    } else if (maxVal == absDir.y) {
+        return (direction.y > 0.0) ? 2 : 3;
+    } else {
+        return (direction.z > 0.0) ? 4 : 5;
+    }
+}
+
+float Calculate2DShadow(vec4 fragPosLightSpace, uint layer, float bias) {
+    // 1. Perspective divide (NDC coordinates: range [-1, 1])
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 
-    // 2. Skálázás [0, 1] tartományba (mivel a textúra koordináták itt kezdõdnek)
+    // 2. Transform to [0, 1] range (to match texture coordinate space)
     projCoords = projCoords * 0.5f + 0.5f;
 
-    // 3. Ha a pont távolabb van, mint a farPlane, ne legyen árnyékban
-    if (projCoords.z > 1.0f) return 1.0f;     // not in shadow
+    // 3. If the point is further than the far plane, it is not in shadow
+    if (projCoords.z > 1.0f) return 1.0f;
 
-    // 4. Mintavételezés a tömbbõl
-    float closestDepth = texture(lightShadowMapArray, vec3(projCoords.xy, float(layer))).r; 
+    // 4. Sample the depth from the shadow map array
+    float closestDepth = texture(light2DShadowMapArray, vec3(projCoords.xy, float(layer))).r; 
     
-    // 5. Aktuális pixel mélysége
+    // 5. Get current pixel depth
     float currentDepth = projCoords.z;
 
-    // 6. Összehasonlítás (egyszerû shadow bias-szal az acne ellen)
-    float shadow = currentDepth - bias > closestDepth ? 0.0f : 1.0f;      // 0: in shadow; 1 not in shadow
+    // 6. Depth comparison (using shadow bias to prevent shadow acne)
+    // Returns 0.0 if in shadow, 1.0 if not in shadow
+    float shadow = currentDepth - bias > closestDepth ? 0.0f : 1.0f;
+
+    return shadow;
+}
+
+/**
+ * Calculates if a fragment is in shadow using standard non-linear depth values.
+ * This version works with the default OpenGL depth generation (no custom frag shader).
+ * * @param fragPosLightSpace Position of the fragment in the light's clip space (for the specific face).
+ * @param cubeLayer The index of the light in the CubeMap Array.
+ * @param direction Vector from light to fragment (to sample the correct CubeMap face).
+ * @param bias Small offset to prevent shadow acne.
+ */
+float CalculateCubeShadow(vec4 fragPosLightSpace, uint cubeLayer, vec3 direction, float bias) {
+    // 1. Perspective divide to get NDC coordinates [-1, 1]
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    // 2. Map Z from [-1, 1] to [0, 1] range to match depth buffer storage
+    float currentDepth = projCoords.z * 0.5 + 0.5;
+
+    // 3. Sample the non-linear depth stored in the CubeMap Array
+    // We use the 'direction' vector to pick the face, and 'cubeLayer' for the array index
+    float closestDepth = texture(lightCubeShadowMapArray, vec4(direction, float(cubeLayer))).r;
+
+    // 4. Boundary check: if beyond far plane, it's not in shadow
+    if (currentDepth > 1.0) return 1.0;
+
+    // 5. Standard depth comparison
+    // Since this is non-linear, a very small constant bias might still cause issues 
+    // at different distances, but it's the standard approach for non-linear maps.
+    float shadow = (currentDepth - bias > closestDepth) ? 0.0 : 1.0;
 
     return shadow;
 }
 
 struct LightCalculateContributionParams {
     Light light;
-    vec3 position;
+    vec3 position;      // fragment position
     vec3 norm;          // normalised
     vec3 viewDir;       // normalised
     vec3 diffuseColor;
@@ -33,27 +82,27 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     vec3 lightDir;
     float attenuation = 1.0;
     float spotIntensity = 1.0;
-    int flags = int(params.light.flags_angle_shadow.x);
+    int flags = int(params.light.flags_angle_plane_shadow.x);
     
     // 1. Determine Light Direction and Attenuation
     if ((LIGHT_FLAG_IS_DIR & flags) != 0u) {
-        lightDir = normalize(-params.light.direction.xyz);
+        lightDir = normalize(-params.light.direction_lightSpace.xyz);
     }
     else { // Point or Spot Light
-        vec3 lightToFrag = params.light.position.xyz - params.position;
-        float dist = length(lightToFrag);
-        lightDir = normalize(lightToFrag);
+        vec3 fragToLight = params.light.position.xyz - params.position;
+        float dist = length(fragToLight);
+        lightDir = normalize(fragToLight);
 
         // Attenuation calculation (constant, linear, quadratic)
         attenuation = 1.0 / (params.light.La_const.w + params.light.Ld_linear.w * dist + params.light.Ls_quadratic.w * dist * dist);
         
         if ((LIGHT_FLAG_IS_SPOT & flags) != 0u) {
             // Spot Light Calculation
-            vec3 spotDir = normalize(params.light.direction.xyz);
+            vec3 spotDir = normalize(params.light.direction_lightSpace.xyz);
             float theta = dot(lightDir, -spotDir);      // cosine of angle between light ray and spot direction
 
-            float innerCutOff = cos(params.light.flags_angle_shadow.y);
-            float outerCutOff = cos(params.light.flags_angle_shadow.z);
+            float innerCutOff = cos(params.light.flags_angle_plane_shadow.y);
+            float outerCutOff = cos(params.light.flags_angle_plane_shadow.z);
 
             if (theta > outerCutOff) {
                 // Smooth fade from inner to outer cutoff (soft edges)
@@ -70,16 +119,29 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         return vec3(0.0);
     }
 
-    // Calculat shadow
+    // Calculate shadow
     float shadow = 1.0f;
     if(dot(params.norm, lightDir) <= 0) {
         shadow = 0.f;
     }
     else if ((LIGHT_FLAG_CASTS_SHADOW & flags) != 0u) {
-        mat4 viewProj = params.light.lightSpaceMatrix;
-        uint layer = uint(params.light.flags_angle_shadow.w);
         float bias = max(0.05 * (1.0 - dot(params.norm, lightDir)), 0.005);
-        shadow = CalculateShadow(viewProj * vec4(params.position, 1), layer, bias);
+        uint layer = uint(params.light.flags_angle_plane_shadow.w);
+        
+        if ((LIGHT_FLAG_IS_POINT & flags) != 0) {
+            // Spot light -> Cube shadow map
+            float farPlane = params.light.flags_angle_plane_shadow.z;
+            vec3 lightToFrag = params.position - params.light.position.xyz;
+
+            int faceIndex = GetCubeFaceIndex(lightToFrag);
+            mat4 viewProj = lightSpaceMatrices[int(params.light.direction_lightSpace.w) + faceIndex];
+
+            shadow = CalculateCubeShadow(viewProj * vec4(params.position, 1), layer, lightToFrag, bias);
+        } else {
+            // Directional or Spot light -> 2D shadow map array
+            mat4 viewProj = lightSpaceMatrices[int(params.light.direction_lightSpace.w)];
+            shadow = Calculate2DShadow(viewProj * vec4(params.position, 1), layer, bias);
+        }
     }
     
     // 2. Diffuse Component

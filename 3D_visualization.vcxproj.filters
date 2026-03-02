@@ -26,9 +26,6 @@
     <ClCompile Include="Sources\Models\BezierCurve.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Models\Material.cpp">
-      <Filter>Sources\Models</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Models\Mesh.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Models\ModelBase.cpp">
       <Filter>Sources\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lights\Light.cpp">
+      <Filter>Sources\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +485,9 @@
     </Filter>
     <Filter Include="Headers\Lights">
       <UniqueIdentifier>{7a3fead9-bcee-4131-b044-fe4ff9faa161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Lights">
+      <UniqueIdentifier>{6c2554f9-d441-4503-a42b-e9c45e05448d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

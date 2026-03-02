@@ -89,11 +89,11 @@
     <ClCompile Include="includes\CameraManipulator.cpp" />
     <ClCompile Include="includes\ObjParser.cpp" />
     <ClCompile Include="includes\ProgramBuilder.cpp" />
+    <ClCompile Include="Sources\Lights\Light.cpp" />
     <ClCompile Include="Sources\Models\BezierCurve.cpp" />
     <ClCompile Include="Sources\Models\BezierSurface.cpp" />
     <ClCompile Include="Sources\Models\BSpline.cpp" />
     <ClCompile Include="Sources\Models\DiscreteCurve.cpp" />
-    <ClCompile Include="Sources\Models\Material.cpp" />
     <ClCompile Include="Sources\Models\Mesh.cpp" />
     <ClCompile Include="Sources\Models\Model.cpp" />
     <ClCompile Include="Sources\Models\ModelBase.cpp" />

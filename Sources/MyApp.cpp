@@ -240,6 +240,14 @@ void CMyApp::CleanSkyboxGeometry()
 }
 void CMyApp::InitModels() {
 	{
+		Material* defMaterial = new Material();
+		defMaterial->SetName("Default_material");
+		defMaterial->SetAmbientColor(glm::vec3(.2));
+		defMaterial->SetDiffuseColor(glm::vec3(1));
+		defMaterial->SetSpecularColor(glm::vec3(1));
+		defMaterial->SetShininess(32);
+		defMaterial->SetDiffuseTex(m_modelTextureID);
+
 		// Bezier-surface
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
@@ -255,18 +263,13 @@ void CMyApp::InitModels() {
 		));
 		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 6, 5 }, std::vector<glm::vec4>{
 			glm::vec4{ -2,2,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
-			glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,2,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
-			glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,10,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
-			glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,2,1,1 }, glm::vec4{ 2,0,1,1 },
-			glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,2,2,1 },
-			glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
+				glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,2,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
+				glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,10,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
+				glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,2,1,1 }, glm::vec4{ 2,0,1,1 },
+				glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,2,2,1 },
+				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
 		});
-		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
-			"Bezier-surface-material",
-			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
-			32.f,
-			m_modelTextureID, 0, 0, 0
-			});
+		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
 
 		// Bezier-surface
 		m_models.push_back(new BezierSurface(
@@ -289,12 +292,7 @@ void CMyApp::InitModels() {
 				glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,0,2,1 },
 				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,0,3,1 }
 		});
-		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
-			"Bezier-surface-material",
-			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
-			32.f,
-			m_modelTextureID, 0, 0, 0
-			});
+		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
 		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
 
 		// Bezier-surface
@@ -345,6 +343,7 @@ void CMyApp::InitModels() {
 		*/
 
 		// Cube
+		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				ShaderProgramCollection{
@@ -364,12 +363,8 @@ void CMyApp::InitModels() {
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\Transforms\\Assets\\cube.obj");
-		((Model*)m_models[m_models.size() - 1])->SetMaterial(new Material{
-			"Bezier-surface-material",
-			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
-			32.f,
-			m_modelTextureID, 0, 0, 0
-		});
+		((Model*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
+		*/
 
 		// Equinox
 		/*
@@ -522,28 +517,24 @@ void CMyApp::CleanModels() {
 }
 
 void CMyApp::InitLights() {
-
 	/*
-	m_lights.push_back(new DirectionalLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programDirectionLightID);
+	DirectionalLight* dl = new DirectionalLight();
+	dl->SetProgramID(m_programDirectionLightID);
+	dl->SetDirection(glm::vec3(0,-1,0));
+	Light::AddLight(dl);
 	*/
 
-	/*
-	m_lights.push_back(new PointLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programPointLightID);
-	*/
+	PointLight* pl = new PointLight();
+	pl->SetProgramID(m_programPointLightID);
+	Light::AddLight(pl);
 
-	m_lights.push_back(new SpotLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programSpotLightID);
-	((SpotLight*)m_lights[m_lights.size() - 1])->SetPosition(glm::vec3(0, 4, 0));
-	m_lights[m_lights.size() - 1]->SetShadow();
-}
-void CMyApp::CleanLights() {
-	for (int i = 0; i < m_lights.size(); ++i) {
-		delete(m_lights[i]);
-		m_lights[i] = nullptr;
-	}
-	m_lights.clear();
+	/*
+	SpotLight* sl = new SpotLight();
+	sl->SetProgramID(m_programSpotLightID);
+	sl->SetPosition(glm::vec3(0, 4, 0));
+	// sl->SetShadow();
+	Light::AddLight(sl);
+	*/
 }
 
 void CMyApp::InitTexture() {
@@ -601,31 +592,10 @@ void CMyApp::InitBuffers() {
 	glGenBuffers(1, &m_ModelIDBufferID);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_COPY);
-
-	InitLightBuffer();
-}
-void CMyApp::InitLightBuffer() {
-	// clear old buffer if exists
-	if (m_LightsBufferID > 0) {
-		glDeleteBuffers(1, &m_LightsBufferID);
-	}
-	// SSBO for lights
-	glGenBuffers(1, &m_LightsBufferID);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightsBufferID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 10 * m_lights.size(), nullptr, GL_DYNAMIC_DRAW);
-	// SSBO for light viewProj matrices
-	glGenBuffers(1, &m_LightViewProjID);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightViewProjID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::mat4) * ShadowMapController::CountViewProjMatrices(), nullptr, GL_DYNAMIC_DRAW);
-
-	m_lightBufferDirty = true;
 }
 void CMyApp::CleanBuffers() {
 	glDeleteBuffers(1, &m_ModelIDBufferID);
 	m_ModelIDBufferID = 0;
-
-	glDeleteBuffers(1, &m_LightsBufferID);
-	m_LightsBufferID = 0;
 }
 
 bool CMyApp::Init()
@@ -670,15 +640,18 @@ void CMyApp::Clean()
 	CleanGeometry();
 	CleanTexture();
 	CleanBuffers();
-	CleanLights();
+	Light::Clean();
 
 	ShadowMapController::Clean();
+	Light::Clean();
 }
 
 void CMyApp::Update(const SUpdateInfo& updateInfo)
 {
 	m_cameraManipulator.Update(updateInfo.DeltaTimeInSec);
 	m_ElapsedTimeInSec = updateInfo.ElapsedTimeInSec;
+
+	Light::UpdateLights();
 }
 
 void CMyApp::DrawAxes() const
@@ -701,7 +674,7 @@ void CMyApp::DrawAxes() const
 	}
 }
 void CMyApp::RenderLightSuorce() const {
-	if (m_selectedLight < 0 || m_selectedLight >= m_lights.size()) {
+	if (m_selectedLight < 0 || m_selectedLight >= Light::GetLightCount()) {
 		return;
 	}
 	RenderLightParams rlp{
@@ -709,42 +682,16 @@ void CMyApp::RenderLightSuorce() const {
 					m_camera.GetWorldUp()
 	};
 	RenderParams rp{
-				m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
+				m_lineWidth, m_camera.GetEye(),
 				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
 				m_camera.GetViewProj(), true,
 				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2]),
 				&rlp
 	};
-	m_lights[m_selectedLight]->Render(&rp);
+	Light::RenderSelected(m_selectedLight, &rp);
 }
-void CMyApp::UpdateLights() {
-	int lightID = 0;
-	for (auto l : m_lights) {
-
-		if (m_lightBufferDirty || l->IsDirtySSBO()) {
-			// update light buffer
-			l->UploadToSSBO(m_LightsBufferID, lightID);
-			// bind lights buffer to binding point 2
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_LightsBufferID);
-		}
-
-		// render to shadow map
-		if (l->GetCastShadow()) {
-			ShadowMapController::BindForWriting(l->GetShadowLayer());
-			for (auto m : m_models) {
-				ICastShadow* model = nullptr;
-				if (Utilities::instanceof(m, model)) {
-					if (model->GetCastShadow()) {
-						model->RenderShadowMap(lightID);
-					}
-				}
-			}
-			ShadowMapController::Unbind();
-		}
-		++lightID;
-	}
-
-	m_lightBufferDirty = false;
+void CMyApp::RenderShadowMaps() {
+	Light::RenderShadowMap(&m_models);
 }
 void CMyApp::RenderModels() const {
 
@@ -757,18 +704,18 @@ void CMyApp::RenderModels() const {
 	// bind the buffer to binding point 0
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ModelIDBufferID);
 
-	// bind lights buffer to binding point 2
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_LightsBufferID);
-	// bind light viewProj matrices SSBO to binding point 3
-
-	// bind shadow maps
+	// bind lights SSBO to binding point 3
+	Light::BindLightsSSBO(3);
+	// bind light viewProj matrices SSBO to binding point 4
+	ShadowMapController::BindLightSpaceSSBO(4);
+	// bind shadow maps to textures 4 and 5
 	ShadowMapController::BindAllForReading(4, 5);
 
 	// Render all models
 	int objCount = 0;
 	for (auto m : m_models) {
 		RenderParams rp{
-			m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
+			m_lineWidth, m_camera.GetEye(),
 			objCount, m_cursorPos, glm::ivec2(m_width, m_height),
 			m_camera.GetViewProj(), (m_selectedModel == objCount),
 			m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
@@ -777,7 +724,8 @@ void CMyApp::RenderModels() const {
 		++objCount;
 	}
 
-	ShadowMapController::Unbind();
+	// Unbind shadow map textures
+	ShadowMapController::UnbindTextures();
 }
 void CMyApp::RenderSkybox() const {
 	glUseProgram(m_programSkyboxID);
@@ -808,7 +756,7 @@ void CMyApp::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	UpdateLights();
+	RenderShadowMaps();
 	RenderLightSuorce();
 	RenderModels();
 	// RenderSkybox();
@@ -823,17 +771,6 @@ void CMyApp::Render()
 
 void CMyApp::RenderGUI()
 {
-	// SHADOW MAP WINDOW
-	/*
-	GLuint shadowMapID = ShadowMapController::GetLayerTextureID(0);
-	if (shadowMapID > 0) {
-		if (ImGui::Begin("Shadow map window")) {
-			ImGui::Image(shadowMapID, ImVec2(200.f, 200.f));
-		}
-		ImGui::End();
-	}
-	*/
-
 	// OBJECT OPTIONS WINDOW
 	if (m_selectedModel >= 0 && m_selectedModel < m_models.size()) {
 
@@ -948,22 +885,19 @@ void CMyApp::RenderGUI()
 		if (ImGui::Button("Add Directional light")) {
 			DirectionalLight* dl = new DirectionalLight();
 			dl->SetProgramID(m_programDirectionLightID);
-			m_lights.push_back(dl);
-			InitLightBuffer();
+			Light::AddLight(dl);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add Point light")) {
 			PointLight* pl = new PointLight();
 			pl->SetProgramID(m_programPointLightID);
-			m_lights.push_back(pl);
-			InitLightBuffer();
+			Light::AddLight(pl);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add Spot light")) {
 			SpotLight* sl = new SpotLight();
 			sl->SetProgramID(m_programSpotLightID);
-			m_lights.push_back(sl);
-			InitLightBuffer();
+			Light::AddLight(sl);
 		}
 
 		// Log data to console
@@ -978,9 +912,9 @@ void CMyApp::RenderGUI()
 	ImGui::End();
 
 	// LIGHT OPTION WINDOW
-	if (m_selectedLight >= 0 && m_selectedLight < m_lights.size()) {
+	if (m_selectedLight >= 0 && m_selectedLight < Light::GetLightCount()) {
 
-		Light* l = m_lights[m_selectedLight];
+		Light* l = Light::GetLight(m_selectedLight);
 
 		if (ImGui::Begin("Light options")) {
 			// Render type specific options
@@ -997,11 +931,10 @@ void CMyApp::RenderGUI()
 			ImGui::Separator();
 			ImGui::Spacing();
 
+			// Delete button
 			if (ImGui::Button("Delete Light")) {
-				delete(l);
-				m_lights.erase(m_lights.begin() + m_selectedLight);
+				Light::DelLight(m_selectedLight);
 				m_selectedLight = -1;
-				InitLightBuffer();
 				ImGui::End();
 				return;
 			}

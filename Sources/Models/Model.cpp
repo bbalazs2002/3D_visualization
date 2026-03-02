@@ -6,6 +6,7 @@ Model::Model(ModelParams params) : ModelBase(MODEL2MODELBASE) {
 }
 Model::~Model() {
 	CleanGeometry();
+	CleanMaterials();
 }
 
 // Drawable methods
@@ -56,7 +57,7 @@ void Model::Render(RenderParams* p) {
 	// SSBO bind globally to binding point 2
 	// Shadow texture globally uploaded to unit #4
 	glUniform1i(ul(progID, "lightShadowMapArray"), 4);
-	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
+	glUniform1i(ul(progID, "lightData.lightCount"), Light::GetLightCount());
 	// Transform module
 	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));
 
@@ -170,7 +171,7 @@ void Model::RenderGUI(std::vector<ModelBase*>*) {
 }
 
 // ICastShadow methods
-void Model::RenderShadowMap(int lightID) {
+void Model::RenderShadowMap(GLint lightID, GLint faceID) {
 	if (!GetShow() || GetWireFrame()) {
 		return;
 	}
@@ -208,6 +209,7 @@ void Model::RenderShadowMap(int lightID) {
 	// SSBO bind globally to binding point 2
 	// Shader data
 	glUniform1i(ul(progID, "lightID"), lightID);
+	glUniform1i(ul(progID, "faceID"), faceID);
 
 	if (CMyApp::MeshID < 0 || CMyApp::MeshID >= m_meshes.size()) {
 		// Render all meshes
@@ -245,6 +247,7 @@ void Model::SetObjPath() {
 
 	// clean old geometry
 	CleanGeometry();
+	CleanMaterials();
 	// load the new file
 	ModelLoaderReturn meshMatData = ModelLoader::LoadFromOBJ(m_objPath);
 	m_meshes = meshMatData.meshes;

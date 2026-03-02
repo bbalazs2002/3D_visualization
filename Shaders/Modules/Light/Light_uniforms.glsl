@@ -2,6 +2,10 @@
 	#error "LIGHT_LIGHTS_SSBO macro is undefined!"
 #endif
 
+#ifndef LIGHT_SPACE_MATRICES_SSBO
+	#error "LIGHT_SPACE_MATRICES_SSBO macro is undefined!"
+#endif
+
 #ifndef LIGHT_FLAG_IS_DIR
 	// #error "LIGHT_FLAG_IS_DIR macro is undefined! Default value is used"
 	#define LIGHT_FLAG_IS_DIR       (1u << 0) // 1
@@ -20,18 +24,23 @@
 #endif
 
 struct Light {
-	mat4 lightSpaceMatrix;		//
-	vec4 La_const;				// xyz: La, w: constant attenuation
-	vec4 Ld_linear;				// xyz: Ld, w: linear attenuation
-	vec4 Ls_quadratic;			// xyz: Ls, w: quadratic attenuation
-	vec4 direction;				// xyz: direction, w: padding
-	vec4 position;				// xyz: position, w: padding
-	vec4 flags_angle_shadow;	// x: flags, y: inner angle, z: outer angle, w: shadowLayer
+	vec4 La_const;					// xyz: La, w: constant attenuation
+	vec4 Ld_linear;					// xyz: Ld, w: linear attenuation
+	vec4 Ls_quadratic;				// xyz: Ls, w: quadratic attenuation
+	vec4 direction_lightSpace;		// xyz: direction, w: lightSpaceMatrix
+	vec4 position;					// xyz: position, w: padding
+	vec4 flags_angle_plane_shadow;	// x: flags, y: inner angle (for spot), z: outer angle (for spot), w: shadowLayer
+									//			 y: near plane (for point), z: far plane (for point), 
 };
-uniform sampler2DArray lightShadowMapArray;
+uniform sampler2DArray light2DShadowMapArray;
+uniform samplerCubeArray lightCubeShadowMapArray;
 
 layout(std430, binding = LIGHT_LIGHTS_SSBO) buffer LightBuffer {
 	Light lightSources[];
+};
+
+layout(std430, binding = LIGHT_SPACE_MATRICES_SSBO) buffer LightSpaceMatricesSSBO {
+	mat4 lightSpaceMatrices[];
 };
 
 struct LightUniforms{

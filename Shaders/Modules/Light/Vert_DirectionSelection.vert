@@ -7,7 +7,8 @@ out vec3 vs_out_col;
 #include "../Camera/Camera.glsl"
 
 // light
-#define LIGHT_LIGHTS_SSBO 2
+#define LIGHT_LIGHTS_SSBO 3
+#define LIGHT_SPACE_MATRICES_SSBO 4
 #include "Light_uniforms.glsl"
 
 uniform int lightID = 0;
@@ -83,7 +84,7 @@ const vec3 weights[] = vec3[](
 
 void main() {
 	// calculate model base
-	vec3 u = normalize(lightSources[lightID].direction.xyz);
+	vec3 u = normalize(lightSources[lightID].direction_lightSpace.xyz);
 	vec3 v = vec3(0);
 	float d = dot(u, vec3(0,1,0));
 	if (-.8 < d && d < .8) {	// not near to 180° or -180°

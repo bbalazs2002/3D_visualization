@@ -4,6 +4,8 @@ void main () {
 	// Intentionally left blank (The gl_FragCoord.z value is written to the GL_DEPTH_ATTACHMENT automaticly)
     // gl_FragDepth = gl_FragCoord.z; // default
 
+    // gl_FragDepth = 1.f;
+
     /*
     float depth = gl_FragCoord.z;
     if (depth > 0.0) {

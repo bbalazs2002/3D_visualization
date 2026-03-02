@@ -207,7 +207,7 @@ public:
 	void RenderGUI(std::vector<ModelBase*>* models) override;
 
 	// ICastShadow
-	void RenderShadowMap(int lightID) override;
+	void RenderShadowMap(GLint lightID, GLint faceID) override;
 	inline void SetProgramShadowID(GLuint id) override {
 		m_shadowProgramID = id;
 	}
