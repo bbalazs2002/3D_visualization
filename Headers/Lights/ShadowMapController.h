@@ -74,7 +74,7 @@ private:
 		glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_DEPTH_COMPONENT32F, sizeCube, sizeCube, layersCube * 6);
 
 		SetupCommonTextureParams(GL_TEXTURE_CUBE_MAP_ARRAY);
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, fboCubeArrayID);
 		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureCubeArrayID, 0, 0);
 		glDrawBuffer(GL_NONE);
@@ -194,10 +194,10 @@ public:
 		// Handling matrix indirection (1 matrix/light)
 		*matrixIndexPtr = nextMatrixIndex;
 		++nextMatrixIndex;
-		
+
 		layers2D = (int)handles2D.size();
 		Allocate2DStorage();
-		
+
 		AllocateLightSpaceSSBO();
 
 		return layerIndex;
@@ -236,7 +236,7 @@ public:
 		// Handling matrix indirection (6 matrix/light)
 		*matrixIndexPtr = nextMatrixIndex;
 		nextMatrixIndex += 6;
-		
+
 		layersCube = (int)handlesCube.size();
 		AllocateCubeStorage();
 
@@ -278,7 +278,10 @@ public:
 
 		if (texture2DArrayID > 0) {
 			glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture2DArrayID, 0, layerIndex);
-			if (clear) glClear(GL_DEPTH_BUFFER_BIT);
+			if (clear) {
+				glClearDepth(1.0f);
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
 		}
 	}
 	static void BindCubeFBO() {
@@ -294,7 +297,10 @@ public:
 			GLuint layerInCubeArray = cubeLayerIndex * 6 + faceIndex;
 
 			glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureCubeArrayID, 0, cubeLayerIndex * 6 + faceIndex);
-			if (clear) glClear(GL_DEPTH_BUFFER_BIT);
+			if (clear) {
+				glClearDepth(1.0f);
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
 		}
 	}
 	static void UnbindFBO() {

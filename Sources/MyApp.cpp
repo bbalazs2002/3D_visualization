@@ -248,7 +248,10 @@ void CMyApp::InitModels() {
 		defMaterial->SetShininess(32);
 		defMaterial->SetDiffuseTex(m_modelTextureID);
 
+		InitCube();
+
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				ShaderProgramCollection{
@@ -270,8 +273,10 @@ void CMyApp::InitModels() {
 				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
+		*/
 
 		// Bezier-surface
+		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
 				ShaderProgramCollection{
@@ -294,6 +299,7 @@ void CMyApp::InitModels() {
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
 		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
+		*/
 
 		// Bezier-surface
 		/*
@@ -367,7 +373,6 @@ void CMyApp::InitModels() {
 		*/
 
 		// Equinox
-		/*
 		m_models.push_back(new Model(
 			ModelParams{
 				ShaderProgramCollection{
@@ -380,14 +385,13 @@ void CMyApp::InitModels() {
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
-				{ 1, 0, 0, 0 },
-				{ 0, 1, 0, 0 },
-				{ 0, 0, 1, 0 },
-				{ 0, 0, 0, 1 }
+				{ .1, 0, 0, 0 },
+				{ 0, .1, 0, 0 },
+				{ 0, 0, .1, 0 },
+				{ 0, 0, 0, .1 }
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
-		*/
 
 		// Equinox
 		/*
@@ -514,6 +518,37 @@ void CMyApp::CleanModels() {
 		delete(m_models[i]);
 	}
 	m_models.clear();
+}
+
+void CMyApp::InitCube() {
+	Material* defMaterial = new Material();
+	defMaterial->SetName("Default_material");
+	defMaterial->SetAmbientColor(glm::vec3(.2));
+	defMaterial->SetDiffuseColor(glm::vec3(1));
+	defMaterial->SetSpecularColor(glm::vec3(1));
+	defMaterial->SetShininess(32);
+	defMaterial->SetDiffuseTex(m_modelTextureID);
+
+	m_models.push_back(new Model(
+		ModelParams{
+			ShaderProgramCollection{
+				m_programModelID,
+				m_programModelSelectedID,
+				m_programModelShadowID
+			},
+			"Cube-inverse",
+			true
+		}
+	));
+	m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
+			{ 10, 0, 0, 0 },
+			{ 0, 10, 0, 5 },
+			{ 0, 0, 10, 0 },
+			{ 0, 0, 0, 1 }
+		}
+	));
+	((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\cube-inverse.obj");
+	((Model*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
 }
 
 void CMyApp::InitLights() {

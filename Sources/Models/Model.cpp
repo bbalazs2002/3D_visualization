@@ -55,8 +55,9 @@ void Model::Render(RenderParams* p) {
 	glUniform2iv(ul(progID, "clickHandlerData.windowSize"), 1, glm::value_ptr(p->windowSize));
 	// Light module
 	// SSBO bind globally to binding point 2
-	// Shadow texture globally uploaded to unit #4
-	glUniform1i(ul(progID, "lightShadowMapArray"), 4);
+	// Shadow texture globally uploaded to unit #4 -> 2D; #5 -> cube
+	glUniform1i(ul(progID, "light2DShadowMapArray"), 4);
+	glUniform1i(ul(progID, "lightCubeShadowMapArray"), 5);
 	glUniform1i(ul(progID, "lightData.lightCount"), Light::GetLightCount());
 	// Transform module
 	glUniformMatrix4fv(ul(progID, "transformData.world"), 1, GL_FALSE, glm::value_ptr(modelTransform));

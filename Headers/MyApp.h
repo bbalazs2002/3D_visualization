@@ -95,6 +95,8 @@ protected:
 	void CleanSkyboxGeometry();
 	void InitModels();
 	void CleanModels();
+	void InitCube();
+	void CleanCube();
 
 	// Textures
 	GLuint m_skyboxTextureID = 0;

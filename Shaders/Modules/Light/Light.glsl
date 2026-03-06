@@ -27,7 +27,7 @@ float Calculate2DShadow(vec4 fragPosLightSpace, uint layer, float bias) {
     if (projCoords.z > 1.0f) return 1.0f;
 
     // 4. Sample the depth from the shadow map array
-    float closestDepth = texture(light2DShadowMapArray, vec3(projCoords.xy, float(layer))).r; 
+    float closestDepth = texture(light2DShadowMapArray, vec3(projCoords.xy, float(layer))).r;
     
     // 5. Get current pixel depth
     float currentDepth = projCoords.z;
@@ -48,23 +48,24 @@ float Calculate2DShadow(vec4 fragPosLightSpace, uint layer, float bias) {
  * @param bias Small offset to prevent shadow acne.
  */
 float CalculateCubeShadow(vec4 fragPosLightSpace, uint cubeLayer, vec3 direction, float bias) {
-    // 1. Perspective divide to get NDC coordinates [-1, 1]
+    // 1. Perspective divide (NDC coordinates: range [-1, 1])
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 
-    // 2. Map Z from [-1, 1] to [0, 1] range to match depth buffer storage
-    float currentDepth = projCoords.z * 0.5 + 0.5;
+    // 2. Transform to [0, 1] range (to match texture coordinate space)
+    projCoords = projCoords * 0.5f + 0.5f;
 
-    // 3. Sample the non-linear depth stored in the CubeMap Array
-    // We use the 'direction' vector to pick the face, and 'cubeLayer' for the array index
+    // 3. Get current pixel depth
+    float currentDepth = projCoords.z;
+
+    // 4. If the point is further than the far plane, it is in shadow
+    if (currentDepth > 1.0f) return 0.0f;
+
+    // 5. Sample the depth from the shadow map array
     float closestDepth = texture(lightCubeShadowMapArray, vec4(direction, float(cubeLayer))).r;
 
-    // 4. Boundary check: if beyond far plane, it's not in shadow
-    if (currentDepth > 1.0) return 1.0;
-
-    // 5. Standard depth comparison
-    // Since this is non-linear, a very small constant bias might still cause issues 
-    // at different distances, but it's the standard approach for non-linear maps.
-    float shadow = (currentDepth - bias > closestDepth) ? 0.0 : 1.0;
+    // 6. Depth comparison (using shadow bias to prevent shadow acne)
+    // Returns 0.0 if in shadow, 1.0 if not in shadow
+    float shadow = currentDepth - bias > closestDepth ? 0.0f : 1.0f;
 
     return shadow;
 }
@@ -94,7 +95,8 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         lightDir = normalize(fragToLight);
 
         // Attenuation calculation (constant, linear, quadratic)
-        attenuation = 1.0 / (params.light.La_const.w + params.light.Ld_linear.w * dist + params.light.Ls_quadratic.w * dist * dist);
+        // Originally should be 1.0 / (params.light.La_const.w + params.light.Ld_linear.w * dist + params.light.Ls_quadratic.w * dist * dist);
+        attenuation = (params.light.La_const.w + params.light.Ld_linear.w * dist + params.light.Ls_quadratic.w * dist * dist);
         
         if ((LIGHT_FLAG_IS_SPOT & flags) != 0u) {
             // Spot Light Calculation
@@ -115,6 +117,7 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     }
 
     // If the light is dimmed out by spot or attenuation, skip the expensive calculations
+    // 1 / attenuation <= 0 <=> attenuation < 0
     if (attenuation <= 0.0 || spotIntensity <= 0.0) {
         return vec3(0.0);
     }
@@ -129,14 +132,16 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
         uint layer = uint(params.light.flags_angle_plane_shadow.w);
         
         if ((LIGHT_FLAG_IS_POINT & flags) != 0) {
-            // Spot light -> Cube shadow map
-            float farPlane = params.light.flags_angle_plane_shadow.z;
+            // Point light -> Cube shadow map
             vec3 lightToFrag = params.position - params.light.position.xyz;
 
             int faceIndex = GetCubeFaceIndex(lightToFrag);
             mat4 viewProj = lightSpaceMatrices[int(params.light.direction_lightSpace.w) + faceIndex];
 
             shadow = CalculateCubeShadow(viewProj * vec4(params.position, 1), layer, lightToFrag, bias);
+
+            // return vec3(shadow);
+
         } else {
             // Directional or Spot light -> 2D shadow map array
             mat4 viewProj = lightSpaceMatrices[int(params.light.direction_lightSpace.w)];
@@ -154,7 +159,7 @@ vec3 LightCalculateContribution(LightCalculateContributionParams params) {
     vec3 specular = params.light.Ls_quadratic.xyz * params.specularColor * spec;
 
     // 4. Combine and apply attenuation/spot factor
-    return shadow * (diffuse + specular) * attenuation * spotIntensity;
+    return (shadow * (diffuse + specular) * spotIntensity) / attenuation;
 }
 
 struct LightCalculateParams{

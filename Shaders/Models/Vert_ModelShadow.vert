@@ -9,9 +9,10 @@ layout (location = 0 ) in vec3 vs_in_pos;
 #include "../Modules/Light/Light_uniforms.glsl"
 
 uniform int lightID;
+uniform int faceID = 0;
 
 void main()
 {
-    mat4 viewProj = lightSpaceMatrices[int(lightSources[lightID].direction_lightSpace.w)];
+    mat4 viewProj = lightSpaceMatrices[int(lightSources[lightID].direction_lightSpace.w) + faceID];
     gl_Position = viewProj * Transform(vec4(vs_in_pos, 1.0));
 }
