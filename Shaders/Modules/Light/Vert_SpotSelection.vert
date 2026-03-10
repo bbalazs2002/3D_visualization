@@ -7,7 +7,8 @@ out vec3 vs_out_col;
 #include "../Camera/Camera.glsl"
 
 // light
-#define LIGHT_LIGHTS_SSBO 2
+#define LIGHT_LIGHTS_SSBO 3
+#define LIGHT_SPACE_MATRICES_SSBO 4
 #include "Light_uniforms.glsl"
 
 uniform int isInner = 0;
@@ -15,7 +16,7 @@ uniform int lightID = 0;
 
 void main() {
 	// calculate model base
-	vec3 u = normalize(lightSources[lightID].direction.xyz);
+	vec3 u = normalize(lightSources[lightID].direction_lightSpace.xyz);
 	vec3 v = vec3(0);
 	float d = dot(u, vec3(0,1,0));
 	if (-.8 < d && d < .8) {	// not near to 180° or -180°
@@ -32,13 +33,13 @@ void main() {
 	float delta = 2. * 3.14159265 / n;
 	float i = float(gl_VertexID - 1);
 
-	float angle = isInner * lightSources[lightID].type_angle.z + (1 - isInner) * lightSources[lightID].type_angle.y;
+	float angle = isInner * lightSources[lightID].flags_angle_plane_shadow.z + (1 - isInner) * lightSources[lightID].flags_angle_plane_shadow.y;
 	float dist = length(lightSources[lightID].position.xyz - cameraData.eye);
-	float m = dist * lightSources[lightID].type_angle.z / 10.;	// height of the cone (scaled by distance from the camera and outer angle size)
-	float r = m * tan(angle);									// radius of the base circle
-	vec3 P = vec3(m, r * cos(i * delta), r * sin(i * delta));	// point on the base circle contour
+	float m = dist * lightSources[lightID].flags_angle_plane_shadow.z / 10.;	// height of the cone (scaled by distance from the camera and outer angle size)
+	float r = m * tan(angle);											// radius of the base circle
+	vec3 P = vec3(m, r * cos(i * delta), r * sin(i * delta));			// point on the base circle contour
 
 	gl_Position = CameraViewProj(vec4(lightSources[lightID].position.xyz + base * (float(isCenter) * vec3(0) + float(1 - isCenter) * P), 1));
 
-	vs_out_col = float(1-isInner) * vec3(1,0,0) + float(isInner) * (float(isCenter) * vec3(1,1,0) + float(1 - isCenter) * vec3(1));
+	vs_out_col = float(1 - isInner) * vec3(1,0,0) + float(isInner) * (float(isCenter) * vec3(1,1,0) + float(1 - isCenter) * vec3(1));
 }

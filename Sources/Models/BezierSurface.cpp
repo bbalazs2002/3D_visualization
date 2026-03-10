@@ -2,8 +2,8 @@
 
 BezierSurface::BezierSurface(BezierSurfaceParams params) : ModelBase(BEZIERSURFACE2MODELBASE) {
 	m_wireframe = params.wireframe;
-	m_type = MODEL_TYPE_BEZIERSURFACE;
 	m_smoothness = params.smoothness;
+	m_shadowProgramID = params.shaderPrograms.programShadowID;
 	SetCtrlPointsSSBO();
 }
 BezierSurface::~BezierSurface() {
@@ -17,6 +17,7 @@ BezierSurface::~BezierSurface() {
 	}
 }
 
+// IDrawable
 void BezierSurface::Render(RenderParams* p) {
 	// -- Render selection if needed --
 	if (p->selected) {
@@ -104,8 +105,12 @@ void BezierSurface::Render(RenderParams* p) {
 	// Material module
 	Material::UploadMaterialToShader(progID, GetMaterial());
 	// Light module
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, p->lights);
-	glUniform1i(ul(progID, "lightData.lightCount"), p->lightCount);
+	// Lights SSBO bind globally to binding point 3
+	// Light viewProj matrices SSBO bind globally to binding point 4
+	// Shadow maps bind globally to textures 4 and 5
+	glUniform1i(ul(progID, "light2DShadowMapArray"), 4);
+	glUniform1i(ul(progID, "lightCubeShadowMapArray"), 5);
+	glUniform1i(ul(progID, "lightData.lightCount"), Light::GetLightCount());
 
 	// -- Draw call --
 	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
@@ -113,8 +118,8 @@ void BezierSurface::Render(RenderParams* p) {
 	// -- Restore initial OGL state --
 	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
 	glLineWidth(defLineWidth);
-	glPolygonMode(GL_FRONT, polygonMode[0]);
-	glPolygonMode(GL_BACK, polygonMode[1]);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	Material::ClearMaterialFromShader();
 	glUseProgram(0);
 
 	if (p->selected) {
@@ -275,4 +280,74 @@ void BezierSurface::RenderGUI(std::vector<ModelBase*>* models) {
 
 	ImGui::Separator();
 	ImGui::Spacing();
+}
+
+// ICastShadow
+void BezierSurface::RenderShadowMap(GLint lightID, GLint faceID = 0) {
+	if (!GetShow() || GetWireFrame()) {
+		return;
+	}
+
+	// -- Check if the surface can be rendered --
+	if (GetCtrlPoints().size() < 1) {
+		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" has too few control points");
+		SetShow(false);
+		return;
+	}
+	if (GetCtrlPoints().size() != GetRowsCount() * GetColsCount()) {
+		Log::errorToConsole("Bezier-surface \"", GetName().c_str(), "\" dimensions do not match");
+		SetShow(false);
+		return;
+	}
+
+	// -- Update ctrlPoints SSBO and transformation matrix if needed --
+	bool transformsReset = false;
+	// check if any of the transformations is changed
+	bool isDirty = false;
+	for (auto t : m_transforms) {
+		if (t->IsDirty()) {
+			isDirty = true;
+		}
+		t->Clean();
+	}
+	// calculate transformation and set SSBO if changed
+	if (isDirty || m_transformDirty) {
+		m_transformDirty = false;
+		glm::mat4 acc = glm::identity<glm::mat4>();
+		for (int i = m_transforms.size() - 1; i >= 0; --i) {
+			acc *= m_transforms[i]->Get();
+		}
+		m_transform = acc;
+		transformsReset = true;
+	}
+
+	if (transformsReset || m_ctrlPointsDirty) {
+		WriteCtrlPointsSSBO();
+	}
+
+	// -- Set render options --
+	bool cullFaceEnabled = glIsEnabled(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+
+	// -- Activate shader --
+	GLuint progID = GetProgramShadowID();
+	glUseProgram(progID);
+
+	// -- Set shader input data --
+	glUniform1i(ul(progID, "lightID"), lightID);
+	glUniform1i(ul(progID, "faceID"), faceID);
+	// Bezier surface module
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, GetCtrlPointsSSBO());
+	glUniform2iv(ul(progID, "bezierSurfaceData.ctrlPointCount"), 1, glm::value_ptr(GetDimensions()));
+	glUniform2iv(ul(progID, "bezierSurfaceData.division"), 1, glm::value_ptr(GetSmoothness()));
+	// Light module
+	// Lights SSBO bind globally to binding point 3
+	// Light viewProj matrices SSBO bind globally to binding point 4
+
+	// -- Draw call --
+	glDrawArrays(GetDrawMode(), 0, (GetSmoothness().x - 1) * (GetSmoothness().y - 1) * 2 * 3);
+
+	// -- Restore initial OGL state --
+	if (cullFaceEnabled) glEnable(GL_CULL_FACE);
+	glUseProgram(0);
 }

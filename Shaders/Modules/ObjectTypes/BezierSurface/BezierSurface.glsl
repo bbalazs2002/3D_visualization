@@ -18,9 +18,9 @@ float BernsteinBaseDerivative(int n, int k, float t) {
     // This term is non-zero only if k <= n-1.
     float B_k_value = BernsteinBase(n - 1, k, t);
     // Mask: 1.0 if k <= n-1, 0.0 otherwise.
-    float mask_k = step(float(n - 1), float(k)) == 0.0 ? 1.0 : 0.0; 
+    // float mask_k = step(float(n - 1), float(k)) == 0.0 ? 1.0 : 0.0; 
     // Alternative mask that might be better for SIMD, though less direct:
-    // float mask_k = 1.0 - step(float(n), float(k));
+    float mask_k = 1.0 - step(float(n), float(k));
 
     float B_k = B_k_value * mask_k;
 

@@ -61,11 +61,16 @@
 // Interfaces
 #include "Interfaces/IDrawable.h"
 #include "Interfaces/IPrintable.h"
+#include "Interfaces/ICastShadow.h"
+
+// Utilities
+#include "Utilities.h"
 
 // Models
 #include "Types.h"
 #include "Transformation.h"
 #include "Material.h"
+#include "Lights/ShadowMapController.h"
 #include "Lights/Light.h"
 #include "Lights/DirectionalLight.h"
 #include "Lights/PointLight.h"

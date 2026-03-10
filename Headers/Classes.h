@@ -24,9 +24,12 @@ class DirectionalLight;
 class PointLight;
 class SpotLight;
 
+// Material
+class Material;
+
 // Utilities
 class Transformation;
-struct Material;
+class ShadowMapController;
 
 // Types
 struct BezierCurveParams;
@@ -35,16 +38,19 @@ struct BSplineParams;
 struct DiscreteCurveParams;
 struct MeshRenderParams;
 struct MeshRenderSelectionParams;
+struct MeshRenderShadowParams;
 struct ModelBaseParams;
 struct ModelLoaderReturn;
 struct ModelParams;
 struct RenderParams;
 struct RenderShadowParams;
+struct ShaderProgramCollection;
 struct SUpdateInfo;
 
 // Interfaces
 interface IDrawable;
 interface IPrintable;
+interface ICastShadow;
 
 // Wrapper
 class CMyApp;

@@ -1,7 +1,6 @@
 #include "../../Headers/include_all.h"
 
 BezierCurve::BezierCurve(BezierCurveParams params) : ModelBase(BEZIERCURVE2MODELBASE) {
-	m_type = MODEL_TYPE_BEZIER;
 	m_smoothness = params.smoothness;
 	m_ctrlPoints = {
 		glm::vec4{0,0,0,1},
@@ -243,8 +242,11 @@ void BezierCurve::Cut(float t, BezierCurve*& newCurve2) {
 	std::stringstream name;
 	name << GetName() << "_2";
 	newCurve2 = new BezierCurve(BezierCurveParams{
-		GetProgramID(),
-		GetProgramSelectedID(),
+		ShaderProgramCollection{
+			GetProgramID(),
+			GetProgramSelectedID(),
+			0
+		},
 		GetSmoothness(),
 		name.str().c_str(),
 		true

@@ -15,7 +15,7 @@ public:
 	void Clean();
 
 	void Update(const SUpdateInfo&);
-	void Render() const;
+	void Render();
 	void RenderGUI();
 
 	void KeyboardDown(const SDL_KeyboardEvent&);
@@ -44,7 +44,8 @@ protected:
 
 	bool m_showAxes = true;
 	bool m_renderShadows = true;
-	int m_shadowBufferSize = 1024;
+	int m_shadow2DBufferSize = 1024;
+	int m_shadowCubeBufferSize = 512;
 
 	std::vector<glm::vec4> m_newIntpolPoints{};
 	std::vector<float> m_newTParams{};
@@ -58,17 +59,18 @@ protected:
 	// Shader program variables
 	GLuint m_programAxesID = 0;						// Program showing X,Y,Z directions
 	GLuint m_programSkyboxID = 0;					// Skybox shaders
-	GLuint m_programModelID = 0;					// Drawing models
-	GLuint m_programSelectedID = 0;					// Draw selection onto model
-	GLuint m_programBezierID = 0;					// Draw Bezier-curves
-	GLuint m_programBezierSelectedID = 0;			// Draw Bezier-curve selection
+	GLuint m_programModelID = 0;					// Draw models
+	GLuint m_programModelSelectedID = 0;			// Draw model selection
+	GLuint m_programModelShadowID = 0;				// Draw model shadows
+	GLuint m_programBezierCurveID = 0;				// Draw Bezier-curves
+	GLuint m_programBezierCurveSelectedID = 0;		// Draw Bezier-curve selection
 	GLuint m_programDiscreteCurveID = 0;			// Draw Discrete curves
 	GLuint m_programDiscreteCurveSelectedID = 0;	// Draw Discrete curve selection
 	GLuint m_programBSplineID = 0;					// Draw BSpline-curves
 	GLuint m_programBSplineSelectedID = 0;			// Draw BSpline-curve selection
 	GLuint m_programBezierSurfaceID = 0;			// Draw Bezier-surface
 	GLuint m_programBezierSurfaceSelectedID = 0;	// Draw Bezier-surface selection
-	GLuint m_programShadowID = 0;					// Render shadow texture
+	GLuint m_programBezierSurfaceShadowID = 0;		// Draw Bezier-surface shadow
 
 	GLuint m_programDirectionLightID = 0;			// Render direction light selection
 	GLuint m_programPointLightID = 0;				// Render point light selection
@@ -93,6 +95,8 @@ protected:
 	void CleanSkyboxGeometry();
 	void InitModels();
 	void CleanModels();
+	void InitCube();
+	void CleanCube();
 
 	// Textures
 	GLuint m_skyboxTextureID = 0;
@@ -101,30 +105,24 @@ protected:
 
 	// Lighting
 	void InitLights();
-	void CleanLights();
-	std::vector<Light*> m_lights{};
 
 	// Texture initialization
 	void InitTexture();
 	void CleanTexture();
 	void InitSkyboxTexture();
 	void CleanSkyboxTexture();
-	void InitResolutionDependentResources(glm::vec2 bufferSize);
-	void CleanResolutionDependentResources();
 
 	// Buffer IDs
 	GLuint m_ModelIDBufferID = 0;
-	GLuint m_LightsBufferID = 0;
-	GLuint m_FBOShadowID = 0;
 
 	// Buffer initialization
 	void InitBuffers();
-	void InitLightBuffer();
 	void CleanBuffers();
 
 	// rendering methods
 	void DrawAxes() const;
 	void RenderModels() const;
 	void RenderLightSuorce() const;
+	void RenderShadowMaps();
 	void RenderSkybox() const;
 };

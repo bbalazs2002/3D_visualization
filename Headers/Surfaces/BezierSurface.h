@@ -2,7 +2,7 @@
 
 #include "../include_all.h"
 
-class BezierSurface : public ModelBase {
+class BezierSurface : public ModelBase, public ICastShadow {
 protected:
 	std::vector<glm::vec4> m_interpolatedPoints{};
 	Material* m_material{};
@@ -13,6 +13,9 @@ protected:
 	GLuint m_interpolatedPointsSSBOID = 0;
 	glm::ivec2 m_smoothness{10, 10};
 	bool m_wireframe = false;
+
+	GLuint m_shadowProgramID = 0;
+	bool m_castShadow = true;
 
 	void SetCtrlPointsSSBO() {
 		glGenBuffers(1, &m_ctrlPointsSSBOID);
@@ -64,12 +67,6 @@ protected:
 public:
 	BezierSurface(BezierSurfaceParams params);
 	~BezierSurface();
-
-	void Render(RenderParams* p) override;
-	void RenderSelection(RenderParams* p) override;
-	void RenderGUI(std::vector<ModelBase*>* models) override;
-
-	void RenderInterpolatedPoints(RenderParams* p);
 
 	inline void SetWireFrame(bool wireframe) {
 		m_wireframe = wireframe;
@@ -352,5 +349,25 @@ public:
 			ss << std::endl;
 		}
 		return ss.str();
+	}
+
+	// IDrawable
+	void Render(RenderParams* p) override;
+	void RenderSelection(RenderParams* p) override;
+	void RenderGUI(std::vector<ModelBase*>* models) override;
+
+	// ICastShadow
+	void RenderShadowMap(GLint lightID, GLint faceID) override;
+	inline void SetProgramShadowID(GLuint id) override {
+		m_shadowProgramID = id;
+	}
+	inline GLuint GetProgramShadowID() const override {
+		return m_shadowProgramID;
+	}
+	inline void SetCastShadow(bool cast) override {
+		m_castShadow = cast;
+	}
+	inline bool GetCastShadow() const override {
+		return m_castShadow;
 	}
 };

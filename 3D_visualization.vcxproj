@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -89,11 +89,11 @@
     <ClCompile Include="includes\CameraManipulator.cpp" />
     <ClCompile Include="includes\ObjParser.cpp" />
     <ClCompile Include="includes\ProgramBuilder.cpp" />
+    <ClCompile Include="Sources\Lights\Light.cpp" />
     <ClCompile Include="Sources\Models\BezierCurve.cpp" />
     <ClCompile Include="Sources\Models\BezierSurface.cpp" />
     <ClCompile Include="Sources\Models\BSpline.cpp" />
     <ClCompile Include="Sources\Models\DiscreteCurve.cpp" />
-    <ClCompile Include="Sources\Models\Material.cpp" />
     <ClCompile Include="Sources\Models\Mesh.cpp" />
     <ClCompile Include="Sources\Models\Model.cpp" />
     <ClCompile Include="Sources\Models\ModelBase.cpp" />
@@ -107,12 +107,13 @@
     <ClInclude Include="Headers\Curves\BSplineInterpolation.h" />
     <ClInclude Include="Headers\Curves\DiscreteCurve.h" />
     <ClInclude Include="Headers\include_all.h" />
+    <ClInclude Include="Headers\Interfaces\ICastShadow.h" />
     <ClInclude Include="Headers\Interfaces\IDrawable.h" />
     <ClInclude Include="Headers\Interfaces\IPrintable.h" />
     <ClInclude Include="Headers\Lights\DirectionalLight.h" />
     <ClInclude Include="Headers\Lights\Light.h" />
     <ClInclude Include="Headers\Lights\PointLight.h" />
-    <ClInclude Include="Headers\Lights\ShadowMapArray.h" />
+    <ClInclude Include="Headers\Lights\ShadowMapController.h" />
     <ClInclude Include="Headers\Lights\SpotLight.h" />
     <ClInclude Include="Headers\Log.h" />
     <ClInclude Include="Headers\Material.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="Headers\Surfaces\BezierSurfaceInterpolation.h" />
     <ClInclude Include="Headers\Transformation.h" />
     <ClInclude Include="Headers\Types.h" />
+    <ClInclude Include="Headers\Utilities.h" />
     <ClInclude Include="includes\GLUtils.hpp" />
     <ClInclude Include="includes\SDL_GLDebugMessageCallback.h" />
     <ClInclude Include="includes\Camera.h" />
@@ -166,6 +168,8 @@
     <None Include="Shaders\BezierCurve\Frag_Bezier.frag" />
     <None Include="Shaders\BezierCurve\Vert_Bezier.vert" />
     <None Include="Shaders\BezierCurve\Vert_BezierSelected.vert" />
+    <None Include="Shaders\BezierSurface\Frag_BezierSurfaceShadow.frag" />
+    <None Include="Shaders\BezierSurface\Vert_BezierSurfaceShadow.vert" />
     <None Include="Shaders\BSpline\Vert_BSplineSelected.vert" />
     <None Include="Shaders\DiscreteCurve\Frag_DiscreteCurve.frag" />
     <None Include="Shaders\DiscreteCurve\Vert_DiscreteCurve.vert" />
@@ -179,10 +183,12 @@
     <None Include="Shaders\BezierSurface\Vert_BezierSurfaceSelected.vert" />
     <None Include="Shaders\BSpline\Frag_BSpline.frag" />
     <None Include="Shaders\BSpline\Vert_BSpline.vert" />
-    <None Include="Shaders\Models\Frag_Lighting.frag" />
-    <None Include="Shaders\Models\Frag_Selected.frag" />
+    <None Include="Shaders\Models\Frag_Model.frag" />
+    <None Include="Shaders\Models\Frag_ModelSelected.frag" />
+    <None Include="Shaders\Models\Frag_ModelShadow.frag" />
     <None Include="Shaders\Models\Vert_Model.vert" />
-    <None Include="Shaders\Models\Vert_Selected.vert" />
+    <None Include="Shaders\Models\Vert_ModelSelected.vert" />
+    <None Include="Shaders\Models\Vert_ModelShadow.vert" />
     <None Include="Shaders\Modules\Camera\Camera.glsl" />
     <None Include="Shaders\Modules\Camera\Camera_uniforms.glsl" />
     <None Include="Shaders\Modules\ClickHandler\ClickHandler.glsl" />
@@ -208,7 +214,6 @@
     <None Include="Shaders\Modules\ObjectTypes\DiscreteCurve\DiscreteCurve_uniforms.glsl" />
     <None Include="Shaders\Modules\Transform\Transform.glsl" />
     <None Include="Shaders\Modules\Transform\Transform_uniforms.glsl" />
-    <None Include="Shaders\Shadow\Vert_Shadow.vert" />
     <None Include="Shaders\Skybox\Frag_skybox_skeleton.frag" />
     <None Include="Shaders\Skybox\Vert_skybox.vert" />
     <None Include="Shaders\Vert_PosNormTex.vert">

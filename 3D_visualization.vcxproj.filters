@@ -26,9 +26,6 @@
     <ClCompile Include="Sources\Models\BezierCurve.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Models\Material.cpp">
-      <Filter>Sources\Models</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Models\Mesh.cpp">
       <Filter>Sources\Models</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Models\ModelBase.cpp">
       <Filter>Sources\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lights\Light.cpp">
+      <Filter>Sources\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,11 +136,14 @@
     <ClInclude Include="Headers\Lights\SpotLight.h">
       <Filter>Headers\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Surfaces\BezierSurfaceInterpolation.h">
-      <Filter>Headers\Surfaces</Filter>
+    <ClInclude Include="Headers\Interfaces\ICastShadow.h">
+      <Filter>Headers\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Lights\ShadowMapArray.h">
-      <Filter>Headers\Lights</Filter>
+    <ClInclude Include="Headers\Lights\ShadowMapController.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Utilities.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -229,18 +232,6 @@
     </None>
     <None Include="Shaders\Models\Vert_Model.vert">
       <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Lighting.frag">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Frag_Selected.frag">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Models\Vert_Selected.vert">
-      <Filter>Shaders\Models</Filter>
-    </None>
-    <None Include="Shaders\Shadow\Vert_Shadow.vert">
-      <Filter>Shaders\Shadow</Filter>
     </None>
     <None Include="Shaders\BSpline\Vert_BSpline.vert">
       <Filter>Shaders\BSpline</Filter>
@@ -362,6 +353,27 @@
     <None Include="Shaders\Modules\Light\Vert_SpotSelection.vert">
       <Filter>Shaders\Modules\Light</Filter>
     </None>
+    <None Include="Shaders\BezierSurface\Vert_BezierSurfaceShadow.vert">
+      <Filter>Shaders\BezierSurface</Filter>
+    </None>
+    <None Include="Shaders\BezierSurface\Frag_BezierSurfaceShadow.frag">
+      <Filter>Shaders\BezierSurface</Filter>
+    </None>
+    <None Include="Shaders\Models\Frag_ModelShadow.frag">
+      <Filter>Shaders\Models</Filter>
+    </None>
+    <None Include="Shaders\Models\Vert_ModelSelected.vert">
+      <Filter>Shaders\Models</Filter>
+    </None>
+    <None Include="Shaders\Models\Vert_ModelShadow.vert">
+      <Filter>Shaders\Models</Filter>
+    </None>
+    <None Include="Shaders\Models\Frag_Model.frag">
+      <Filter>Shaders\Models</Filter>
+    </None>
+    <None Include="Shaders\Models\Frag_ModelSelected.frag">
+      <Filter>Shaders\Models</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\cube.obj">
@@ -407,9 +419,6 @@
     </Filter>
     <Filter Include="Shaders\Models">
       <UniqueIdentifier>{00816edf-bbb7-462c-97e7-3ca45691a18a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Shadow">
-      <UniqueIdentifier>{090520a3-be30-4e98-8534-672812a7f5aa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Headers\Interfaces">
       <UniqueIdentifier>{833306ea-db4e-4e26-902e-302965913292}</UniqueIdentifier>
@@ -476,6 +485,9 @@
     </Filter>
     <Filter Include="Headers\Lights">
       <UniqueIdentifier>{7a3fead9-bcee-4131-b044-fe4ff9faa161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Lights">
+      <UniqueIdentifier>{6c2554f9-d441-4503-a42b-e9c45e05448d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

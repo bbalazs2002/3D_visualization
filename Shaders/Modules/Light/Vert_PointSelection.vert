@@ -7,7 +7,8 @@ out vec3 vs_out_col;
 #include "../Camera/Camera.glsl"
 
 // light
-#define LIGHT_LIGHTS_SSBO 2
+#define LIGHT_LIGHTS_SSBO 3
+#define LIGHT_SPACE_MATRICES_SSBO 4
 #include "Light_uniforms.glsl"
 
 uniform int lightID = 0;

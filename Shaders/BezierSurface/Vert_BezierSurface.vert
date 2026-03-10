@@ -41,7 +41,7 @@ void main()
         BezierSurfaceParams(u, v, bezierSurfaceData.ctrlPointCount)
     ), 1);
     gl_Position = CameraViewProj(p);
-    vs_out_pos = CameraViewProj(p).xyz;
+    vs_out_pos = p.xyz;
 
     vs_out_norm = BezierSurfaceNormal(
         BezierSurfaceParams(u, v, bezierSurfaceData.ctrlPointCount)

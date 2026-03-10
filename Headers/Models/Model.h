@@ -2,12 +2,15 @@
 
 #include "../include_all.h"
 
-class Model : public ModelBase {
+class Model : public ModelBase, public ICastShadow {
 protected:
 	std::vector<Material*> m_materials;
 	std::vector<Mesh*> m_meshes;
 	bool m_wireframe = false;
 	std::string m_objPath;
+
+	GLuint m_shadowProgramID = 0;
+	bool m_castShadow = true;
 
 public:
 	char m_objPathBuffer[256] = "";
@@ -15,15 +18,42 @@ public:
 	Model(ModelParams params);
 	~Model();
 
+	// IDrawable methods
 	void Render(RenderParams* p) override;
 	void RenderSelection(RenderParams* p) override;
 	void RenderGUI(std::vector<ModelBase*>*) override;
+
+	// ICastShadow methods
+	void RenderShadowMap(GLint lightID, GLint faceID) override;
+	inline void SetProgramShadowID(GLuint id) override {
+		m_shadowProgramID = id;
+	}
+	inline GLuint GetProgramShadowID() const override {
+		return m_shadowProgramID;
+	}
+	inline void SetCastShadow(bool cast) override {
+		m_castShadow = cast;
+	}
+	inline bool GetCastShadow() const override {
+		return m_castShadow;
+	}
 
 	inline void AddMaterial(Material* material) {
 		m_materials.push_back(material);
 	}
 	inline Material* GetMaterial(int id) const {
 		return m_materials[id];
+	}
+	inline void SetMaterial(Material* material) {
+		for (auto m : m_materials) {
+			delete(m);
+			m = nullptr;
+		}
+		m_materials.clear();
+		m_materials.push_back(material);
+		for (auto m : m_meshes) {
+			m->SetMaterial(material);
+		}
 	}
 	inline void AddMesh(Mesh* mesh) {
 		m_meshes.push_back(mesh);
@@ -49,5 +79,12 @@ public:
 			delete(p);
 		}
 		m_materials.erase(m_materials.begin(), m_materials.end());
+	}
+	inline void CleanMaterials() {
+		for (auto m : m_materials) {
+			delete(m);
+			m = nullptr;
+		}
+		m_materials.clear();
 	}
 };

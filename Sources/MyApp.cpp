@@ -20,61 +20,62 @@ void CMyApp::InitShaders()
 	m_programModelID = glCreateProgram();
 	ProgramBuilder{ m_programModelID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Model.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Lighting.frag")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Model.frag")
 		.Link();
 
-	m_programSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programSelectedID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_Selected.vert")
-		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_Selected.frag")
+	m_programModelSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programModelSelectedID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_ModelSelected.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_ModelSelected.frag")
+		.Link();
+
+	m_programModelShadowID = glCreateProgram();
+	ProgramBuilder{ m_programModelShadowID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Models/Vert_ModelShadow.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Models/Frag_ModelShadow.frag")
 		.Link();
 
 	// Bezier
-	/*
-	m_programBezierID = glCreateProgram();
-	ProgramBuilder{ m_programBezierID }
+	/*m_programBezierCurveID = glCreateProgram();
+	ProgramBuilder{ m_programBezierCurveID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_Bezier.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 
-	m_programBezierSelectedID = glCreateProgram();
-	ProgramBuilder{ m_programBezierSelectedID }
+	m_programBezierCurveSelectedID = glCreateProgram();
+	ProgramBuilder{ m_programBezierCurveSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierCurve/Vert_BezierSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierCurve/Frag_Bezier.frag")
 		.Link();
 		*/
 
 		// B-Spline
-		/*
-		m_programBSplineID = glCreateProgram();
-		ProgramBuilder{ m_programBSplineID }
-			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
-			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-			.Link();
-
-		m_programBSplineSelectedID = glCreateProgram();
-		ProgramBuilder{ m_programBSplineSelectedID }
-			.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
-			.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
-			.Link();
-			*/
-
-			// DiscreteCurve
-			/*
-			m_programDiscreteCurveID = glCreateProgram();
-			ProgramBuilder{ m_programDiscreteCurveID }
-				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
-				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+		/*m_programBSplineID = glCreateProgram();
+			ProgramBuilder{ m_programBSplineID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSpline.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
 				.Link();
 
-			m_programDiscreteCurveSelectedID = glCreateProgram();
-			ProgramBuilder{ m_programDiscreteCurveSelectedID }
-				.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
-				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
-				.Link();
-				*/
+			m_programBSplineSelectedID = glCreateProgram();
+			ProgramBuilder{ m_programBSplineSelectedID }
+				.ShaderStage(GL_VERTEX_SHADER, "Shaders/BSpline/Vert_BSplineSelected.vert")
+				.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BSpline/Frag_BSpline.frag")
+				.Link();*/
 
-				// Bezier-surface
+				// DiscreteCurve
+				/*m_programDiscreteCurveID = glCreateProgram();
+						ProgramBuilder{ m_programDiscreteCurveID }
+							.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurve.vert")
+							.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+							.Link();
+
+						m_programDiscreteCurveSelectedID = glCreateProgram();
+						ProgramBuilder{ m_programDiscreteCurveSelectedID }
+							.ShaderStage(GL_VERTEX_SHADER, "Shaders/DiscreteCurve/Vert_DiscreteCurveSelected.vert")
+							.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/DiscreteCurve/Frag_DiscreteCurve.frag")
+							.Link();*/
+
+							// Bezier-surface
 	m_programBezierSurfaceID = glCreateProgram();
 	ProgramBuilder{ m_programBezierSurfaceID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurface.vert")
@@ -85,6 +86,12 @@ void CMyApp::InitShaders()
 	ProgramBuilder{ m_programBezierSurfaceSelectedID }
 		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceSelected.vert")
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceSelected.frag")
+		.Link();
+
+	m_programBezierSurfaceShadowID = glCreateProgram();
+	ProgramBuilder{ m_programBezierSurfaceShadowID }
+		.ShaderStage(GL_VERTEX_SHADER, "Shaders/BezierSurface/Vert_BezierSurfaceShadow.vert")
+		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/BezierSurface/Frag_BezierSurfaceShadow.frag")
 		.Link();
 
 	// Light selection
@@ -104,14 +111,6 @@ void CMyApp::InitShaders()
 		.ShaderStage(GL_FRAGMENT_SHADER, "Shaders/Modules/Light/Frag_LightSelection.frag")
 		.Link();
 
-	// Shadows
-	/*
-	m_programShadowID = glCreateProgram();
-	ProgramBuilder{ m_programShadowID }
-		.ShaderStage(GL_VERTEX_SHADER, "Shaders/Shadow/vert_Shadow.vert")
-		.Link();
-	*/
-
 	// exit(1);
 
 	InitAxesShader();
@@ -121,13 +120,15 @@ void CMyApp::CleanShaders()
 {
 	glDeleteProgram(m_programModelID);
 	m_programModelID = 0;
-	glDeleteProgram(m_programSelectedID);
-	m_programSelectedID = 0;
+	glDeleteProgram(m_programModelSelectedID);
+	m_programModelSelectedID = 0;
+	glDeleteProgram(m_programModelShadowID);
+	m_programModelShadowID = 0;
 
-	glDeleteProgram(m_programBezierID);
-	m_programBezierID = 0;
-	glDeleteProgram(m_programBezierSelectedID);
-	m_programBezierSelectedID = 0;
+	glDeleteProgram(m_programBezierCurveID);
+	m_programBezierCurveID = 0;
+	glDeleteProgram(m_programBezierCurveSelectedID);
+	m_programBezierCurveSelectedID = 0;
 
 	glDeleteProgram(m_programBSplineID);
 	m_programBSplineID = 0;
@@ -143,6 +144,8 @@ void CMyApp::CleanShaders()
 	m_programBezierSurfaceID = 0;
 	glDeleteProgram(m_programBezierSurfaceSelectedID);
 	m_programBezierSurfaceSelectedID = 0;
+	glDeleteProgram(m_programBezierSurfaceShadowID);
+	m_programBezierSurfaceShadowID = 0;
 
 	glDeleteProgram(m_programDirectionLightID);
 	m_programDirectionLightID = 0;
@@ -150,9 +153,6 @@ void CMyApp::CleanShaders()
 	m_programPointLightID = 0;
 	glDeleteProgram(m_programSpotLightID);
 	m_programSpotLightID = 0;
-
-	glDeleteProgram(m_programShadowID);
-	m_programShadowID = 0;
 
 	CleanSkyboxShader();
 	CleanAxesShader();
@@ -241,11 +241,24 @@ void CMyApp::CleanSkyboxGeometry()
 }
 void CMyApp::InitModels() {
 	{
+		Material* defMaterial = new Material();
+		defMaterial->SetName("Default_material");
+		defMaterial->SetAmbientColor(glm::vec3(.2));
+		defMaterial->SetDiffuseColor(glm::vec3(1));
+		defMaterial->SetSpecularColor(glm::vec3(1));
+		defMaterial->SetShininess(32);
+		defMaterial->SetDiffuseTex(m_modelTextureID);
+
+		InitCube();
+
 		// Bezier-surface
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
-				m_programBezierSurfaceID,
-				m_programBezierSurfaceSelectedID,
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
 				glm::vec2{10, 10},
 				"Bezier-surface",
 				true, false
@@ -259,19 +272,44 @@ void CMyApp::InitModels() {
 				glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,2,2,1 },
 				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
 		});
-		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
-			"Bezier-surface-material",
-			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
-			32.f,
-			m_modelTextureID, 0, 0, 0
-			});
+		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
+		*/
 
 		// Bezier-surface
 		/*
 		m_models.push_back(new BezierSurface(
 			BezierSurfaceParams{
-				m_programBezierSurfaceID,
-				m_programBezierSurfaceSelectedID,
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
+				glm::vec2{10, 10},
+				"Bezier-surface-2",
+				true, false
+			}
+		));
+		((BezierSurface*)m_models[m_models.size() - 1])->SetCtrlPoints(glm::vec2{ 6, 5 }, std::vector<glm::vec4>{
+			glm::vec4{ -2,0,-2,1 }, glm::vec4{ -1,0,-2,1 }, glm::vec4{ 0,0,-2,1 }, glm::vec4{ 1,0,-2,1 }, glm::vec4{ 2,0,-2,1 },
+				glm::vec4{ -2,0,-1,1 }, glm::vec4{ -1,0,-1,1 }, glm::vec4{ 0,0,-1,1 }, glm::vec4{ 1,0,-1,1 }, glm::vec4{ 2,0,-1,1 },
+				glm::vec4{ -2,0,0,1 }, glm::vec4{ -1,0,0,1 }, glm::vec4{ 0,0,0,1 }, glm::vec4{ 1,0,0,1 }, glm::vec4{ 2,0,0,1 },
+				glm::vec4{ -2,0,1,1 }, glm::vec4{ -1,0,1,1 }, glm::vec4{ 0,0,1,1 }, glm::vec4{ 1,0,1,1 }, glm::vec4{ 2,0,1,1 },
+				glm::vec4{ -2,0,2,1 }, glm::vec4{ -1,0,2,1 }, glm::vec4{ 0,0,2,1 }, glm::vec4{ 1,0,2,1 }, glm::vec4{ 2,0,2,1 },
+				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,0,3,1 }
+		});
+		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
+		((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0, 2, 0)));
+		*/
+
+		// Bezier-surface
+		/*
+		m_models.push_back(new BezierSurface(
+			BezierSurfaceParams{
+				ShaderProgramCollection{
+					m_programBezierSurfaceID,
+					m_programBezierSurfaceSelectedID,
+					m_programBezierSurfaceShadowID,
+				},
 				glm::vec2{10, 10},
 				"Bezier-surface-2",
 				true, false
@@ -284,11 +322,12 @@ void CMyApp::InitModels() {
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(new Material{
 			"Bezier-surface-material",
-			glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f),
+			glm::vec3(.2f), glm::vec3(1.f), glm::vec3(1.f),
 			32.f,
 			m_modelTextureID, 0, 0, 0
 			});
 		*/
+		// ((BezierSurface*)m_models[m_models.size() - 1])->AddTransform(glm::translate(glm::vec3(0,3,0)));
 
 		// Bezier-curve
 		/*
@@ -313,36 +352,65 @@ void CMyApp::InitModels() {
 		/*
 		m_models.push_back(new Model(
 			ModelParams{
-				m_programModelID,
-				m_programSelectedID,
+				ShaderProgramCollection{
+					m_programModelID,
+					m_programModelSelectedID,
+					m_programModelShadowID
+				},
 				"Cube",
 				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
 				{ 1, 0, 0, 0 },
-				{ 0, 1, 0, 0 },
+				{ 0, 1, 0, 5 },
 				{ 0, 0, 1, 0 },
 				{ 0, 0, 0, 1 }
 			}
 		));
 		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\Transforms\\Assets\\cube.obj");
+		((Model*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
 		*/
 
 		// Equinox
 		/*
 		m_models.push_back(new Model(
 			ModelParams{
-				m_programModelID,
-				m_programSelectedID,
+				ShaderProgramCollection{
+					m_programModelID,
+					m_programModelSelectedID,
+					m_programModelShadowID
+				},
 				"Equinox",
 				true
 			}
 		));
 		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
+				{ .1, 0, 0, 0 },
+				{ 0, .1, 0, 0 },
+				{ 0, 0, .1, 0 },
+				{ 0, 0, 0, .1 }
+			}
+		));
+		((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\Equinox-render\\Equinox.obj");
+
+		// Equinox
+		/*
+		m_models.push_back(new Model(
+			ModelParams{
+				ShaderProgramCollection{
+					m_programModelID,
+					m_programModelSelectedID,
+					m_programModelShadowID
+				},
+				"Equinox 2",
+				true
+			}
+		));
+		m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
 				{ 1, 0, 0, 0 },
-				{ 0, 1, 0, 0 },
-				{ 0, 0, 1, 0 },
+				{ 0, 1, 0, 3 },
+				{ 0, 0, 1, -2 },
 				{ 0, 0, 0, 1 }
 			}
 		));
@@ -570,23 +638,56 @@ void CMyApp::CleanModels() {
 	m_models.clear();
 }
 
+void CMyApp::InitCube() {
+	Material* defMaterial = new Material();
+	defMaterial->SetName("Default_material");
+	defMaterial->SetAmbientColor(glm::vec3(.2));
+	defMaterial->SetDiffuseColor(glm::vec3(1));
+	defMaterial->SetSpecularColor(glm::vec3(1));
+	defMaterial->SetShininess(32);
+	defMaterial->SetDiffuseTex(m_modelTextureID);
+
+	m_models.push_back(new Model(
+		ModelParams{
+			ShaderProgramCollection{
+				m_programModelID,
+				m_programModelSelectedID,
+				m_programModelShadowID
+			},
+			"Cube-inverse",
+			true
+		}
+	));
+	m_models[m_models.size() - 1]->AddTransform(glm::transpose(glm::mat4{
+			{ 10, 0, 0, 0 },
+			{ 0, 10, 0, 5 },
+			{ 0, 0, 10, 0 },
+			{ 0, 0, 0, 1 }
+		}
+	));
+	((Model*)m_models[m_models.size() - 1])->SetObjPath("C:\\Users\\Balazs\\Documents\\ELTE\\2025-26-01\\geommod\\3D_visualization\\Assets\\cube-inverse.obj");
+	((Model*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
+}
+
 void CMyApp::InitLights() {
-	m_lights.push_back(new DirectionalLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programDirectionLightID);
+	/*
+	DirectionalLight* dl = new DirectionalLight();
+	dl->SetProgramID(m_programDirectionLightID);
+	dl->SetDirection(glm::vec3(0,-1,0));
+	Light::AddLight(dl);
+	*/
+
+	PointLight* pl = new PointLight();
+	pl->SetProgramID(m_programPointLightID);
+	Light::AddLight(pl);
 
 	/*
-	m_lights.push_back(new PointLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programPointLightID);
-	m_lights.push_back(new SpotLight());
-	m_lights[m_lights.size() - 1]->SetProgramID(m_programSpotLightID);
+	SpotLight* sl = new SpotLight();
+	sl->SetProgramID(m_programSpotLightID);
+	sl->SetPosition(glm::vec3(0, 4, 0));
+	// sl->SetShadow();
+	Light::AddLight(sl);
 	*/
-}
-void CMyApp::CleanLights() {
-	for (int i = 0; i < m_lights.size(); ++i) {
-		delete(m_lights[i]);
-		m_lights[i] = nullptr;
-	}
-	m_lights.clear();
 }
 
 void CMyApp::InitTexture() {
@@ -644,67 +745,10 @@ void CMyApp::InitBuffers() {
 	glGenBuffers(1, &m_ModelIDBufferID);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_COPY);
-
-	InitLightBuffer();
-
-	// framebuffer for shadow texture
-	// glCreateFramebuffers(1, &m_FBOShadowID);
-}
-void CMyApp::InitLightBuffer() {
-	// clear old buffer if exists
-	if (m_LightsBufferID > 0) {
-		glDeleteBuffers(1, &m_LightsBufferID);
-	}
-	// SSBO for lights
-	glGenBuffers(1, &m_LightsBufferID);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_LightsBufferID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * 6 * m_lights.size(), nullptr, GL_DYNAMIC_DRAW);
 }
 void CMyApp::CleanBuffers() {
 	glDeleteBuffers(1, &m_ModelIDBufferID);
 	m_ModelIDBufferID = 0;
-
-	glDeleteBuffers(1, &m_LightsBufferID);
-	m_LightsBufferID = 0;
-
-	// glDeleteFramebuffers(1, &m_FBOShadowID);
-	// m_FBOShadowID = 0;
-}
-
-void CMyApp::InitResolutionDependentResources(glm::vec2 bufferSize) {
-	return;
-	// We use texture instead of renderbuffer,
-	// because we will sample it in the shader	
-
-	glCreateTextures(GL_TEXTURE_2D, 1, &m_shadowTextureID);
-	glTextureStorage2D(m_shadowTextureID, 1, GL_DEPTH_COMPONENT24, bufferSize.x, bufferSize.y);
-
-	glNamedFramebufferTexture(m_FBOShadowID, GL_DEPTH_ATTACHMENT, m_shadowTextureID, 0);
-
-	// Completeness check
-	GLenum status = glCheckNamedFramebufferStatus(m_FBOShadowID, GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE)
-	{
-		switch (status) {
-		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT!");
-			break;
-		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT!");
-			break;
-		case GL_FRAMEBUFFER_UNSUPPORTED:
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_UNSUPPORTED!");
-			Log::errorToConsole("[InitFramebuffer] Incomplete framebuffer GL_FRAMEBUFFER_UNSUPPORTED!");
-			break;
-		}
-	}
-}
-void CMyApp::CleanResolutionDependentResources()
-{
-	glDeleteTextures(1, &m_shadowTextureID);
-	m_shadowTextureID = 0;
 }
 
 bool CMyApp::Init()
@@ -716,12 +760,14 @@ bool CMyApp::Init()
 	// glClearColor(0.125f, 0.25f, 0.5f, 1.0f);
 	glClearColor(0, 0, 0, 1.0f);
 
+	// Init shadow maps
+	ShadowMapController::Init(m_shadow2DBufferSize, m_shadow2DBufferSize, m_shadowCubeBufferSize);
+
 	InitShaders();
 	InitTexture();
 	InitLights();
 	InitGeometry();
 	InitBuffers();
-	// InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
 
 	//
 	// Other
@@ -747,14 +793,18 @@ void CMyApp::Clean()
 	CleanGeometry();
 	CleanTexture();
 	CleanBuffers();
-	CleanLights();
-	CleanResolutionDependentResources();
+	Light::Clean();
+
+	ShadowMapController::Clean();
+	Light::Clean();
 }
 
 void CMyApp::Update(const SUpdateInfo& updateInfo)
 {
 	m_cameraManipulator.Update(updateInfo.DeltaTimeInSec);
 	m_ElapsedTimeInSec = updateInfo.ElapsedTimeInSec;
+
+	Light::UpdateLights();
 }
 
 void CMyApp::DrawAxes() const
@@ -777,7 +827,7 @@ void CMyApp::DrawAxes() const
 	}
 }
 void CMyApp::RenderLightSuorce() const {
-	if (m_selectedLight < 0 || m_selectedLight >= m_lights.size()) {
+	if (m_selectedLight < 0 || m_selectedLight >= Light::GetLightCount()) {
 		return;
 	}
 	RenderLightParams rlp{
@@ -785,16 +835,20 @@ void CMyApp::RenderLightSuorce() const {
 					m_camera.GetWorldUp()
 	};
 	RenderParams rp{
-				m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
+				m_lineWidth, m_camera.GetEye(),
 				m_selectedLight, m_cursorPos, glm::ivec2(m_width, m_height),
 				m_camera.GetViewProj(), true,
 				m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2]),
 				&rlp
 	};
-	m_lights[m_selectedLight]->Render(&rp);
+	Light::RenderSelected(m_selectedLight, &rp);
+}
+void CMyApp::RenderShadowMaps() {
+	Light::RenderShadowMap(&m_models);
 }
 void CMyApp::RenderModels() const {
 
+	// click handler buffer
 	// update first vec4 in the buffer to the default model id
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ModelIDBufferID);
 	glm::vec4 defObjID = glm::vec4(-1.f);
@@ -803,18 +857,18 @@ void CMyApp::RenderModels() const {
 	// bind the buffer to binding point 0
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ModelIDBufferID);
 
-	// update light buffer
-	int lcounter = 0;
-	for (auto l : m_lights) {
-		l->UploadToSSBO(m_LightsBufferID, lcounter);
-		++lcounter;
-	}
+	// bind lights SSBO to binding point 3
+	Light::BindLightsSSBO(3);
+	// bind light viewProj matrices SSBO to binding point 4
+	ShadowMapController::BindLightSpaceSSBO(4);
+	// bind shadow maps to textures 4 and 5
+	ShadowMapController::BindAllForReading(4, 5);
 
 	// Render all models
 	int objCount = 0;
 	for (auto m : m_models) {
 		RenderParams rp{
-			m_lineWidth, m_camera.GetEye(), m_LightsBufferID, m_lights.size(),
+			m_lineWidth, m_camera.GetEye(),
 			objCount, m_cursorPos, glm::ivec2(m_width, m_height),
 			m_camera.GetViewProj(), (m_selectedModel == objCount),
 			m_selectionWidth, glm::vec3(m_selColor[0], m_selColor[1], m_selColor[2])
@@ -822,6 +876,9 @@ void CMyApp::RenderModels() const {
 		m->Render(&rp);
 		++objCount;
 	}
+
+	// Unbind shadow map textures
+	ShadowMapController::UnbindTextures();
 }
 void CMyApp::RenderSkybox() const {
 	glUseProgram(m_programSkyboxID);
@@ -848,10 +905,11 @@ void CMyApp::RenderSkybox() const {
 	glBindVertexArray(0);
 	glBindTextureUnit(0, 0);
 }
-void CMyApp::Render() const
+void CMyApp::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	RenderShadowMaps();
 	RenderLightSuorce();
 	RenderModels();
 	// RenderSkybox();
@@ -910,80 +968,88 @@ void CMyApp::RenderGUI()
 		ImGui::SliderFloat("Selection width", &m_selectionWidth, 1.f, 10.f);
 		ImGui::ColorEdit3("Selection color", &m_selColor.r);
 		ImGui::SliderFloat("Line width", &m_lineWidth, 1.f, 10.f);
-		static int bufferResolutionLevel = 10;
-		std::string bufferResolutionText = std::to_string(1 << bufferResolutionLevel);
-		if (ImGui::SliderInt("Shadow resolution level", &bufferResolutionLevel, 5, 12, bufferResolutionText.c_str()))
+
+		// Shadow map texture size
+		static int buffer2DResolutionLevel = 10;
+		std::string buffer2DResolutionText = std::to_string(1 << buffer2DResolutionLevel);
+		if (ImGui::SliderInt("Shadow 2D resolution level", &buffer2DResolutionLevel, 5, 12, buffer2DResolutionText.c_str()))
 		{
-			m_shadowBufferSize = 1 << bufferResolutionLevel;
-			CleanResolutionDependentResources();
-			InitResolutionDependentResources(glm::vec2(m_shadowBufferSize));
+			m_shadow2DBufferSize = 1 << buffer2DResolutionLevel;
+		}
+		static int bufferCubeResolutionLevel = 9;
+		std::string bufferCubeResolutionText = std::to_string(1 << bufferCubeResolutionLevel);
+		if (ImGui::SliderInt("Shadow Cube resolution level", &bufferCubeResolutionLevel, 5, 12, bufferCubeResolutionText.c_str()))
+		{
+			m_shadowCubeBufferSize = 1 << bufferCubeResolutionLevel;
 		}
 
 		// Add new model
 		if (ImGui::Button("Add model")) {
 			m_models.push_back(new Model(
-				ModelParams{
+				ModelParams{ ShaderProgramCollection{
 					m_programModelID,
-					m_programSelectedID
-				}
+					m_programModelSelectedID,
+					m_programModelShadowID
+				} }
 			));
 		}
 		// Add new curve
 		if (ImGui::Button("Add Bezier-curve")) {
 			m_models.push_back(new BezierCurve(
-				BezierCurveParams{
-					m_programBezierID,
-					m_programBezierSelectedID
-				}
+				BezierCurveParams{ ShaderProgramCollection{
+					m_programBezierCurveID,
+					m_programBezierCurveSelectedID,
+					0
+				} }
 			));
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add B-Spline")) {
 			m_models.push_back(new BSpline(
-				BSplineParams{
+				BSplineParams{ ShaderProgramCollection{
 					m_programBSplineID,
-					m_programBSplineSelectedID
-				}
+					m_programBSplineSelectedID,
+					0
+				} }
 			));
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add Discrete-curve")) {
 			m_models.push_back(new DiscreteCurve(
-				DiscreteCurveParams{
+				DiscreteCurveParams{ ShaderProgramCollection{
 					m_programDiscreteCurveID,
-					m_programDiscreteCurveSelectedID
-				}
+					m_programDiscreteCurveSelectedID,
+					0
+				} }
 			));
 		}
 		// Add new surface
 		if (ImGui::Button("Add Bezier-surface")) {
 			m_models.push_back(new BezierSurface(
-				BezierSurfaceParams{
+				BezierSurfaceParams{ ShaderProgramCollection {
 					m_programBezierSurfaceID,
-					m_programBezierSurfaceSelectedID
-				}
+					m_programBezierSurfaceSelectedID,
+					0
+				} }
 			));
 		}
 		// Add new light
 		if (ImGui::Button("Add Directional light")) {
 			DirectionalLight* dl = new DirectionalLight();
 			dl->SetProgramID(m_programDirectionLightID);
-			m_lights.push_back(dl);
-			InitLightBuffer();
+			Light::AddLight(dl);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add Point light")) {
 			PointLight* pl = new PointLight();
 			pl->SetProgramID(m_programPointLightID);
-			m_lights.push_back(pl);
-			InitLightBuffer();
+			Light::AddLight(pl);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add Spot light")) {
 			SpotLight* sl = new SpotLight();
 			sl->SetProgramID(m_programSpotLightID);
-			m_lights.push_back(sl);
-			InitLightBuffer();
+			Light::AddLight(sl);
 		}
 
 		// Log data to console
@@ -998,17 +1064,9 @@ void CMyApp::RenderGUI()
 	ImGui::End();
 
 	// LIGHT OPTION WINDOW
-	if (m_selectedLight >= 0 && m_selectedLight < m_lights.size()) {
+	if (m_selectedLight >= 0 && m_selectedLight < Light::GetLightCount()) {
 
-		Light* l = m_lights[m_selectedLight];
-
-		// Delete selected light if marked
-		if (l->MarkedForDeletion()) {
-			delete(l);
-			m_lights.erase(m_lights.begin() + m_selectedLight);
-			m_selectedLight = -1;
-			return;
-		}
+		Light* l = Light::GetLight(m_selectedLight);
 
 		if (ImGui::Begin("Light options")) {
 			// Render type specific options
@@ -1020,6 +1078,18 @@ void CMyApp::RenderGUI()
 
 			// Render general options
 			l->RenderGUIBase();
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			// Delete button
+			if (ImGui::Button("Delete Light")) {
+				Light::DelLight(m_selectedLight);
+				m_selectedLight = -1;
+				ImGui::End();
+				return;
+			}
 		}
 		ImGui::End();
 	}

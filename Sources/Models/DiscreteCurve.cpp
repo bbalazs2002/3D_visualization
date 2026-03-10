@@ -1,7 +1,6 @@
 #include "../../Headers/include_all.h"
 
 DiscreteCurve::DiscreteCurve(DiscreteCurveParams params) : ModelBase(DISCRETECURVE2MODELBASE) {
-	m_type = MODEL_TYPE_DISCRETECURVE;
 	m_ctrlPoints = {
 		glm::vec4{0,0,0,1},
 		glm::vec4{1,0,0,1},

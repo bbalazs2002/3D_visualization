@@ -21,17 +21,7 @@ out vec3 vs_out_norm;
 void main()
 {
 	vs_out_norm = normalize(vs_in_norm);
-
-	// vs_out_tex = vs_in_tex;
 	vs_out_tex = vec2(vs_in_tex.x, 1.f - vs_in_tex.y);
-	// vs_out_tex = vec2(1.f - vs_in_tex.x, vs_in_tex.y);
-	// vs_out_tex = vec2(1.f - vs_in_tex.x, 1.f - vs_in_tex.y);
-
-	// vs_out_tex = vs_in_tex.yx;
-	// vs_out_tex = vec2(vs_in_tex.y, 1.f - vs_in_tex.x);
-	// vs_out_tex = vec2(1.f - vs_in_tex.y, vs_in_tex.x);
-	// vs_out_tex = vec2(1.f - vs_in_tex.y, 1.f - vs_in_tex.x);
-
 	vs_out_pos = Transform(vec4(vs_in_pos, 1)).xyz;
 	gl_Position = CameraViewProj(Transform(vec4( vs_in_pos, 1 )));
 }
