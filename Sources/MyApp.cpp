@@ -273,7 +273,6 @@ void CMyApp::InitModels() {
 				glm::vec4{ -2,0,3,1 }, glm::vec4{ -1,0,3,1 }, glm::vec4{ 0,0,3,1 }, glm::vec4{ 1,0,3,1 }, glm::vec4{ 2,2,3,1 }
 		});
 		((BezierSurface*)m_models[m_models.size() - 1])->SetMaterial(defMaterial);
-		*/
 
 		// Bezier-surface
 		/*

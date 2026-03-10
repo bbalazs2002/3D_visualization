@@ -123,7 +123,7 @@ void BezierSurface::Render(RenderParams* p) {
 	glUseProgram(0);
 
 	if (p->selected) {
-		RenderInterpolatedPoints(p);
+		this->RenderInterpolatedPoints(p);
 	}
 }
 

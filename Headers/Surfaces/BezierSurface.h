@@ -354,6 +354,7 @@ public:
 	// IDrawable
 	void Render(RenderParams* p) override;
 	void RenderSelection(RenderParams* p) override;
+	void RenderInterpolatedPoints(RenderParams* p);
 	void RenderGUI(std::vector<ModelBase*>* models) override;
 
 	// ICastShadow
