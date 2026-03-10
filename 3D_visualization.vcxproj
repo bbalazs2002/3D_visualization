@@ -123,6 +123,7 @@
     <ClInclude Include="Headers\Models\ModelLoader.h" />
     <ClInclude Include="Headers\MyApp.h" />
     <ClInclude Include="Headers\Surfaces\BezierSurface.h" />
+    <ClInclude Include="Headers\Surfaces\BezierSurfaceInterpolation.h" />
     <ClInclude Include="Headers\Transformation.h" />
     <ClInclude Include="Headers\Types.h" />
     <ClInclude Include="Headers\Utilities.h" />

@@ -1,0 +1,88 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
+  <diagram name="BSpline Module" id="0">
+    <mxGraphModel dx="1912" dy="1115" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mod" value="&amp;nbsp;BSpline module" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;align=left;verticalAlign=top;fontStyle=1;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="10" y="10" width="1020" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_0" value="bSplineData : BSplineUniforms" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="190" y="60" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_0" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;exitX=0.5;exitY=1;endFill=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="uniformInstance_0" target="HxpmNwwPtEi6P3aKIWFD-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1200" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_uniform_0_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_0" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-1" value="preprocessor macros" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="30" y="220" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-2" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;BSPLINE_CTRL_POINTS_SSBO&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-1">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-3" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;BSPLINE_KNOTS_SSBO&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-1">
+          <mxGeometry y="60" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-5" value="functions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="345" y="220" width="510" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-6" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ BSplineGetTStart(params :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;GetTParams&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;) : float&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry y="30" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-7" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ BSplineGetTEnd(params :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;GetTParams&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;) : float&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry y="60" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-8" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ BSplineFindKnotSpan(params :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;BSplineParams&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;) : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry y="90" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-9" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ BSplineEvaluateBasisFunctions(spanIndex :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;int&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;, params :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;BSplineParams&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;, N :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;float*&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;) : void&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry y="120" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-10" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ BSpline(params :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;BSplineParams&lt;/span&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;) : vec3&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry y="150" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-11" value="BSplineUniforms" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="140" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-12" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;degree : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-11">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-13" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;knotCount : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-11">
+          <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-14" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;ctrlPointCount : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-11">
+          <mxGeometry y="90" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-15" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;division : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HxpmNwwPtEi6P3aKIWFD-11">
+          <mxGeometry y="120" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="HxpmNwwPtEi6P3aKIWFD-16" target="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-20" value="SSBO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HxpmNwwPtEi6P3aKIWFD-17">
+          <mxGeometry x="-0.5" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-16" value="BSplineCtrlPoints : vec4[]" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="HxpmNwwPtEi6P3aKIWFD-18" target="HxpmNwwPtEi6P3aKIWFD-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-21" value="SSBO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HxpmNwwPtEi6P3aKIWFD-19">
+          <mxGeometry x="0.0421" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HxpmNwwPtEi6P3aKIWFD-18" value="BSplineKnots : float" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="60" width="260" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

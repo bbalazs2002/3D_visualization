@@ -1,0 +1,39 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
+  <diagram name="Transform Module" id="0">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mod" value="&amp;nbsp;Transform module" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;                  align=left;verticalAlign=top;fontStyle=1;fontSize=24;align=left;" parent="1" vertex="1">
+          <mxGeometry x="10" y="10" width="440" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="functions" value="functions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;                  horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;                  marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" parent="1" vertex="1">
+          <mxGeometry x="235" y="170" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="func1" value="+ Transform(pos) : vec4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;                  spacingLeft=4;spacingRight=4;overflow=hidden;                  points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="functions" vertex="1">
+          <mxGeometry y="30" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance" value="transformData : TransformUniforms" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="200" y="60" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow" style="endArrow=classic;html=1;rounded=0;                  entryX=0.5;entryY=0;exitX=0.5;exitY=1;endFill=1;startSize=9;endSize=13;" parent="1" source="uniformInstance" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="160" as="sourcePoint" />
+            <mxPoint x="360" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowLabel" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="arrow" vertex="1" connectable="0">
+          <mxGeometry x="-0.15" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HZ6G7tbyo9A_K2u8IVCz-1" value="TransformUniforms" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HZ6G7tbyo9A_K2u8IVCz-2" value="world : mat4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="HZ6G7tbyo9A_K2u8IVCz-1">
+          <mxGeometry y="30" width="160" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

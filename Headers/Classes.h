@@ -11,6 +11,7 @@ class DiscreteCurve;
 
 // Surfaces
 class BezierDurface;
+class BezierSurfaceInterpolation;
 
 // Models
 class Mesh;

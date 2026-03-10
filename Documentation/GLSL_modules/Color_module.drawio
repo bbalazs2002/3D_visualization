@@ -1,0 +1,39 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
+  <diagram name="Color Module" id="0">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mod" value="&amp;nbsp;Color module" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6a00ff;fontColor=#ffffff;strokeColor=#3700CC;align=left;verticalAlign=top;fontStyle=1;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="10" y="10" width="460" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance" value="colorData : ColorUniforms" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="190" y="60" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="functions" value="functions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;resizeParent=1;whiteSpace=wrap;html=1;swimlaneFillColor=default;gradientColor=none;" parent="1" vertex="1">
+          <mxGeometry x="220" y="160" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="func1" value="+ Color() : vec4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;" parent="functions" vertex="1">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;exitX=0.5;exitY=1;endFill=1;" parent="1" source="uniformInstance" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-70" y="-130" as="sourcePoint" />
+            <mxPoint x="-70" y="-130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowLabel1" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow1" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bfTN1kPs2qnXgRT7eJC3-1" value="ColorUniforms" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bfTN1kPs2qnXgRT7eJC3-2" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;color : vec3&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="bfTN1kPs2qnXgRT7eJC3-1">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

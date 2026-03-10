@@ -1,0 +1,92 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
+  <diagram name="Material Module" id="0">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mod" value="&amp;nbsp;Material module" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3c800;fontColor=#000000;strokeColor=#B09500;align=left;verticalAlign=top;fontStyle=1;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="10" y="10" width="760" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_0" value="materialDiffuseTex : sampler2D" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="60" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_1" value="materialSpecularTex : sampler2D" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="130" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_2" value="materialEmissionTex : sampler2D" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="200" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_3" value="materialNormalTex : sampler2D" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="270" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uniformInstance_4" value="materialData : MaterialUniforms" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="340" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="functions" value="functions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;resizeParent=1;whiteSpace=wrap;html=1;swimlaneFillColor=default;" parent="1" vertex="1">
+          <mxGeometry x="30" y="270" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-7" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ MaterialPrepare(texCoord : vec2) : float[13]&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="functions">
+          <mxGeometry y="30" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_0" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;exitX=0;exitY=0.5;endFill=1;entryDx=0;entryDy=0;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" parent="1" source="uniformInstance_0" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_0_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_0" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint x="38" y="-87" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_uniform_1" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;exitX=0;exitY=0.5;endFill=1;exitDx=0;exitDy=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" parent="1" source="uniformInstance_1" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_1_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_1" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint x="38" y="-55" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_uniform_2" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;exitX=0;exitY=0.5;endFill=1;exitDx=0;exitDy=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" parent="1" source="uniformInstance_2" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_2_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_2" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint x="38" y="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_uniform_3" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;exitX=0;exitY=0.5;endFill=1;entryDx=0;entryDy=0;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" parent="1" source="uniformInstance_3" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_3_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_3" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint x="32" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_uniform_4" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;exitX=0;exitY=0.5;endFill=1;exitDx=0;exitDy=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" parent="1" source="uniformInstance_4" target="functions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_uniform_4_label" value="uniform" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;" parent="arrow_uniform_4" vertex="1" connectable="0">
+          <mxGeometry x="-0.1" y="2" relative="1" as="geometry">
+            <mxPoint x="42" y="24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-1" value="MaterialUniforms" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneFillColor=default;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-2" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;diffuseColorTex : vec4&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="MifP3QfMV93roYDg1ofU-1">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-3" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;specularColorTex : vec4&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="MifP3QfMV93roYDg1ofU-1">
+          <mxGeometry y="60" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-4" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;ambientColorEmissionTex : vec4&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="MifP3QfMV93roYDg1ofU-1">
+          <mxGeometry y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-6" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;shininess : float&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="MifP3QfMV93roYDg1ofU-1">
+          <mxGeometry y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MifP3QfMV93roYDg1ofU-5" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;hasNormalTex : int&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="MifP3QfMV93roYDg1ofU-1">
+          <mxGeometry y="150" width="200" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

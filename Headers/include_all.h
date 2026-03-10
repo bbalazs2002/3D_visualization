@@ -17,6 +17,7 @@
 #include <utility>
 #include <vector>
 #include <math.h>
+#include <format>
 
 // GLM
 #include <glm/glm.hpp>
@@ -46,6 +47,10 @@
 
 // TinyObjLoader
 #include "tiny_obj_loader.h"
+
+// Eigen
+#include <Eigen/Dense>
+#include <Eigen/LU>
 
 // Log
 #include "Log.h"
@@ -79,6 +84,7 @@
 #include "Curves/BSplineInterpolation.h"
 #include "Curves/DiscreteCurve.h"
 #include "Surfaces/BezierSurface.h"
+#include "Surfaces/BezierSurfaceInterpolation.h"
 
 // main application
 #include "MyApp.h"

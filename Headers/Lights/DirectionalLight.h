@@ -4,7 +4,7 @@
 
 class DirectionalLight : public Light {
 protected:
-	glm::vec3 m_direction = glm::vec3(0.0, 1.0, 0.0);
+	glm::vec3 m_direction = glm::vec3(0.0, -1.0, 0.0);
 
 public:
 	~DirectionalLight() {
